@@ -1,0 +1,73 @@
+
+This is used to connect to imap server and pull messages. Don't know if it's secure yet or not. Pretty sure it's not
+
+Properties props = System.getProperties();
+            props.setProperty("mail.store.protocol", "imaps");
+            props.setProperty("mail.imap.starttls.enable", "true");
+            props.setProperty("mail.imap.ssl.enable", "true");
+            try {
+                Session session = Session.getDefaultInstance(props, null);
+                Store store = session.getStore("imaps");
+                store.connect("imap.gmail.com", "nickslightsysemail@gmail.com", "IbanezL6");
+                writeToFile(store.toString());
+
+                Folder inbox = store.getFolder("Inbox");
+                inbox.open(Folder.READ_ONLY);
+                Message messages[] = inbox.getMessages();
+                for (Message message : messages) {
+                    writeToFile(message.getSubject());
+                    System.out.println(message.getSubject());
+                }
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                System.out.println("Messaging Exception.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Exception.");
+            }
+            System.out.println(readFromFile());
+            System.out.println("Email: " + mEmail);
+            System.out.println("Password: " + mPassword);
+
+
+//Read and write functions used from https://stackoverflow.com/questions/14376807/how-to-read-write-string-from-a-file-in-android
+    public void writeToFile(String data) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("emails.txt", MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    public String readFromFile() {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = openFileInput("config.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
+    }

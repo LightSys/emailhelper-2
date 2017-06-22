@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void writeToFile(String data) {
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("emails.txt", MODE_PRIVATE));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("Login Credentials.txt", MODE_PRIVATE));
             outputStreamWriter.write(data);
             outputStreamWriter.close();
         }
@@ -371,32 +371,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            Properties props = System.getProperties();
-            props.setProperty("mail.store.protocol", "imaps");
-            props.setProperty("mail.imap.starttls.enable", "true");
-            props.setProperty("mail.imap.ssl.enable", "true");
-            try {
-                Session session = Session.getDefaultInstance(props, null);
-                Store store = session.getStore("imaps");
-                store.connect("imap.gmail.com", "nickslightsysemail@gmail.com", "IbanezL6");
-                writeToFile(store.toString());
-
-                Folder inbox = store.getFolder("Inbox");
-                inbox.open(Folder.READ_ONLY);
-                Message messages[] = inbox.getMessages();
-                for (Message message : messages) {
-                    System.out.println(message.getSubject());
-                }
-            } catch (MessagingException e) {
-                e.printStackTrace();
-                System.out.println("Messaging Exception.");
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Exception.");
-            }
-            System.out.println(readFromFile());
-            System.out.println("Email: " + mEmail);
-            System.out.println("Password: " + mPassword);
+            String credentials = "Email:" + mEmail + "\nPassword:" + mPassword;
+            writeToFile(credentials);
             try {
                 // Simulate network access.
                 Thread.sleep(2000);

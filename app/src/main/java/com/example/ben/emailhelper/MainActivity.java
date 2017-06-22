@@ -1,5 +1,7 @@
 package com.example.ben.emailhelper;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,10 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.File;
+
+import android.app.FragmentTransaction;
+import android.view.ViewGroup;
 
 import java.net.URL;
 import javax.xml.parsers.SAXParser;
@@ -28,8 +34,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
 
 public class MainActivity extends AppCompatActivity {
-
-    String data = "This is a test string.";
 
     //Read and write functions used from https://stackoverflow.com/questions/14376807/how-to-read-write-string-from-a-file-in-android
     public void writeToFile(String data) {
@@ -43,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String readFromFile() {
+    public String readFromFile(String filename) {
 
         String ret = "";
 
         try {
-            InputStream inputStream = openFileInput("config.txt");
+            InputStream inputStream = openFileInput(filename);
 
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -73,9 +77,28 @@ public class MainActivity extends AppCompatActivity {
         return ret;
     }
 
-    public void goToLogin(View view) {
+    public void goToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    public void setFragmentNoBackStack(Fragment frag){
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fragmentContainer, frag);
+        transaction.commit();
+    }
+
+    public void setFragment(Fragment frag) {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fragmentContainer, frag);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void goToMessages() {
+        setFragmentNoBackStack(new MessageListFragment());
     }
 
     /*public void getEmail(View view) {
@@ -108,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        writeToFile(data);
-        System.out.println(readFromFile());
+        //goToLogin();
+        goToMessages();
     }
 }
