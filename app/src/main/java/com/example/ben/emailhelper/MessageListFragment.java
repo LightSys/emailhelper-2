@@ -16,6 +16,8 @@ import com.example.ben.emailhelper.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -35,6 +37,7 @@ public class MessageListFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private List<Message> messagesList;
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -61,8 +64,8 @@ public class MessageListFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-        GetMail getMail = new GetMail();
-        getMail.execute();
+        //GetMail getMail = new GetMail();      Started work on something else, but this doesn't work because it calls
+        //getMail.execute();                    the value before the ASync task is finished running
     }
 
     @Override
@@ -80,7 +83,8 @@ public class MessageListFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 System.out.println("Column count: " + mColumnCount);                     //Debug prints
             }
-            recyclerView.setAdapter(new MyMessageListRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyMessageListRecyclerViewAdapter(messagesList, mListener));
+            // messagesList should be a list of messages made from the network call in GetMail class
         }
         return view;
     }
@@ -103,10 +107,18 @@ public class MessageListFragment extends Fragment {
         mListener = null;
     }
 
+    //Async Task because network calls can't be made on the main thread
     public class GetMail extends AsyncTask<Void, Void, Boolean> {
+        Message messages[] = null;
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            /*
+             *  This was pulled from a YouTube video. Not 100% sure what everything means with the Store and Session,
+             *  but JavaMail API has info on it.
+             *  https://www.youtube.com/watch?v=glEwFPKid74&t=6s
+             *  -Nick
+             */
             Properties props = System.getProperties();
             props.setProperty("mail.store.protocol", "imaps");
             props.setProperty("mail.imap.starttls.enable", "true");
@@ -118,9 +130,10 @@ public class MessageListFragment extends Fragment {
 
                 Folder inbox = store.getFolder("Inbox");
                 inbox.open(Folder.READ_ONLY);
-                Message messages[] = inbox.getMessages();
+                messages = inbox.getMessages();
 
-                mColumnCount = messages.length;
+                //messagesList = Arrays.asList(messages);
+                mColumnCount = messages.length;          //I don't actually know if column count is what that should be
                 System.out.println("Number of messages: " + messages.length);
             } catch (MessagingException e) {
                 e.printStackTrace();
@@ -129,12 +142,17 @@ public class MessageListFragment extends Fragment {
                 e.printStackTrace();
                 System.out.println("Exception.");
             }
-            // TODO: register the new account here.
             return true;
         }
 
+        /*
+         *  Don't know what should normally go in these two function, but I'll keep them here in case
+         *  they're important
+         *  -Nick
+         */
         @Override
         protected void onPostExecute(final Boolean success) {
+            messagesList = Arrays.asList(messages);
         }
 
         @Override
@@ -153,6 +171,8 @@ public class MessageListFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        // The To Do is in case we want to change naming standards, so we can easily find it. The argument type is changed
+        void onListFragmentInteraction(Message item);
     }
+
 }

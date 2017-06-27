@@ -8,7 +8,7 @@ Properties props = System.getProperties();
             try {
                 Session session = Session.getDefaultInstance(props, null);
                 Store store = session.getStore("imaps");
-                store.connect("imap.gmail.com", "nickslightsysemail@gmail.com", "IbanezL6");
+                store.connect("imap.gmail.com", HelperClass._Email, HelperClass._Password);
                 writeToFile(store.toString());
 
                 Folder inbox = store.getFolder("Inbox");

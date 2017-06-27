@@ -11,6 +11,12 @@ import com.example.ben.emailhelper.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
+
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
@@ -18,10 +24,10 @@ import java.util.List;
  */
 public class MyMessageListRecyclerViewAdapter extends RecyclerView.Adapter<MyMessageListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Message> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyMessageListRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyMessageListRecyclerViewAdapter(List<Message> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +42,8 @@ public class MyMessageListRecyclerViewAdapter extends RecyclerView.Adapter<MyMes
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mIdView.setText(mValues.get(position).id);             These were from the DummyItem class
+        //holder.mContentView.setText(mValues.get(position).content);   These were from the DunnyItem class
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +66,7 @@ public class MyMessageListRecyclerViewAdapter extends RecyclerView.Adapter<MyMes
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Message mItem;                   //Changed from DummyItem to Message
 
         public ViewHolder(View view) {
             super(view);

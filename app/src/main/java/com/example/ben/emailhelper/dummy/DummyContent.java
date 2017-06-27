@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
+
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
@@ -14,27 +20,31 @@ import java.util.Map;
 public class DummyContent {
 
     /**
-     * An array of sample (dummy) items.
+     * An array of Messages from JavaMail API
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<Message> ITEMS = new ArrayList<Message>();
 
     /**
-     * A map of sample (dummy) items, by ID.
+     * A map of Messages from JavaMail API, by ID.      We might not need a map. Still figuring out how the list works
      */
-    public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+    public static final Map<String, Message> ITEM_MAP = new HashMap<String, Message>();
 
-    private static final int COUNT = 25;
+    //changed it to not be final, since the size will be changing
+    private static int COUNT = 25;
 
-    static {
+    /*
+        Pretty sure we don't need this function, but we'll see
+
+        static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }
-    }
+    }*/
 
-    private static void addItem(DummyItem item) {
+    private static void addItem(Message item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        //ITEM_MAP.put(item.id, item);      Maybe we don't need a map. Don't know yet
     }
 
     private static DummyItem createDummyItem(int position) {
