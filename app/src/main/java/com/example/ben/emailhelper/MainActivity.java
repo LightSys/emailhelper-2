@@ -2,7 +2,10 @@ package com.example.ben.emailhelper;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -33,6 +36,7 @@ import java.io.File;
 
 import android.app.FragmentTransaction;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.net.URL;
@@ -59,12 +63,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    //This is an instance of the database for testing
+    DatabaseHelper db;
 
+    //These variables are used in the list view
     private List<Movie> movieList = new ArrayList<>();
+    private List<Conversation> conversationList = new ArrayList<>();
     private RecyclerView recyclerView;
     private MoviesAdapter mAdapter;
+    private ConversationAdapter cAdapter;
 
-    int clickCounter = 0;
+    //These variables handle the button and text field for adding items to the list
+    private EditText newEmail;
+    private int clickCounter = 0;
 
     public void goToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
@@ -100,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /*
+     *  I still need to understand this part a little more. Not sure what the difference between onMove and onSwiped is,
+     *  or if we even use onMove.
+     *  -Nick
+     */
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
 
         @Override
@@ -110,27 +126,73 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            Toast.makeText(MainActivity.this, "on Swiped ", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "on Swiped ", Toast.LENGTH_SHORT).show();
+
             int itemPosition = viewHolder.getAdapterPosition();
-            movieList.remove(itemPosition);
-            mAdapter.notifyDataSetChanged();
+
+            //Need to delete it from DB before getting rid of it from the list
+            Integer deletedRows = db.deleteData(conversationList.get(itemPosition).getEmail());
+            if (deletedRows > 0)
+                Toast.makeText(MainActivity.this, "Data Deleted", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(MainActivity.this, "Data Not Deleted", Toast.LENGTH_SHORT).show();
+
+
+
             //Remove swiped item from list and notify the RecyclerView
+            conversationList.remove(itemPosition);
+            cAdapter.notifyDataSetChanged();
         }
     };
 
+
+    /*
+     *  Most of the stuff in here was used for testing to set up the RecyclerView. It probably should be moved once
+     *  everything starts coming together. Most likely we will want this in the MessageListFragment class or in a
+     *  similar location.
+     *  -Nick
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        db = new DatabaseHelper(this);                                  //Creates instance of database
 
-        mAdapter = new MoviesAdapter(movieList);
+        newEmail = (EditText) findViewById(R.id.addEmailButton);        //Sets newEmail varable to the EditText field
 
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view); //Makes the RecyclerView
+
+        mAdapter = new MoviesAdapter(movieList);                        //Adapter for the Movies
+        cAdapter = new ConversationAdapter(conversationList);           //Adapter for the Conversations
+
+        //recyclerView.setHasFixedSize(true);           I don't think we want this because we will be adding and removing
+        //                                              conversations often.
+
+
+        RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(cLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(cAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Conversation conversation = conversationList.get(position);
+                Toast.makeText(getApplicationContext(), conversation.getEmail() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {}
+        }));
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        prepareConversationData();
+
+
+        /*RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -150,16 +212,46 @@ public class MainActivity extends AppCompatActivity {
         }));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-        prepareMovieData();
-
+        prepareMovieData();*/
     }
+
+    /*
+     *  This function is what the button in content_main.xml calls. It will need to be changed in add a persons
+     *  name/email address to the list instead of meaningless text
+     *  -Nick
+     */
 
     public void addItems(View v) {
-        Movie movie = new Movie("Clicked : ", "Button", Integer.toString(clickCounter++));
-        movieList.add(0, movie);
-        mAdapter.notifyDataSetChanged();
+        Conversation conversation = new Conversation(newEmail.getText().toString(), newEmail.getText().toString(), CommonMethods.getCurrentTime());
+
+        //DB stuff starts here
+        boolean isInserted = db.insertData(newEmail.getText().toString(), newEmail.getText().toString(), CommonMethods.getCurrentTime());
+        if (isInserted) {
+            Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_SHORT).show();
+            conversationList.add(0, conversation);  //Adds data to first position of list, making it display at the top
+            cAdapter.notifyDataSetChanged();
+        }
+        else
+            Toast.makeText(MainActivity.this, "Data Not Inserted", Toast.LENGTH_SHORT).show();
+
+        //Empties EditText field when it is added to the list
+        //Also make sure you don't clear it before you add the data to the DB
+        newEmail.getText().clear();
     }
 
+
+    public void prepareConversationData() {
+        Cursor res = db.getData();
+        while (res.moveToNext()) {
+            Conversation conversation = new Conversation(res.getString(0), res.getString(1), res.getString(2));
+            conversationList.add(conversation);
+        }
+    }
+
+    /*
+     *  All of this info was used for testing. It can be removed when the list displays the current messages.
+     *  -Nick
+     */
     private void prepareMovieData() {
         Movie movie = new Movie("Mad Max: Fury Road", "Action & Adventure", "2015");
         movieList.add(movie);
