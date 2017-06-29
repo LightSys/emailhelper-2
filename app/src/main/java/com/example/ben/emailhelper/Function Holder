@@ -71,3 +71,18 @@ Properties props = System.getProperties();
 
         return ret;
     }
+
+    public void setFragmentNoBackStack(Fragment frag){
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.fragmentContainer, frag);
+            transaction.commit();
+        }
+
+        public void setFragment(Fragment frag) {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.fragmentContainer, frag);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }

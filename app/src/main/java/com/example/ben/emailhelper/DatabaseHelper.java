@@ -48,6 +48,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+
+    /*
+     *  I fixed the part where this was orignally used, but it may still be useful somewhere else
+     *  -Nick
+     */
     public boolean checkIfExists(String column, String argument) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + column + " = " + argument, null);
