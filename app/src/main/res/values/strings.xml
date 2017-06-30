@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EmailHelper</string>
+    <string name="app_name">Email Helper</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_fragment_messagelist">Messages</string>
     <string name="hello_world">Hello World!</string>
