@@ -13,11 +13,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-/**
- * Created by nicholasweg on 6/22/17.
- */
+/**************************************************************************************************
+ *                                 Created by nicholasweg on 6/22/17.                             *
+ *  I made this because I saw it in a different app project and liked the idea. If there is data  *
+ *  that gets used a lot in different classes you can save it here and call it from that. If we   *
+ *  end up needing to save different types of IMAP hosts and ports, this is where it shoudl be.   *
+ **************************************************************************************************/
 
 public class HelperClass extends AppCompatActivity{
-    public static String _Email = "nickslightsysemail@gmail.com";
-    public static String _Password = "IbanezL6";
+    public static boolean savedCredentials = false;
+
+    public static String _Email = "";
+    public static String _Password = "";
 }

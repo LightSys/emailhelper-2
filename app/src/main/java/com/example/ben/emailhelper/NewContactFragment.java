@@ -7,6 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -14,82 +20,73 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * {@link NewContactFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NewContactFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class NewContactFragment extends android.app.Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    DatabaseHelper db;
+
+    Button addContactButton;
+    EditText firstNameField, lastNameField, emailField;
+    View rootView;
 
     public NewContactFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewContactFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NewContactFragment newInstance(String param1, String param2) {
-        NewContactFragment fragment = new NewContactFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_contact, container, false);
+        rootView = inflater.inflate(R.layout.fragment_new_contact, container, false);
+        addContactButton = (Button) rootView.findViewById(R.id.addContactButton);
+        firstNameField = (EditText) rootView.findViewById(R.id.firstNameField);
+        lastNameField = (EditText) rootView.findViewById(R.id.lastNameField);
+        emailField = (EditText) rootView.findViewById(R.id.emailField);
+        addItems();
+        return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public void addItems() {
+        addContactButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        db = new DatabaseHelper(getActivity().getApplicationContext());
+                        String insertEmail = emailField.getText().toString();
+                        String insertFirstName = firstNameField.getText().toString();
+                        String insertLastName = lastNameField.getText().toString();
+                        Contact contact = new Contact(insertEmail, insertFirstName, insertLastName);
+
+                        boolean isInserted = db.insertContactData(insertEmail, insertFirstName,
+                                insertLastName);
+
+                        emailField.getText().clear();                                               //Empties EditText field when it is added to the list
+                        firstNameField.getText().clear();                                           //Also make sure you don't clear it before you add the data to the DB
+                        lastNameField.getText().clear();
+
+                        Date today = Calendar.getInstance().getTime();
+                        boolean isConvo = db.insertConversationData(insertEmail, insertFirstName + " " + insertLastName, CommonMethods.getCurrentTime(), today.toString());
+                        if (isConvo) {
+                            Toast.makeText(getActivity().getApplicationContext(), "Conversation Inserted", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                            Toast.makeText(getActivity().getApplicationContext(), "Conversation Not Inserted", Toast.LENGTH_SHORT).show();
+
+                        MainActivity mainActivity = (MainActivity) getActivity();
+                        ContactFragment newContactFragment = new ContactFragment();
+                        mainActivity.setFragmentNoBackStack(newContactFragment);
+                    }
+                }
+        );
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     /**
      * This interface must be implemented by activities that contain this

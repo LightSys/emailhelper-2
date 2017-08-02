@@ -54,12 +54,24 @@
             android:layout_marginLeft="30dp"/>
 
         <EditText
+            android:id="@+id/emailField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lastNameField"
             android:layout_marginTop="50dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"/>
+
+        <Button
+            android:id="@+id/addContactButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_below="@+id/emailField"
+            android:layout_marginTop="25dp"
+            android:text="Add Contact"
+            android:textSize="20sp"/>
 
     </RelativeLayout>
 

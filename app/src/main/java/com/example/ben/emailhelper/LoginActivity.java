@@ -3,6 +3,7 @@ package com.example.ben.emailhelper;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -49,6 +51,7 @@ import javax.mail.Store;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
+ * THIS DOESN'T DO ANYTHING RIGHT NOW. USE IT TO GET THE SIGN IN INFORMATION THE FIRST TIME THE USER SIGNS IN.
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
@@ -219,6 +222,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+
+        // Save the 'global' variables of HelperClass
+        HelperClass._Email = email;
+        HelperClass._Password = password;
+        HelperClass.savedCredentials = true;
+
+        // Create object of SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("myPreferences", 0);
+        // New get Editor
+        SharedPreferences.Editor editor = sharedPref.edit();
+        // Put your values
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.putBoolean("check", true);
+        // Apply your edits
+        editor.apply();
 
         boolean cancel = false;
         View focusView = null;
