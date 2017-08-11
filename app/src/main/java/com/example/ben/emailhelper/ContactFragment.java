@@ -146,6 +146,7 @@ public class ContactFragment extends android.app.Fragment {
     /**********************************************************************************************
      *              Function for when the plus button is clicked to add a new contact             *
      **********************************************************************************************/
+
     public void goToNewContact() {
         addContactButton.setOnClickListener(
                 new View.OnClickListener() {

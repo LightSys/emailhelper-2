@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: Remove or figure out how to make the DividerItemDecoration work
     // TODO: Add multiple mail services
+    // TODO: Polling or push notifications
 
     DatabaseHelper db;
 

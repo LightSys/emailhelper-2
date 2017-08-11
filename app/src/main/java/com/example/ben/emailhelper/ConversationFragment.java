@@ -90,11 +90,8 @@ public class ConversationFragment extends android.app.Fragment {
                 // once the network request has completed successfully
                 GetMail mail = new GetMail();
                 mail.execute();
-                    System.out.println("what's happening");
            }
             });
-        // Configue the refreshing colours
-        // swipeContainer.setColorSchemeColors(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         return rootView;
     }
 
@@ -194,7 +191,6 @@ public class ConversationFragment extends android.app.Fragment {
 
         @Override
         protected Long doInBackground(URL... params) {
-            System.out.println("Do we even run this");
             fetchTimeLineAsync();
             return null;
         }
@@ -210,7 +206,6 @@ public class ConversationFragment extends android.app.Fragment {
      **********************************************************************************************/
 
     public void fetchTimeLineAsync() {
-        System.out.println("Does it even run this");
         Cursor res = db.getContactData();
         SearchTerm sender;
         Properties props = System.getProperties();
@@ -225,10 +220,7 @@ public class ConversationFragment extends android.app.Fragment {
             UIDFolder uf = (UIDFolder)inbox;
             inbox.open(Folder.READ_ONLY);
 
-            System.out.println("Do we get here?");
-
             while(res.moveToNext()) {
-                System.out.println("How many times does it go?");
                 Date today = Calendar.getInstance().getTime();
                 sender = new FromTerm(new InternetAddress(res.getString(0)));
                 SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, today);

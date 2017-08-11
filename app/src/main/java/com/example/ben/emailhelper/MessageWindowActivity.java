@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 /**************************************************************************************************
- *  This is the activity that happens everything in the message window, outside of a              *
+ *  This is the activity where everything happens in the message window, outside of a             *
  *  BottomNavigationActivity.                                                                     *
  **************************************************************************************************/
 

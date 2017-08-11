@@ -30,7 +30,7 @@ Properties props = System.getProperties();
             System.out.println("Password: " + mPassword);
 
 
-//Read and write functions used from https://stackoverflow.com/questions/14376807/how-to-read-write-string-from-a-file-in-android
+Read and write functions used from https://stackoverflow.com/questions/14376807/how-to-read-write-string-from-a-file-in-android
     public void writeToFile(String data) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput("emails.txt", MODE_PRIVATE));

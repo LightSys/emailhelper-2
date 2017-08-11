@@ -15,6 +15,7 @@ public class Conversation {
     public Conversation() {}
 
     /**********************************************************************************************
+     *  TODO: Change the date field
      *  I added the today field so that when pulling emails, you can stop at the day the message  *
      *  was created and not look past that. When the conversation is made, it inserts the current *
      *  date and time into the field, which is the same format that JavaMail uses as a            *
