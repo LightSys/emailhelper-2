@@ -30,10 +30,16 @@
         <activity android:name=".MessageWindowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
+
                 <data android:scheme="mailto" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service android:name=".ServiceActivity" />
+
+        <activity android:name=".FakeService"></activity>
     </application>
 
 </manifest>

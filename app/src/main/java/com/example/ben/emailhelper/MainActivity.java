@@ -3,6 +3,9 @@ package com.example.ben.emailhelper;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -11,9 +14,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPStore;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,6 +34,7 @@ import java.util.Properties;
 
 import javax.mail.BodyPart;
 import javax.mail.Folder;
+import javax.mail.FolderClosedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -33,6 +42,11 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.UIDFolder;
+import javax.mail.URLName;
+import javax.mail.event.MessageChangedEvent;
+import javax.mail.event.MessageChangedListener;
+import javax.mail.event.MessageCountEvent;
+import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -54,8 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
     ConversationFragment newConversationFragment = new ConversationFragment();
     ContactFragment newContactFragment = new ContactFragment();
+    SettingsFragment newSettingsFragment = new SettingsFragment();
 
     int newestMessageNumber = 0;
+
+    NotificationCompat.Builder notification;
+    private static int uniqueID = 123456;
 
 
     public void setFragmentNoBackStack(Fragment frag){
@@ -84,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     getSupportActionBar().setTitle("Messages");
                     return true;
                 case R.id.navigation_dashboard:
+                    setFragmentNoBackStack(newSettingsFragment);
                     getSupportActionBar().setTitle("Settings");
                     return true;
                 case R.id.navigation_notifications:
@@ -105,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         HelperClass._Email = sharedPref.getString("email", "");
         HelperClass._Password = sharedPref.getString("password", "");
         HelperClass.savedCredentials = sharedPref.getBoolean("check", false);
+        //startService(new Intent(this, ServiceActivity.class));
 
         if (!HelperClass.savedCredentials) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
@@ -118,6 +138,9 @@ public class MainActivity extends AppCompatActivity {
         db = new DatabaseHelper(getApplicationContext());
         GetMailAddresses GMA = new GetMailAddresses();
         GMA.execute();
+
+        notification = new NotificationCompat.Builder(this);
+        notification.setAutoCancel(true);
     }
 
     /**********************************************************************************************
@@ -155,14 +178,38 @@ public class MainActivity extends AppCompatActivity {
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
         try {
+            //Session session = Session.getDefaultInstance(props, null);
+            //Store store = session.getStore("imaps");
+            //store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
+
             Session session = Session.getDefaultInstance(props, null);
-            Store store = session.getStore("imaps");
+            IMAPStore store = (IMAPStore) session.getStore("imaps");
             store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
 
 
             Folder inbox = store.getFolder("Inbox");
             UIDFolder uf = (UIDFolder)inbox;
-            inbox.open(Folder.READ_ONLY);
+            inbox.open(Folder.READ_WRITE);
+
+            /*inbox.addMessageCountListener(new MessageCountListener() {
+                @Override
+                public void messagesAdded(MessageCountEvent messageCountEvent) {
+                    System.out.println("Message Count Event Fired");
+                    newEmailReceived();
+                }
+
+                @Override
+                public void messagesRemoved(MessageCountEvent messageCountEvent) {
+                    System.out.println("Message Removed Event Fired");
+                }
+            });
+
+            inbox.addMessageChangedListener(new MessageChangedListener() {
+                @Override
+                public void messageChanged(MessageChangedEvent messageChangedEvent) {
+                    System.out.println("Message Changed Event Fired");
+                }
+            });*/
 
             while(res.moveToNext()) {
                 Date today = Calendar.getInstance().getTime();
@@ -181,6 +228,36 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
+
+            /*int freq = 2000;
+            boolean supportsIdle = false;
+            try {
+                if (inbox instanceof  IMAPFolder) {
+                    IMAPFolder f = (IMAPFolder) inbox;
+                    f.idle();
+                    supportsIdle = true;
+                }
+            } catch (FolderClosedException fex) {
+                throw fex;
+            } catch (MessagingException mex) {
+                supportsIdle = false;
+            }
+
+            for (; ; ) {
+                if (supportsIdle && inbox instanceof IMAPFolder) {
+                    IMAPFolder f = (IMAPFolder) inbox;
+                    f.idle();
+                    System.out.println("IDLE done");
+                }
+                else {
+                    Thread.sleep(freq); // sleep for freq milliseconds
+
+                    // This is to force the IMAP server to send us
+                    // EXISTS notifications.
+                    inbox.getMessageCount();
+                }
+            }*/
+
         } catch (MessagingException e) {
             e.printStackTrace();
             System.out.println("Messaging Exception.");
@@ -230,5 +307,27 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+
+    /**********************************************************************************************
+     *                                  Notification Builder                                      *
+     **********************************************************************************************/
+
+    public void newEmailReceived() {
+        // Build the notification
+        notification.setSmallIcon(R.drawable.ic_home_black_24dp);
+        notification.setTicker("This is the ticker");
+        notification.setWhen(System.currentTimeMillis());
+        notification.setContentTitle("Here is the title");
+        notification.setContentText("I am the body of your notification");
+
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notification.setContentIntent(pendingIntent);
+        notification.setPriority(Notification.PRIORITY_HIGH);
+
+        //Build notification and issue it
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(uniqueID, notification.build());
     }
 }
