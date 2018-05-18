@@ -185,7 +185,6 @@ public class ConversationWindowFragment extends android.app.Fragment {
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(passedEmail));
             message.setSubject("Conversation Email");
             message.setText(persistantMessage);
-
             Transport.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();

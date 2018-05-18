@@ -9,5 +9,5 @@
     <item android:state_focused="false"
         android:state_pressed="true"
         android:drawable="@drawable/send_selected" />
-    <item android:drawable="@drawable/send" />
+    <item android:drawable="@drawable/send_selected" />
 </selector>
