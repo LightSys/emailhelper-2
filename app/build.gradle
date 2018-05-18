@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
+
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
     defaultConfig {
-        applicationId "com.example.ben.emailhelper"
+        applicationId "com.lightsys.emailtotext"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -18,25 +17,27 @@ android {
         }
     }
 }
+
 dependencies {
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile files('build/libs/activation.jar')
-    compile files('build/libs/additionnal.jar')
-    compile files('build/libs/mail.jar')
-    compile 'com.android.support:recyclerview-v7:27.1.1'
-    compile 'com.android.support:recyclerview-v7:27.1.1'
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0'
-    compile 'com.android.support:design:27.1.1'
-    compile 'com.android.support:support-v4:27.1.1'
-    compile 'com.android.support:support-vector-drawable:27.1.1'
-    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-    compile 'org.jsoup:jsoup:1.10.3'
-    testCompile 'junit:junit:4.12'
-}
-apply plugin: 'com.google.gms.google-services'
-repositories {
-    jcenter()
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:support-vector-drawable:27.1.1'
+    implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+    implementation 'org.jsoup:jsoup:1.10.3'
+
+    //implementation  'javax.mail:javax.mail-api:1.5.3'
+    //implementation group: 'com.sun.mail', name: 'imap', version: '1.5.2'
+
+    implementation files('libs/javax.mail.jar')
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
 }

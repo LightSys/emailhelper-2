@@ -13,8 +13,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -97,18 +97,22 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            TextView overview = findViewById(R.id.overview);
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     setFragmentNoBackStack(newConversationFragment);
-                    getSupportActionBar().setTitle("Messages");
+                    overview.setText("Messages");
+                    //getSupportActionBar().setTitle("Messages");
                     return true;
                 case R.id.navigation_dashboard:
                     setFragmentNoBackStack(newSettingsFragment);
-                    getSupportActionBar().setTitle("Settings");
+                    overview.setText("Settings");
+                    //getSupportActionBar().setTitle("Settings");
                     return true;
                 case R.id.navigation_notifications:
                     setFragmentNoBackStack(newContactFragment);
-                    getSupportActionBar().setTitle("Contacts");
+                    overview.setText("Contacts");
+                    //getSupportActionBar().setTitle("Contacts");
                     return true;
             }
             return false;
@@ -121,19 +125,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences("myPreferences", 0);
         HelperClass._Email = sharedPref.getString("email", "");
         HelperClass._Password = sharedPref.getString("password", "");
         HelperClass.savedCredentials = sharedPref.getBoolean("check", false);
-        //startService(new Intent(this, ServiceActivity.class));
 
+        //Gets Credentials if the app doesn't have them
         if (!HelperClass.savedCredentials) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
         }
 
         setFragmentNoBackStack(newConversationFragment);
-        getSupportActionBar().setTitle("Messages");                                                 //This is to set the title the first time the app is launched.
+        //This is to set the title the first time the app is launched.
+        getSupportActionBar().setTitle("Email Helper");
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         db = new DatabaseHelper(getApplicationContext());

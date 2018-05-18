@@ -36,7 +36,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import java.util.*;
 import javax.mail.*;
-import javax.activation.*;
 import javax.mail.internet.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;

@@ -12,9 +12,9 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 
 import com.sun.mail.imap.IMAPFolder;
