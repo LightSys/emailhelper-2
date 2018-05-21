@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Stack;
 
 import javax.mail.BodyPart;
 import javax.mail.Folder;
@@ -191,35 +192,51 @@ public class MainActivity extends AppCompatActivity {
 
             Folder inbox = store.getFolder("Inbox");
             UIDFolder uf = (UIDFolder)inbox;
+            inbox.open(Folder.READ_ONLY);
 
             while(res.moveToNext()) {
+
                 Date today = Calendar.getInstance().getTime();
                 sender = new FromTerm(new InternetAddress(res.getString(0)));
-                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, today);
+
+                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.LE, today);
                 SearchTerm andTerm = new AndTerm(sender, newerThan);
                 Message messages[] = inbox.search(andTerm);
+
+                Stack<ConversationWindow> test = new Stack<>();
+                //The purpose of this stack is to organize more messages into time order.
                 for (int i = messages.length-1; i >= 0; i--) {
                     Message message = messages[i];
                     String messageID = Long.toString(uf.getUID(message));
+                    String subject = getSubjectFromMessage(message);
                     String body = getTextFromMessage(message);
-
+                    body = subject + "\n\n" + body;
                     ConversationWindow convo = new ConversationWindow(res.getString(0), null, body, messageID, false);
-                    boolean isInserted = db.insertWindowData(res.getString(0), res.getString(0), body, false, messageID);
+                    boolean isInserted = db.willInsertWindowData(res.getString(0), res.getString(0), body, false, messageID);
+                    if (isInserted == false) {
                         break;
+                    }
+                    test.push(convo);
                 }
+                while(!test.isEmpty()){
+                    ConversationWindow convo = test.pop();
+                    db.insertWindowData(convo.getEmail(),convo.getName(),convo.getMessage(),false,convo.getMessageId());
+                    //Puts them into the data base in order
+                }
+
+
             }
-
-                }
-
-
 
         } catch (MessagingException e) {
             e.printStackTrace();
+            System.out.println("Messaging Exception. Here!");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Exception.");
         }
     }
+
+
 
     /**********************************************************************************************
      *  Got these function from here:
@@ -234,6 +251,11 @@ public class MainActivity extends AppCompatActivity {
             Multipart mimeMultipart = (Multipart) message.getContent();
             result = getTextFromMimeMultipart(mimeMultipart);
         }
+        return result;
+    }
+    private String getSubjectFromMessage(Message message) throws MessagingException {
+        String result = "";
+        result = message.getSubject().toString();
         return result;
     }
 
