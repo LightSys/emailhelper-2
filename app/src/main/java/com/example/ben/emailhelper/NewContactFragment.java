@@ -53,7 +53,7 @@ public class NewContactFragment extends android.app.Fragment {
                         String insertEmail = emailField.getText().toString();
                         String insertFirstName = firstNameField.getText().toString();
                         String insertLastName = lastNameField.getText().toString();
-                        Contact contact = new Contact(insertEmail, insertFirstName, insertLastName);
+                        //Contact contact = new Contact(insertEmail, insertFirstName, insertLastName);
 
                         boolean isInserted = db.insertContactData(insertEmail, insertFirstName,
                                 insertLastName);
@@ -67,9 +67,9 @@ public class NewContactFragment extends android.app.Fragment {
                         if (isConvo) {
                             Toast.makeText(getActivity().getApplicationContext(), "Conversation Inserted", Toast.LENGTH_SHORT).show();
                         }
-                        else
+                        else {
                             Toast.makeText(getActivity().getApplicationContext(), "Conversation Not Inserted", Toast.LENGTH_SHORT).show();
-
+                        }
                         MainActivity mainActivity = (MainActivity) getActivity();
                         ContactFragment newContactFragment = new ContactFragment();
                         mainActivity.setFragmentNoBackStack(newContactFragment);

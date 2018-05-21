@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.Date;
+
 /**************************************************************************************************
  *                              Created by nicholasweg on 6/27/17.                                *
  *  Any changes made to this file regarding the database structure won't take effect unless you   *
@@ -99,9 +101,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
+    public boolean willInsertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_4 + " = " + messageID;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.getCount() > 0) {
+            cursor.close();
+            return false;
+        }
+        return true;
+    }
+
     public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_4 + " = " + messageID;
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.getCount() > 0) {
@@ -112,7 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(WINDOW_COL_1, email);
         contentValues.put(WINDOW_COL_2, name);
         contentValues.put(WINDOW_COL_3, message);
-        contentValues.put(WINDOW_COL_4, messageID);
+        contentValues.put(WINDOW_COL_5, messageID);
         contentValues.put(WINDOW_COL_6, sent_by_me);
         long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
         if (result == -1)

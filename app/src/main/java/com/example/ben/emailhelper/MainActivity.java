@@ -185,38 +185,12 @@ public class MainActivity extends AppCompatActivity {
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
         try {
-            //Session session = Session.getDefaultInstance(props, null);
-            //Store store = session.getStore("imaps");
-            //store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
-
             Session session = Session.getDefaultInstance(props, null);
             IMAPStore store = (IMAPStore) session.getStore("imaps");
             store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
 
-
             Folder inbox = store.getFolder("Inbox");
             UIDFolder uf = (UIDFolder)inbox;
-            inbox.open(Folder.READ_WRITE);
-
-            /*inbox.addMessageCountListener(new MessageCountListener() {
-                @Override
-                public void messagesAdded(MessageCountEvent messageCountEvent) {
-                    System.out.println("Message Count Event Fired");
-                    newEmailReceived();
-                }
-
-                @Override
-                public void messagesRemoved(MessageCountEvent messageCountEvent) {
-                    System.out.println("Message Removed Event Fired");
-                }
-            });
-
-            inbox.addMessageChangedListener(new MessageChangedListener() {
-                @Override
-                public void messageChanged(MessageChangedEvent messageChangedEvent) {
-                    System.out.println("Message Changed Event Fired");
-                }
-            });*/
 
             while(res.moveToNext()) {
                 Date today = Calendar.getInstance().getTime();
@@ -231,43 +205,16 @@ public class MainActivity extends AppCompatActivity {
 
                     ConversationWindow convo = new ConversationWindow(res.getString(0), null, body, messageID, false);
                     boolean isInserted = db.insertWindowData(res.getString(0), res.getString(0), body, false, messageID);
-                    if (isInserted == false)
                         break;
                 }
             }
 
-            /*int freq = 2000;
-            boolean supportsIdle = false;
-            try {
-                if (inbox instanceof  IMAPFolder) {
-                    IMAPFolder f = (IMAPFolder) inbox;
-                    f.idle();
-                    supportsIdle = true;
                 }
-            } catch (FolderClosedException fex) {
-                throw fex;
-            } catch (MessagingException mex) {
-                supportsIdle = false;
-            }
 
-            for (; ; ) {
-                if (supportsIdle && inbox instanceof IMAPFolder) {
-                    IMAPFolder f = (IMAPFolder) inbox;
-                    f.idle();
-                    System.out.println("IDLE done");
-                }
-                else {
-                    Thread.sleep(freq); // sleep for freq milliseconds
 
-                    // This is to force the IMAP server to send us
-                    // EXISTS notifications.
-                    inbox.getMessageCount();
-                }
-            }*/
 
         } catch (MessagingException e) {
             e.printStackTrace();
-            System.out.println("Messaging Exception.");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Exception.");
