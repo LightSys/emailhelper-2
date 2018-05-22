@@ -103,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean willInsertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_4 + " = " + messageID;
+        String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + messageID;
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.getCount() > 0) {
             cursor.close();
@@ -114,7 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_4 + " = " + messageID;
+        String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + messageID;
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.getCount() > 0) {
             cursor.close();
@@ -152,6 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select FIRSTNAME from saved_contacts where EMAIL = ?", new String[]{email}, null);
         return name;
     }
+
 
     public Integer deleteContactData(String email) {
         SQLiteDatabase db = this.getWritableDatabase();

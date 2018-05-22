@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Stack;
 
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -191,7 +192,9 @@ public class ConversationFragment extends android.app.Fragment {
 
         @Override
         protected Long doInBackground(URL... params) {
-            fetchTimeLineAsync();
+            //fetchTimeLineAsync();
+            com.example.ben.emailhelper.GetMail.getMail(db);
+
             return null;
         }
 
@@ -205,7 +208,7 @@ public class ConversationFragment extends android.app.Fragment {
      *                  Function to put database items into the conversationList                  *
      **********************************************************************************************/
 
-    public void fetchTimeLineAsync() {
+    /*public void fetchTimeLineAsync() {
         Cursor res = db.getContactData();
         SearchTerm sender;
         Properties props = System.getProperties();
@@ -223,20 +226,26 @@ public class ConversationFragment extends android.app.Fragment {
             while(res.moveToNext()) {
                 Date today = Calendar.getInstance().getTime();
                 sender = new FromTerm(new InternetAddress(res.getString(0)));
-                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, today);
+                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.LE, today);
                 SearchTerm andTerm = new AndTerm(sender, newerThan);
                 Message messages[] = inbox.search(andTerm);
+                Stack<ConversationWindow> test = new Stack<>();//The purpose of this stack is to organize more messages into time order.
                 for (int i = messages.length-1; i >= 0; i--) {
                     Message message = messages[i];
                     String messageID = Long.toString(uf.getUID(message));
+                    String subject = MainActivity.getSubjectFromMessage(message);
                     String body = MainActivity.getTextFromMessage(message);
-
-                    ConversationWindow convo = new ConversationWindow(res.getString(0), null, body, messageID, false);
-                    boolean isInserted = db.insertWindowData(res.getString(0), res.getString(0), body, false, messageID);
-                    if (isInserted == false)
+                    String output = subject + "\n\n" + body;
+                    ConversationWindow convo = new ConversationWindow(res.getString(0), null, output, messageID, false);
+                    boolean isInserted = db.willInsertWindowData(res.getString(0), res.getString(0), output, false, messageID);
+                    if (isInserted == false) {
                         break;
+                    }
+                    else{
+                        test.push(convo);
+                    }
                     // This moves the conversation with the newest email to the top of the list.
-                    else {
+                    /*else {
                         for (Conversation conversation : conversationList) {
                             if (conversation.getEmail().equals(convo.getEmail())) {
                                 int index = conversationList.indexOf(conversation);
@@ -244,7 +253,12 @@ public class ConversationFragment extends android.app.Fragment {
                                 conversationList.add(0,conversation);
                             }
                         }
-                    }
+                    }*//*
+                }
+                while(!test.isEmpty()){
+                    ConversationWindow convo = test.pop();
+                    db.insertWindowData(convo.getEmail(),convo.getName(),convo.getMessage(),false,convo.getMessageId());
+                    //Puts them into the database in order
                 }
             }
         } catch (MessagingException e) {
@@ -254,5 +268,5 @@ public class ConversationFragment extends android.app.Fragment {
             e.printStackTrace();
             System.out.println("Exception.");
         }
-    }
+    }*/
 }
