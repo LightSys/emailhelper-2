@@ -5,6 +5,6 @@
     android:id="@+id/message_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ben.emailhelper.MessageWindowActivity">
+    tools:context="org.lightsys.emailhelper.MessageWindowActivity">
 
 </android.support.constraint.ConstraintLayout>

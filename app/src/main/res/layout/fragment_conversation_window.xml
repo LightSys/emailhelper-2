@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="#e1e1e1"
     android:orientation="vertical"
-    tools:context="com.example.ben.emailhelper.ConversationWindowFragment">
+    tools:context="org.lightsys.emailhelper.Conversation.ConversationWindowFragment">
 
     <RelativeLayout
         android:id="@+id/messageList"

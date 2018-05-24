@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.ben.emailhelper.ContactFragment">
+    tools:context="org.lightsys.emailhelper.Contact.ContactFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
