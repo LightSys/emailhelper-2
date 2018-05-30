@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="24dp"
+    android:layout_width="wrap_content">
+    <item
+        android:id="@+id/action_new_contact"
+        android:icon="@drawable/ic_person_add_white_24dp"
+        android:title="@string/action_new_contact"
+        android:layout_height="4dp"
+        android:layout_width="4dp"
+        app:showAsAction="ifRoom"/>
+</menu>

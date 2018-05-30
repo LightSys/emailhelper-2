@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="24dp" android:layout_width="wrap_content">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="24dp"
+    android:layout_width="wrap_content">
+    <item
+        android:id="@+id/action_new_contact"
+        android:icon="@drawable/ic_person_add_white_24dp"
+        android:title="@string/action_new_contact"
+        android:layout_height="4dp"
+        android:layout_width="4dp"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/message_menu_settings"
-        android:title="Settings" />
+        android:title="Settings"
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/message_menu_contacts"
-        android:title="Contacts" />
+        android:title="Contacts"
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/message_menu_add_contact"
-        android:title="Add Contacts" />
+        android:title="Add Contact"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/message_menu_credentials"
+        android:title="Update Credentials"
+        app:showAsAction="never"/>
 
 </menu>

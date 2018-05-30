@@ -1,6 +1,5 @@
 package org.lightsys.emailhelper;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,6 +8,8 @@ import android.app.Service;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -25,6 +26,8 @@ import android.util.Log;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Random;
+
+import static java.lang.Math.pow;
 
 
 /**
@@ -43,11 +46,11 @@ public class AutoUpdater extends Service {
     private static final int ONE_SECOND     = 1000;
     private static final int ONE_MINUTE     = ONE_SECOND * 60;
     private static final int NEVER          = -1;
-    //private static final int updateTime     = 30 * ONE_SECOND;
     private emailNotification gotMail;
 
     private DatabaseHelper db; //local database
-    org.lightsys.emailhelper.Settings set;
+    private SharedPreferences sp;
+    private Resources r;
 
     private int      updateMillis = NEVER; //number of milliseconds between updates
     private Calendar prevDate     = Calendar.getInstance();
@@ -63,8 +66,6 @@ public class AutoUpdater extends Service {
 
     public AutoUpdater() {
         gotMail = new emailNotification();
-
-
         Runnable timerRunnable = new Runnable() {
             @Override
             public void run() {
@@ -93,6 +94,8 @@ public class AutoUpdater extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         db = new DatabaseHelper(getApplicationContext());
+        sp = getSharedPreferences("myPreferences", 0);
+        r = getResources();
         checkForUpdates();
 
         //keeps service running after app is shut down
@@ -139,6 +142,7 @@ public class AutoUpdater extends Service {
         );
 
         if (isAlarm == null) {
+        SharedPreferences sp = getSharedPreferences("myPreferences",0);
             // Does not exist -- create a new one.
             PendingIntent wakeAlarm = PendingIntent.getBroadcast(
                     getApplicationContext(),
@@ -149,11 +153,13 @@ public class AutoUpdater extends Service {
 
             // Set a 15 minute interval for the alarm.
             AlarmManager alarms = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-            int updateTime = set.getUpdateFrequency() * 60^set.getUpdateTimePeriod();
+            int updateFrequency = Integer.valueOf(sp.getString(getResources().getString(R.string.key_update_frequency),getResources().getString(R.string.default_update_frequency)));
+            int updateTimePeriod = Integer.valueOf(sp.getString(getResources().getString(R.string.key_update_time_period),getResources().getString(R.string.value_time_period_minutes)));
+            long updateTime = (long) (updateFrequency * pow(60,updateTimePeriod) * 1000);
             alarms.setRepeating(
                     AlarmManager.RTC_WAKEUP,
-                    SystemClock.elapsedRealtime() + (updateTime), // AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-                    updateTime, // AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                    SystemClock.elapsedRealtime() + (updateTime),
+                    updateTime,
                     wakeAlarm
             );
         }
@@ -195,14 +201,18 @@ public class AutoUpdater extends Service {
 
 
     private void checkForUpdates(){
-        doUpdate help = new doUpdate();
-        help.execute();
+        GetMail mailer = new GetMail(db,sp,r);
+        mailer.execute();
     }
 
     /**********************************************************************************************
      *                                  Notification Builder                                      *
      **********************************************************************************************/
     private void sendNotification(String title, String subject){
+        SharedPreferences sp = getSharedPreferences("myPreferences",0);
+        if(!sp.getBoolean(getResources().getString(R.string.key_update_show_notifications),getResources().getBoolean(R.bool.default_update_show_notifications))){
+            return;
+        }
 
         Context context = this;
         NotificationManager notificationManager = (NotificationManager)
@@ -261,24 +271,5 @@ public class AutoUpdater extends Service {
             screenWakeLock.release();
         }
     }
-    //Async task to get mail in Background
-    private class doUpdate extends AsyncTask<URL, Integer, Long> {
-        protected void onProgressUpdate() {
-        }
-        @Override
-        protected Long doInBackground(URL... params) {
-            GetMail temp = new GetMail();
-            gotMail = temp.getMail(db);
-            while(gotMail.status()){
-                NotificationBase noti = gotMail.pop();
-                sendNotification(noti.getTitle(),noti.getSubject());
-            }
 
-            return null;
-        }
-
-        protected void onPostExecute(Long result) {
-
-        }
-    }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="@bool/default_update_show_notifications"
+        android:key="@string/key_update_show_notifications"
+        android:summaryOff="@string/summary_notifications_off"
+        android:summaryOn="@string/summary_notifications_on"
+        android:title="@string/title_update_show_notifications" />
+    <CheckBoxPreference
+        android:defaultValue="@bool/default_update_show_messages"
+        android:key="@string/key_update_show_messages"
+        android:summaryOff="@string/summary_messages_off"
+        android:summaryOn="@string/summary_messages_on"
+        android:title="@string/title_update_show_messages"/>
+
+    <ListPreference
+        android:title="@string/title_update_time_period"
+        android:key="@string/key_update_time_period"
+        android:entries="@array/array_time_period_labels"
+        android:entryValues="@array/array_time_period_values"
+        android:defaultValue="@integer/value_time_period_minutes"/>
+
+    <EditTextPreference
+        android:defaultValue="@string/default_update_frequency"
+        android:key="@string/key_update_frequency"
+        android:title="@string/title_update_frequency"/>
+</PreferenceScreen>

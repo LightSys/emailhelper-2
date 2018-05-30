@@ -1,7 +1,11 @@
 package org.lightsys.emailhelper.Conversation;
 
+import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,10 +19,13 @@ import android.widget.Toast;
 
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
+import org.lightsys.emailhelper.GetMail;
 import org.lightsys.emailhelper.MessageWindowActivity;
+import org.lightsys.emailhelper.NotificationBase;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,15 +39,21 @@ public class ConversationFragment extends android.app.Fragment {
     private RecyclerView recyclerView;
     private ConversationAdapter cAdapter;
     private SwipeRefreshLayout swipeContainer;
-    View rootView;                                                                                  //This variable had to be made global so that the list wouldn't duplicate data
+    View rootView;
+    SharedPreferences sp;
+    Resources r;
+    //This variable had to be made global so that the list wouldn't duplicate data
 
     public ConversationFragment() {
         // Required empty public constructor
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = getActivity().getApplication().getSharedPreferences("myPreferences", 0);
+        r = getResources();
     }
 
     /**********************************************************************************************
@@ -65,16 +78,18 @@ public class ConversationFragment extends android.app.Fragment {
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                // Code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully
-                    //TODO FIX THIS
-                //GetMail mail = new GetMail();
-                //mail.execute();
-           }
-            });
+            @Override
+            public void onRefresh() {
+            // Code to refresh the list here.
+            GetMail mailer = new GetMail(db,sp,r);
+            mailer.execute();
+            // Make sure you call swipeContainer.setRefreshing(false)
+            swipeContainer.setRefreshing(false);//Must be called
+            Toast.makeText(getActivity().getApplicationContext(), "Refresh in Progress",
+                        Toast.LENGTH_SHORT).show();
+            prepareConversationData();
+            }
+        });
         return rootView;
     }
 
@@ -140,7 +155,6 @@ public class ConversationFragment extends android.app.Fragment {
                 intent.putExtra("email", conversation.getEmail());
                 startActivity(intent);
             }
-
             @Override
             public void onLongClick(View view, int position) {}
         }));
@@ -166,4 +180,5 @@ public class ConversationFragment extends android.app.Fragment {
         }
         cAdapter.notifyDataSetChanged();
     }
+
 }

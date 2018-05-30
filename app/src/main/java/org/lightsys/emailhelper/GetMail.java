@@ -1,12 +1,17 @@
 package org.lightsys.emailhelper;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.sun.mail.imap.IMAPStore;
 
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
@@ -27,8 +32,27 @@ import javax.mail.search.FromTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
-public class GetMail {
-    public static emailNotification getMail(DatabaseHelper db) {
+public class GetMail extends AsyncTask<URL, Integer, Long> {
+    DatabaseHelper db;
+    SharedPreferences sp;
+    Resources r;
+    public GetMail(DatabaseHelper databaseHelper,SharedPreferences sharedPreferences,Resources resources){
+        db = databaseHelper;
+        sp = sharedPreferences;
+        r = resources;
+    }
+    protected void onProgressUpdate() {
+    }
+    @Override
+    protected Long doInBackground(URL... params) {
+        getMail(sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages)));
+        //showMessage can be anything because it is not getting pushed to a notification
+        return null;
+    }
+    protected void onPostExecute(Long result) {
+
+    }
+    public emailNotification getMail(boolean showMessage) {
         emailNotification receivedNew = new emailNotification();
         Cursor res = db.getContactData();
         SearchTerm sender;
@@ -65,11 +89,11 @@ public class GetMail {
 
                         }
                         String Title = "New Message from " + db.getContactName(convo.getEmail());
-
-                        String NotiMessage = convo.getMessage();
-                        //int lengthOfMessage = NotiMessage.length();
-                        //NotiMessage = NotiMessage.substring(0,subject.length()+lengthOfMessage);
-                        receivedNew.push(Title,NotiMessage);
+                        String NotificationMessage = convo.getMessage();
+                        if(!showMessage){
+                            NotificationMessage = NotificationMessage.substring(0,subject.length());
+                        }
+                        receivedNew.push(Title,NotificationMessage);
                     }
 
                 }

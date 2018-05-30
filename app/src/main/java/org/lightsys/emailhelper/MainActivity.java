@@ -6,25 +6,20 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.Preference;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import org.lightsys.emailhelper.Contact.ContactActivity;
 import org.lightsys.emailhelper.Contact.ContactFragment;
+import org.lightsys.emailhelper.Contact.NewContactActivity;
 import org.lightsys.emailhelper.Conversation.ConversationFragment;
 
-import java.io.IOException;
-import java.util.Calendar;
-
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.internet.MimeMultipart;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     ConversationFragment newConversationFragment = new ConversationFragment();
     ContactFragment newContactFragment = new ContactFragment();
-    SettingsFragment newSettingsFragment = new SettingsFragment();
-    Settings appSettings;
 
     int newestMessageNumber = 0;
 
@@ -65,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Email Helper");
 
         //start Updater
         Intent updateIntent = new Intent(getBaseContext(), AutoUpdater.class);
@@ -72,9 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences("myPreferences", 0);
-        HelperClass._Email = sharedPref.getString("email", "");
-        HelperClass._Password = sharedPref.getString("password", "");
-        HelperClass.savedCredentials = sharedPref.getBoolean("check", false);
+//        HelperClass._Email = sharedPref.getString("email", "");
+//        HelperClass._Password = sharedPref.getString("password", "");
+//        HelperClass.savedCredentials = sharedPref.getBoolean("check", false);
+        HelperClass._Email = password.User;
+        HelperClass._Password = password.auth;
+        HelperClass.savedCredentials = true;
 
         //Gets Credentials if the app doesn't have them
         if (!HelperClass.savedCredentials) {
@@ -84,9 +81,19 @@ public class MainActivity extends AppCompatActivity {
 
         setFragmentNoBackStack(newConversationFragment);
         //This is to set the title the first time the app is launched.
-        getSupportActionBar().setTitle("Email Helper");
+
         db = new DatabaseHelper(getBaseContext());
-        appSettings = new Settings();
+
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        newConversationFragment.prepareConversationData();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        newConversationFragment.prepareConversationData();
 
     }
     @Override
@@ -103,11 +110,23 @@ public class MainActivity extends AppCompatActivity {
             startActivity(startSettings);
             return true;
         }
-        /*else if(id == R.id.message_menu_contacts){
-            Intent startSettings = new Intent(this,ContactActivity.class);
-            startActivity(startSettings);
+        else if(id == R.id.message_menu_contacts){
+            Intent startContacts = new Intent(this,ContactActivity.class);
+            startActivity(startContacts);
             return true;
-        }*/
+        }
+        else if(id == R.id.message_menu_add_contact){
+            Intent startNewContact = new Intent(this, NewContactActivity.class);
+            startActivity(startNewContact);
+            return true;
+        }
+        else if(id == R.id.action_new_contact){
+            Intent startNewContact = new Intent(this, NewContactActivity.class);
+            startActivity(startNewContact);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+
     }
+
 }

@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Email Helper</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="title_fragment_messagelist">Messages</string>
-    <string name="hello_world">Hello World!</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -25,4 +23,37 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings">Settings</string>
+    <string name="contacts">Contacts</string>
+    <string name="new_contact">New Contact</string>
+    <string name="action_new_contact">New Contact Button</string>
+
+
+    <!-- SharedPreference Strings-->
+    <!-- Keys -->
+    <string name = "key_update_frequency" translatable="false">updateFrequency</string>
+    <string name = "key_update_time_period" translatable="false">updateTimePeriod</string>
+    <string name = "key_update_show_notifications" translatable="false">showNotifications</string>
+    <string name = "key_update_show_messages" translatable="false">showMessages</string>
+    <string name = "key_email" translatable="false">email</string>
+    <string name = "key_password" translatable="false">password</string>
+    <!-- Values -->
+    <string name = "value_time_period_minutes" translatable="false">1</string>
+    <string name = "value_time_period_hours" translatable="false">2</string>
+    <!-- Defaults -->
+    <string name = "default_update_frequency" translatable="false">30</string>
+    <string name = "default_email" translatable="false">john.doe@gmail.com</string>
+    <string name = "default_password" translatable="false">******</string>
+    <!-- Titles -->
+    <string name = "title_update_frequency" translatable="true">Update Frequency</string>
+    <string name = "title_update_time_period" translatable="true">Update Time Period</string>
+    <string name = "entry_time_period_minutes" translatable="true">Minutes</string>
+    <string name = "entry_time_period_hours" translatable="true">Hours</string>
+    <string name = "title_update_show_notifications" translatable="true">Show Notifications</string>
+    <string name = "title_update_show_messages" translatable="true">Show Messages</string>
+    <!-- Summaries -->
+    <string name = "summary_notifications_on" translatable="true">On</string>
+    <string name = "summary_notifications_off" translatable="true">Off</string>
+    <string name = "summary_messages_on" translatable="true">On</string>
+    <string name = "summary_messages_off" translatable="true">Off</string>
+
 </resources>

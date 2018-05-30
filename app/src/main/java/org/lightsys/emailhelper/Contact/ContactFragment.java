@@ -1,5 +1,6 @@
 package org.lightsys.emailhelper.Contact;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,12 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.lightsys.emailhelper.Contact.Contact;
-import org.lightsys.emailhelper.Contact.ContactAdapter;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
-import org.lightsys.emailhelper.MainActivity;
-import org.lightsys.emailhelper.NewContactFragment;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 
@@ -34,17 +31,12 @@ public class ContactFragment extends android.app.Fragment {
     private List<Contact> contactList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
-    View rootView;                                                                                  //This variable had to be made global so that the list wouldn't duplicate data
+    View rootView;    //This variable had to be made global so that the list wouldn't duplicate data
 
-    //These variables handle the button and text field for adding items to the list
-    //Right now the EditText field isn't doing anything and the layout needs to change for that
-    private EditText newContact;
-
-    Button addContactButton;
 
     public ContactFragment() {
-        // Required empty public constructor
-    }
+
+    }// Required empty public constructor
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +60,6 @@ public class ContactFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_contact, container, false);
         makeRecyclerView(rootView);
-        addContactButton = (Button) rootView.findViewById(R.id.addContactButton);
-        //addItems();
-        goToNewContact();
         return rootView;
     }
 
@@ -116,8 +105,6 @@ public class ContactFragment extends android.app.Fragment {
     public void makeRecyclerView(View view) {
         db = new DatabaseHelper(getActivity().getApplicationContext());                             //Creates instance of database
 
-        newContact = (EditText) view.findViewById(R.id.addContactField);                            //Sets newEmail variable to the EditText field
-
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_contact_view);                //Makes the RecyclerView
 
         contactAdapter = new ContactAdapter(contactList);                                           //Adapter for the Contacts
@@ -148,24 +135,6 @@ public class ContactFragment extends android.app.Fragment {
         prepareContactData();
     }
 
-    /**********************************************************************************************
-     *              Function for when the plus button is clicked to add a new contact             *
-     **********************************************************************************************/
-
-    public void goToNewContact() {
-        addContactButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainActivity mainActivity = (MainActivity) getActivity();
-                        if (mainActivity instanceof MainActivity) {
-                            NewContactFragment newContactFragment = new NewContactFragment();
-                            mainActivity.setFragment(newContactFragment);
-                        }
-                    }
-                }
-        );
-    }
 
     /**********************************************************************************************
      *                      Clears contactList and inserts data from database                     *
