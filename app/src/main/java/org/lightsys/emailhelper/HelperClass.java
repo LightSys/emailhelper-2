@@ -22,7 +22,6 @@ import java.io.OutputStreamWriter;
 
 public class HelperClass extends AppCompatActivity{
     public static boolean savedCredentials = false;
-
     public static String _Email = "";
     public static String _Password = "";
 }

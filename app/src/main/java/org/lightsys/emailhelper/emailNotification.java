@@ -25,15 +25,10 @@ public class emailNotification {
             gotMail = true;
         }
     }
-    public NotificationBase pop(){
-        if(newEmails.size()==1){
+    public NotificationBase pop() {
+        if (newEmails.size() == 1) {
             gotMail = false;
         }
         return newEmails.pop();
-
     }
-
-
-
-
 }

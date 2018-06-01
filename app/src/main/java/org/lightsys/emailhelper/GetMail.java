@@ -1,13 +1,18 @@
 package org.lightsys.emailhelper;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.sun.mail.imap.IMAPStore;
 
+import org.lightsys.emailhelper.Conversation.Conversation;
+import org.lightsys.emailhelper.Conversation.ConversationFragment;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 
 import java.io.IOException;
@@ -36,23 +41,24 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
     DatabaseHelper db;
     SharedPreferences sp;
     Resources r;
-    public GetMail(DatabaseHelper databaseHelper,SharedPreferences sharedPreferences,Resources resources){
-        db = databaseHelper;
-        sp = sharedPreferences;
-        r = resources;
-    }
-    protected void onProgressUpdate() {
+    Context c;
+
+    public GetMail(Context context){
+        c = context;
+        db = new DatabaseHelper(context);
+        r = c.getResources();
+        sp = c.getSharedPreferences(r.getString(R.string.preferences),0);
+
     }
     @Override
     protected Long doInBackground(URL... params) {
-        getMail(sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages)));
-        //showMessage can be anything because it is not getting pushed to a notification
+        getMail();
         return null;
     }
     protected void onPostExecute(Long result) {
 
     }
-    public emailNotification getMail(boolean showMessage) {
+    public emailNotification getMail() {
         emailNotification receivedNew = new emailNotification();
         Cursor res = db.getContactData();
         SearchTerm sender;
@@ -90,6 +96,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                         }
                         String Title = "New Message from " + db.getContactName(convo.getEmail());
                         String NotificationMessage = convo.getMessage();
+                        boolean showMessage = sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages));
                         if(!showMessage){
                             NotificationMessage = NotificationMessage.substring(0,subject.length());
                         }
@@ -100,7 +107,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 while (!test.isEmpty()) {
                     ConversationWindow convo = test.pop();
                     db.insertWindowData(convo.getEmail(), convo.getName(), convo.getMessage(), false, convo.getMessageId());
-                    //Puts them into the database in order
+                    db.updateConversation(convo.getEmail(),CommonMethods.getCurrentTime());
                 }
             }
         } catch (MessagingException e) {

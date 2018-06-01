@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.Date;
-
 /**************************************************************************************************
  *                              Created by nicholasweg on 6/27/17.                                *
  *  Any changes made to this file regarding the database structure won't take effect unless you   *
@@ -16,7 +14,7 @@ import java.util.Date;
  *  in the future. Otherwise you can use the onUpgrade function.                                  *
  **************************************************************************************************/
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper{
     public static final String DATABASE_NAME = "EmailHelper.db";
     // Conversation variables
     public static final String CONVERSATION_TABLE_NAME = "active_messages";
@@ -52,10 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(conversationQuery);
         db.execSQL(contactQuery);
         db.execSQL(windowQuery);
-
     }
-
-
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -147,7 +142,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    //I don't think I actually use and that may be because it doesn't work
     public String getContactName(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         String name = "";
@@ -160,4 +154,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(CONTACT_TABLE_NAME, "EMAIL = ?", new String[] {email});
     }
+    public void updateConversation(String email, String currentTime){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query,new String[] {email});
+        query = "delete from "+CONVERSATION_TABLE_NAME+" where EMAIL = ?";
+        res.moveToNext();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, email);
+        contentValues.put(CONVO_COL_2,res.getString(res.getColumnIndex(CONVO_COL_2)));
+        contentValues.put(CONVO_COL_3,currentTime);
+        contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));
+        db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
+        db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+    }
+
 }

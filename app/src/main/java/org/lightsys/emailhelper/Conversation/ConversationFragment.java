@@ -1,12 +1,13 @@
 package org.lightsys.emailhelper.Conversation;
 
-import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +22,6 @@ import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.GetMail;
 import org.lightsys.emailhelper.MessageWindowActivity;
-import org.lightsys.emailhelper.NotificationBase;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 
@@ -29,10 +29,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConversationFragment extends android.app.Fragment {
-
-    //This is an instance of the database for testing
-    DatabaseHelper db;
+public class ConversationFragment extends android.app.Fragment{
 
     //These variables are used in the list view
     private List<Conversation> conversationList = new ArrayList<>();
@@ -42,18 +39,17 @@ public class ConversationFragment extends android.app.Fragment {
     View rootView;
     SharedPreferences sp;
     Resources r;
-    //This variable had to be made global so that the list wouldn't duplicate data
+    DatabaseHelper db;
 
     public ConversationFragment() {
-        // Required empty public constructor
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sp = getActivity().getApplication().getSharedPreferences("myPreferences", 0);
         r = getResources();
+        sp = getActivity().getApplication().getSharedPreferences(getString(R.string.preferences), 0);
+        db = new DatabaseHelper(getActivity().getApplicationContext());
     }
 
     /**********************************************************************************************
@@ -73,21 +69,16 @@ public class ConversationFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
         makeRecyclerView(rootView);
-        db = new DatabaseHelper(rootView.getContext());
         // Lookup the swipe container view
-        swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
+        swipeContainer = rootView.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
+        //TODO to easily find where the refresh code is.
+
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            // Code to refresh the list here.
-            GetMail mailer = new GetMail(db,sp,r);
-            mailer.execute();
-            // Make sure you call swipeContainer.setRefreshing(false)
-            swipeContainer.setRefreshing(false);//Must be called
-            Toast.makeText(getActivity().getApplicationContext(), "Refresh in Progress",
-                        Toast.LENGTH_SHORT).show();
-            prepareConversationData();
+                refresh myRefresher = new refresh();
+                myRefresher.execute();
             }
         });
         return rootView;
@@ -138,9 +129,9 @@ public class ConversationFragment extends android.app.Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);                        //Makes the RecyclerView
 
-        cAdapter = new ConversationAdapter(conversationList);                                       //Adapter for the Conversations
+        cAdapter = new ConversationAdapter(conversationList);//Adapter for the Conversations
 
-        RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager cLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(cLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -150,7 +141,7 @@ public class ConversationFragment extends android.app.Fragment {
             @Override
             public void onClick(View view, int position) {
                 Conversation conversation = conversationList.get(position);
-                Toast.makeText(getActivity().getApplicationContext(), conversation.getEmail() + " is selected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), conversation.getName() + " is selected!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity().getBaseContext(), MessageWindowActivity.class);
                 intent.putExtra("email", conversation.getEmail());
                 startActivity(intent);
@@ -180,5 +171,20 @@ public class ConversationFragment extends android.app.Fragment {
         }
         cAdapter.notifyDataSetChanged();
     }
-
+    private class refresh extends AsyncTask<URL, Integer, Long>{
+        Handler handler;
+        @Override
+        protected Long doInBackground(URL... urls) {
+            handler = new Handler(Looper.getMainLooper());
+            GetMail mailer = new GetMail(getActivity().getApplicationContext());
+            mailer.getMail();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Long result){
+            swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.refresh_finished), Toast.LENGTH_SHORT).show();
+            prepareConversationData();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -35,6 +36,10 @@ public class MessageWindowActivity extends AppCompatActivity {
         email = intent.getStringExtra("email");
         passToFragment();
         setFragmentNoBackStack(chats);
+        ActionBar actionBar = this.getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /**********************************************************************************************
