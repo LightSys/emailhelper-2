@@ -145,7 +145,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public String getContactName(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         String name = "";
-        Cursor res = db.rawQuery("select FIRSTNAME from saved_contacts where EMAIL = ?", new String[]{email}, null);
+        Cursor res = db.rawQuery("select * from saved_contacts where EMAIL = ?", new String[]{email}, null);
+        if(res.moveToNext()){
+            String firstname = res.getString(res.getColumnIndex(CONTACT_COL_2));
+            String lastname  = res.getString(res.getColumnIndex(CONTACT_COL_3));
+            name = firstname + " "+ lastname;
+        }
         return name;
     }
 

@@ -2,4 +2,5 @@
 <resources>
     <bool name = "default_update_show_notifications">true</bool>
     <bool name = "default_update_show_messages">false</bool>
+    <bool name = "default_valid_credentials">false</bool>
 </resources>

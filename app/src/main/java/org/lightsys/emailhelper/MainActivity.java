@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("Email Helper");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle(getString(R.string.app_name));
 
 
         //start Updater
@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity{
 
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
-//        HelperClass._Email = sharedPref.getString("email", "");
-//        HelperClass._Password = sharedPref.getString("password", "");
-//        HelperClass.savedCredentials = sharedPref.getBoolean("check", false);
+//        HelperClass._Email = sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email));
+//        HelperClass._Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
+//        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
         //TODO replace hard code
         HelperClass._Email = password.User;
         HelperClass._Password = password.auth;
@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity{
         Contact send2 = password.sender2;
         db.insertContactData(send2.getEmail(),send2.getFirstName(),send2.getLastName());
         db.insertConversationData(send2.getEmail(),send2.getFirstName()+" "+send2.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
-
         //Hard code ^^^^^
 
         //Gets Credentials if the app doesn't have them
@@ -100,22 +99,24 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.message_menu_settings) {
-            Intent startSettings = new Intent(this, SettingsActivity.class);
-            startActivity(startSettings);
-            return true;
-        } else if (id == R.id.message_menu_contacts) {
-            Intent startContacts = new Intent(this, ContactActivity.class);
-            startActivity(startContacts);
-            return true;
-        } else if (id == R.id.message_menu_add_contact) {
-            Intent startNewContact = new Intent(this, NewContactActivity.class);
-            startActivity(startNewContact);
-            return true;
-        } else if (id == R.id.action_new_contact) {
-            Intent startNewContact = new Intent(this, NewContactActivity.class);
-            startActivity(startNewContact);
-            return true;
+        switch(id){
+            case R.id.message_menu_settings:
+                Intent startSettings = new Intent(this, SettingsActivity.class);
+                startActivity(startSettings);
+                return true;
+            case R.id.message_menu_contacts:
+                Intent startContacts = new Intent(this, ContactActivity.class);
+                startActivity(startContacts);
+                return true;
+            case R.id.message_menu_add_contact:
+            case R.id.action_new_contact:
+                Intent startNewContact = new Intent(this, NewContactActivity.class);
+                startActivity(startNewContact);
+                return true;
+            case R.id.message_menu_credentials:
+                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

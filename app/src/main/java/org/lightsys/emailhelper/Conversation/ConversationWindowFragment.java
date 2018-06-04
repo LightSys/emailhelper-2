@@ -13,18 +13,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.HelperClass;
 import org.lightsys.emailhelper.R;
-
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -32,6 +30,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import xdroid.toaster.Toaster;
 
 public class ConversationWindowFragment extends android.app.Fragment {
 
@@ -178,7 +177,12 @@ public class ConversationWindowFragment extends android.app.Fragment {
             message.setSubject("Conversation Email");
             message.setText(persistantMessage);
             Transport.send(message);
-        } catch (MessagingException e) {
+        }
+        catch(AuthenticationFailedException e){
+            e.printStackTrace();
+            System.out.println("Messaging Exception.");
+            Toaster.toastLong(R.string.invalid_credentials_message);
+        }catch (MessagingException e) {
             e.printStackTrace();
         }
     }

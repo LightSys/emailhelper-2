@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Stack;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -110,6 +111,10 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                     db.updateConversation(convo.getEmail(),CommonMethods.getCurrentTime());
                 }
             }
+        } catch(AuthenticationFailedException e){
+            e.printStackTrace();
+            System.out.println("Messaging Exception.");
+            receivedNew.setInvalid_Credentials();
         } catch (MessagingException e) {
             e.printStackTrace();
             System.out.println("Messaging Exception.");

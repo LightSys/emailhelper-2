@@ -22,8 +22,10 @@ import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.GetMail;
 import org.lightsys.emailhelper.MessageWindowActivity;
+import org.lightsys.emailhelper.NotificationBase;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
+import org.lightsys.emailhelper.emailNotification;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -173,17 +175,23 @@ public class ConversationFragment extends android.app.Fragment{
     }
     private class refresh extends AsyncTask<URL, Integer, Long>{
         Handler handler;
+        emailNotification creds;
         @Override
         protected Long doInBackground(URL... urls) {
             handler = new Handler(Looper.getMainLooper());
             GetMail mailer = new GetMail(getActivity().getApplicationContext());
-            mailer.getMail();
+            creds = mailer.getMail();
             return null;
         }
         @Override
         protected void onPostExecute(Long result){
             swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
-            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.refresh_finished), Toast.LENGTH_SHORT).show();
+            if(creds.getInvalid_Credentials()){
+                Toast.makeText(getActivity().getApplicationContext(),getString(R.string.invalid_credentials),Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.refresh_finished), Toast.LENGTH_SHORT).show();
+            }
             prepareConversationData();
         }
     }

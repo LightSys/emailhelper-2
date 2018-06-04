@@ -9,19 +9,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,22 +27,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import com.sun.mail.imap.IMAPStore;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.UIDFolder;
+
+import xdroid.toaster.Toaster;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -183,9 +175,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // New get Editor
         SharedPreferences.Editor editor = sharedPref.edit();
         // Put your values
-        editor.putString("email", email);
-        editor.putString("password", password);
-        editor.putBoolean("check", true);
+        editor.putString(getResources().getString(R.string.key_email), email);
+        editor.putString(getResources().getString(R.string.key_password), password);
+        editor.putBoolean(getResources().getString(R.string.key_valid_credentials), true);
         // Apply your edits
         editor.apply();
 
@@ -220,6 +212,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+        }
+        checkCredentials check = new checkCredentials();
+        check.execute();
+    }
+    private class checkCredentials extends AsyncTask<URL, Integer, Boolean>{
+
+        @Override
+        protected Boolean doInBackground(URL... urls) {
+            try{
+                Properties props = System.getProperties();
+                props.setProperty("mail.store.protocol", "imaps");
+                Session session = Session.getDefaultInstance(props, null);
+                IMAPStore store = (IMAPStore) session.getStore("imaps");
+                store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
+                Folder inbox = store.getFolder("Inbox");
+                UIDFolder uf = (UIDFolder) inbox;
+                inbox.open(Folder.READ_WRITE);
+            }catch(AuthenticationFailedException e){
+                Toaster.toastLong(R.string.invalid_credentials);
+                return null;
+
+            }catch(MessagingException e){
+                return null;
+            }
+            Toaster.toastLong(R.string.valid_credentials);
+            return null;
         }
     }
 

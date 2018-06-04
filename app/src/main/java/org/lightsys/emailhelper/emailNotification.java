@@ -6,11 +6,13 @@ import java.util.Stack;
 
 public class emailNotification {
     private boolean gotMail;
+    private boolean invalid_credentials;
     private Stack<NotificationBase> newEmails;
 
     public emailNotification(){
         gotMail = false;
         newEmails = new Stack<>();
+        invalid_credentials = false;
     }
     public boolean status(){
         return gotMail;
@@ -30,5 +32,15 @@ public class emailNotification {
             gotMail = false;
         }
         return newEmails.pop();
+    }
+
+    public void setInvalid_Credentials() {
+        this.invalid_credentials = true;
+    }
+    public void resetInvalid_Credentials(){
+        this.invalid_credentials = false;
+    }
+    public boolean getInvalid_Credentials(){
+        return invalid_credentials;
     }
 }

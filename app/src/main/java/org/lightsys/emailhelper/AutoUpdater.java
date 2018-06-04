@@ -9,7 +9,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,6 +21,7 @@ import android.util.Log;
 import java.net.URL;
 import java.util.List;
 import java.util.Random;
+import xdroid.toaster.Toaster;
 import static java.lang.Math.pow;
 
 
@@ -39,11 +39,13 @@ public class AutoUpdater extends Service {
 
     //time constants in milliseconds
     private static final int ONE_SECOND     = 1000;
+    private static final int ONE_MINUTE = 60*ONE_SECOND;
     private emailNotification gotMail;
 
-    private DatabaseHelper db;
     private SharedPreferences sp;
-    private Resources r;
+
+    //TODO remove testing variable
+    private boolean testing = false;
 
     //custom timer that ticks every minute
     //used to constantly check to see if it's time to check for updates
@@ -52,11 +54,9 @@ public class AutoUpdater extends Service {
     private PowerManager powerManager = null;
 
     public AutoUpdater() {
-        gotMail = new emailNotification();
         Runnable timerRunnable = new Runnable() {
             @Override
             public void run() {
-
                 try {
                     checkForUpdates();
                 } catch (Exception e) {
@@ -66,16 +66,18 @@ public class AutoUpdater extends Service {
                 int updateFrequency = Integer.valueOf(sp.getString(getResources().getString(R.string.key_update_frequency),getResources().getString(R.string.default_update_frequency)));
                 int updateTimePeriod = Integer.valueOf(sp.getString(getResources().getString(R.string.key_update_time_period),getResources().getString(R.string.value_time_period_minutes)));
                 long updateTime = (long) (updateFrequency * pow(60,updateTimePeriod) * ONE_SECOND);
-                timerHandler.postDelayed(this, updateTime);
+                if(testing){
+                    updateTime = ONE_MINUTE;
+                }
+
+                timerHandler.postDelayed(this, updateTime);//continuously calls for updates
             }
         };
         timerHandler.postDelayed(timerRunnable, ONE_SECOND);//updates at start up
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        db = new DatabaseHelper(getApplicationContext());
-        sp = getSharedPreferences("myPreferences", 0);
-        r = getResources();
+        sp = getSharedPreferences(getString(R.string.preferences), 0);
         checkForUpdates();
 
         //keeps service running after app is shut down
@@ -96,9 +98,13 @@ public class AutoUpdater extends Service {
         protected Long doInBackground(URL... urls) {
             GetMail mailer = new GetMail(getApplicationContext());
             gotMail = mailer.getMail();
-            while (gotMail.status()){
-                NotificationBase temp = gotMail.pop();
-                sendNotification(temp.getTitle(),temp.getSubject());
+            if(gotMail.getInvalid_Credentials()){
+                sendNotification(getString(R.string.invalid_credentials_notification_title),getString(R.string.invalid_credentials_notification_subject));
+            }else{
+                while (gotMail.status()){
+                    NotificationBase temp = gotMail.pop();
+                    sendNotification(temp.getTitle(),temp.getSubject());
+                }
             }
             return null;
         }
@@ -110,14 +116,15 @@ public class AutoUpdater extends Service {
     /**********************************************************************************************
      *                                  Notification Builder                                      *
      **********************************************************************************************/
-    private void sendNotification(String title, String subject){
+    private void sendNotification(final String title, final String subject){
         SharedPreferences sp = getSharedPreferences(getResources().getString(R.string.preferences),0);
         if(!sp.getBoolean(getResources().getString(R.string.key_update_show_notifications),getResources().getBoolean(R.bool.default_update_show_notifications))){
             return;
         }
-        /*if(isAppRunning()){
+        if(appIsRunning()){
+            Toaster.toastLong(title+"\n"+subject);
             return;
-        }*/
+        }
 
         Context context = this;
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -172,6 +179,21 @@ public class AutoUpdater extends Service {
         if (screenWakeLock != null && screenWakeLock.isHeld()) {
             screenWakeLock.release();
         }
+    }
+    public boolean appIsRunning(){
+        final ActivityManager manager = (ActivityManager) getBaseContext().getSystemService(getApplicationContext().ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> infos = manager.getRunningAppProcesses();
+        if(infos != null){
+            for(int i = 0; i < infos.size();i++){
+                if(infos.get(i).processName.equals(getString(R.string.package_name))){
+                    int help = infos.get(i).importance;
+                    int test = 0;
+                    if(infos.get(i).importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

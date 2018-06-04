@@ -31,6 +31,10 @@ repositories {
 dependencies {
     implementation 'com.sun.mail:android-mail:1.6.0'
     implementation 'com.sun.mail:android-activation:1.6.0'
+    //included under Apache 2.0 licence
+    //from https://github.com/shamanland/xdroid
+    implementation 'com.shamanland:xdroid-toaster:0.3.0'
+
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
