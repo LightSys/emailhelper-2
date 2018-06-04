@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity{
         HelperClass._Email = password.User;
         HelperClass._Password = password.auth;
         HelperClass.savedCredentials = true;
+        SharedPreferences.Editor myEdit = sharedPref.edit();
+        myEdit.putString(getString(R.string.key_email),password.User);
+        myEdit.apply();
         Contact send1 = password.sender1;
         db.insertContactData(send1.getEmail(),send1.getFirstName(),send1.getLastName());
         db.insertConversationData(send1.getEmail(),send1.getFirstName()+" "+send1.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
@@ -114,8 +117,12 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(startNewContact);
                 return true;
             case R.id.message_menu_credentials:
-                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-                startActivity(intent);
+                Intent startCredentials = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(startCredentials);
+                return true;
+            case R.id.message_menu_QR_output:;
+                Intent QR = new Intent(getBaseContext(), QRActivity.class);
+                startActivity(QR);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -29,5 +29,10 @@
         android:id="@+id/message_menu_credentials"
         android:title="Update Credentials"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/message_menu_QR_output"
+        android:title="Show my QR code"
+        android:icon="@drawable/ic_center_focus_24dp"
+        app:showAsAction="ifRoom"/>
 
 </menu>
