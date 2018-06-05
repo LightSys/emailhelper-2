@@ -121,10 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONTACT_COL_2, newContact.getFirstName());
         contentValues.put(CONTACT_COL_3, newContact.getLastName());
         long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
-        if (result == -1)
-            return false;
-        else
-            return true;
+        return result == -1;
     }
 
     public boolean willInsertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
@@ -180,6 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             String lastname  = res.getString(res.getColumnIndex(CONTACT_COL_3));
             name = firstname + " "+ lastname;
         }
+        res.close();
         return name;
     }
 
@@ -201,6 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
         db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
         db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        res.close();
     }
     public Date getContactDate(String email){
         //The goal of this function is to take in a email string.
@@ -213,6 +212,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         Cursor res = db.rawQuery(query,new String[] {email});
         res.moveToNext();
         String Date = res.getString(res.getColumnIndex(CONVO_COL_4));
+        res.close();
         String day = Date.substring(0,Date.indexOf(" "));
         if(day.length()==1){
             day = "0" + day;

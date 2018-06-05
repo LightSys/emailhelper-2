@@ -11,9 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa4f89d0-5e47-4407-9443-0686d2a62f99" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -52,9 +50,11 @@
       <file leaf-file-name="DatabaseHelper.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="223" column="102" lean-forward="false" selection-start-line="223" selection-start-column="102" selection-end-line="223" selection-end-column="102" />
-              <folding />
+            <state relative-caret-position="168">
+              <caret line="214" column="20" lean-forward="false" selection-start-line="214" selection-start-column="20" selection-end-line="214" selection-end-column="20" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -3031,9 +3031,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="223" column="102" lean-forward="false" selection-start-line="223" selection-start-column="102" selection-end-line="223" selection-end-column="102" />
-          <folding />
+        <state relative-caret-position="168">
+          <caret line="214" column="20" lean-forward="false" selection-start-line="214" selection-start-column="20" selection-end-line="214" selection-end-column="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
