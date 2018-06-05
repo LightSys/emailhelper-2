@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import org.lightsys.emailhelper.Contact.Contact;
 
+import java.util.Date;
+
 /**************************************************************************************************
  *                              Created by nicholasweg on 6/27/17.                                *
  *  Any changes made to this file regarding the database structure won't take effect unless you   *
@@ -193,12 +195,74 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         query = "delete from "+CONVERSATION_TABLE_NAME+" where EMAIL = ?";
         res.moveToNext();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CONVO_COL_1, email);
+        contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
         contentValues.put(CONVO_COL_2,res.getString(res.getColumnIndex(CONVO_COL_2)));
-        contentValues.put(CONVO_COL_3,currentTime);
-        contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));
+        contentValues.put(CONVO_COL_3,currentTime);//Updates the time
+        contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
         db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
         db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
     }
-
+    public Date getContactDate(String email){
+        //The goal of this function is to take in a email string.
+        //Then serach the database for the entry.
+        //The entry created date is converted to a special formatted output string used in getMail.
+        Date today;
+        String date = "";
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query,new String[] {email});
+        res.moveToNext();
+        String Date = res.getString(res.getColumnIndex(CONVO_COL_4));
+        String day = Date.substring(0,Date.indexOf(" "));
+        if(day.length()==1){
+            day = "0" + day;
+        }
+        date +=day;
+        Date = Date.substring(Date.indexOf(" ")+1);
+        String month = Date.substring(0,3);
+        int Month = 0;
+        switch (month){//the data falls through the switch which increases the count to the right spot
+            case "Dec":
+                Month++;
+            case "Nov":
+                Month++;
+            case "Oct":
+                Month++;
+            case "Sep":
+                Month++;
+            case "Aug":
+                Month++;
+            case "Jul":
+                Month++;
+            case "Jun":
+                Month++;
+            case "May":
+                Month++;
+            case "Apr":
+                Month++;
+            case "Mar":
+                Month++;
+            case "Feb":
+                Month++;
+        }
+        month = Integer.toString(Month);
+        if(month.length()==1){
+            month = "0" + month;
+        }
+        date += month;
+        String year = Date.substring(Date.indexOf(" ")+1);
+        int Year = Integer.valueOf(year);
+        Year -= 1900;
+        year = Integer.toString(Year);
+        date +=year;
+        //The final string appears DDMMYYY
+        //Where DD is normal
+        //MM indexes starting at 0 for Jan
+        //YYY is the years from 1900;
+        today = new Date(0,0,0,0,0,0);//Empties the date
+        today.setDate(Integer.valueOf(date.substring(0,2)));
+        today.setMonth(Integer.valueOf(date.substring(2,4)));
+        today.setYear(Integer.valueOf(date.substring(4)));
+        return today;
+    }
 }

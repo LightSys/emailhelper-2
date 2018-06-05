@@ -73,10 +73,9 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
             while (res.moveToNext()) {
-                Date today = Calendar.getInstance().getTime();
                 sender = new FromTerm(new InternetAddress(res.getString(0)));
-                //TODO we need to change the today term to the last message recieved for that contact
-                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,today);//What can we do?
+                Date today = db.getContactDate(res.getString(0));
+                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT,today);
                 SearchTerm andTerm = new AndTerm(sender, newerThan);
                 Message messages[] = inbox.search(andTerm);
                 Stack<ConversationWindow> test = new Stack<>();//The purpose of this stack is to organize more messages into time order.
