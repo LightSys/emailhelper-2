@@ -5,16 +5,22 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Contact.ContactActivity;
 import org.lightsys.emailhelper.Contact.NewContactActivity;
 import org.lightsys.emailhelper.Conversation.ConversationFragment;
+import org.lightsys.emailhelper.qr.QRActivity;
+import org.lightsys.emailhelper.qr.launchQRScanner;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -22,8 +28,9 @@ public class MainActivity extends AppCompatActivity{
     // TODO: Add multiple mail services
     // TODO: Polling or push notifications
 
-    DatabaseHelper db;
+    static private final int QR_RESULT = 1;
 
+    DatabaseHelper db;
     ConversationFragment newConversationFragment = new ConversationFragment();
 
     public void setFragmentNoBackStack(Fragment frag){
@@ -91,7 +98,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onResume() {
         super.onResume();
-
+        newConversationFragment.prepareConversationData();
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -120,11 +131,47 @@ public class MainActivity extends AppCompatActivity{
                 Intent startCredentials = new Intent(getBaseContext(), LoginActivity.class);
                 startActivity(startCredentials);
                 return true;
-            case R.id.message_menu_QR_output:;
+            case R.id.message_menu_QR_output:
                 Intent QR = new Intent(getBaseContext(), QRActivity.class);
                 startActivity(QR);
                 return true;
+            case R.id.message_menu_QR_input:
+                gatherData(true);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    //launches QR scanner
+    public void gatherData(boolean launchScanner){
+        //imported from LightSys Event App
+        //modified for use in EmailHelper
+        /*for testing on device w/o camera
+        db.addGeneral("url","http://192.168.0.23:3000/db");
+        Log.d(TAG, "gatherData: http://192.168.0.23:3000/db");
+
+        new DataConnection(context, activity, "new", "http://192.168.0.23:3000/db", true).execute("");
+*/
+        if (launchScanner) {
+            if (ActivityCompat.checkSelfPermission(this, "android.permission.CAMERA") != PackageManager.PERMISSION_GRANTED) {
+                requestCameraPermission();
+            } else {
+                Intent QR = new Intent(MainActivity.this, launchQRScanner.class);
+                startActivityForResult(QR, QR_RESULT);
+            }
+        }
+    }
+    private void requestCameraPermission() {
+        //imported from LightSys Event App
+        Log.w("Barcode-reader", "Camera permission is not granted. Requesting permission");
+        final String[] permissions = new String[]{"android.permission.CAMERA"};
+        if(!ActivityCompat.shouldShowRequestPermissionRationale(this, "android.permission.CAMERA")) {
+            ActivityCompat.requestPermissions(this, permissions, 2);
+        } else {
+            new View.OnClickListener() {
+                public void onClick(View view) {
+                    ActivityCompat.requestPermissions(MainActivity.this, permissions, 2);
+                }
+            };
+        }
     }
 }

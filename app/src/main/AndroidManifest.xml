@@ -71,8 +71,15 @@
         <service android:name=".AutoUpdater" />
 
         <activity
-            android:name=".QRActivity"
+            android:name=".qr.QRActivity"
             android:label="@string/title_activity_qr_output"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" /></activity>
+        <activity
+            android:name=".qr.launchQRScanner"
+            android:label="@string/title_activity_qr_input"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

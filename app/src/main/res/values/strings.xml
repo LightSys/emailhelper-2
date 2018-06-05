@@ -32,7 +32,7 @@
 
 
     <!-- SharedPreference Strings-->
-    <string name="preferences" translatable="false">Email Helper App</string>
+    <string name="preferences" translatable="false">org.lightsys.emailhelper_preferences</string>
 
     <!-- Keys -->
     <string name="key_update_frequency" translatable="false">updateFrequency</string>
@@ -61,6 +61,16 @@
     <string name="summary_notifications_off" translatable="true">Off</string>
     <string name="summary_messages_on" translatable="true">On</string>
     <string name="summary_messages_off" translatable="true">Off</string>
+    <!-- QR Code Strings -->
     <string name="title_activity_qr_output">My QR code</string>
+    <string name="title_activity_qr_input">Scan QR Code</string>
+    <string name="msg_default_status">Scan a QR code to import contact data.</string>
+
+    <string name="key_first_name" translatable="false">firstName</string>
+    <string name="key_last_name" translatable="false">lastName</string>
+    <string name="default_first_name" translatable="true">Enter first name for your contact card.</string>
+    <string name="default_last_name" translatable="true">Enter last name for your contact card.</string>
+    <string name="title_first_name" translatable="true">First Name</string>
+    <string name="title_last_name" translatable="true">Last Name</string>
 
 </resources>

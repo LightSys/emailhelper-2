@@ -39,6 +39,10 @@ dependencies {
     implementation 'com.google.zxing:zxing-parent:3.3.3'
     //from https://github.com/kenglxn/QRGen
     implementation 'com.github.kenglxn.qrgen:android:2.4.0'
+    //from https://github.com/KingsMentor/MobileVisionBarcodeScanner/blob/master/license
+    implementation('com.github.KingsMentor:MobileVisionBarcodeScanner:v1.2') { transitive = true; }
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 
 
     implementation 'com.android.support:appcompat-v7:27.1.1'

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.lightsys.emailhelper.Contact.Contact;
+
 /**************************************************************************************************
  *                              Created by nicholasweg on 6/27/17.                                *
  *  Any changes made to this file regarding the database structure won't take effect unless you   *
@@ -73,6 +75,19 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         else
             return true;
     }
+    public boolean insertConversationData(Contact newContact, String time, String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, newContact.getEmail());
+        contentValues.put(CONVO_COL_2, newContact.getFirstName()+" "+newContact.getLastName());
+        contentValues.put(CONVO_COL_3, time);
+        contentValues.put(CONVO_COL_4, date);
+        long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
 
     public Cursor getConversationData() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -91,6 +106,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONTACT_COL_1, email);
         contentValues.put(CONTACT_COL_2, firstName);
         contentValues.put(CONTACT_COL_3, lastName);
+        long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
+        if (result == -1)
+            return false;
+        else
+            return true;
+    }
+    public boolean insertContactData(Contact newContact) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONTACT_COL_1, newContact.getEmail());
+        contentValues.put(CONTACT_COL_2, newContact.getFirstName());
+        contentValues.put(CONTACT_COL_3, newContact.getLastName());
         long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
         if (result == -1)
             return false;

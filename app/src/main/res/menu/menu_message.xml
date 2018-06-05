@@ -9,7 +9,7 @@
         android:title="@string/action_new_contact"
         android:layout_height="4dp"
         android:layout_width="4dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/message_menu_settings"
@@ -33,6 +33,11 @@
         android:id="@+id/message_menu_QR_output"
         android:title="Show my QR code"
         android:icon="@drawable/ic_center_focus_24dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/message_menu_QR_input"
+        android:title="Gather QR"
+        android:icon="@drawable/ic_camera_white"
+        app:showAsAction="always"/>
 
 </menu>

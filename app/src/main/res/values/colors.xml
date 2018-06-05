@@ -6,4 +6,6 @@
     <color name="year">#999999</color>
     <color name="title">#222222</color>
     <color name="addContact">#ffffff</color>
+    <color name="grey">#888888</color>
+
 </resources>
