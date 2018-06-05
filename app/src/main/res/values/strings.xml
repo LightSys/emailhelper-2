@@ -1,12 +1,11 @@
 <resources>
     <string name="app_name">Email Helper</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="title_fragment_messagelist">Messages</string>
-    <string name="hello_world">Hello World!</string>
+    <string name="package_name">org.lightsys.emailhelper</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -16,12 +15,62 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_navigation">NavigationActivity</string>
-    <string name="title_home">Messages</string>
-    <string name="title_dashboard">Settings</string>
-    <string name="title_notifications">Contacts</string>
-    <string name="title_activity_selector">SelectorActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- General Strings -->
+    <string name="settings" translatable="true">Settings</string>
+    <string name="contacts" translatable="true">Contacts</string>
+    <string name="new_contact" translatable="true">New Contact</string>
+    <string name="action_new_contact" translatable="true">New Contact Button</string>
+    <string name="refresh_finished" translatable="true">Refresh finished.</string>
+    <string name="fragment_credentials_email" translatable="true">Email:</string>
+    <string name="fragment_credentials_password" translatable="true">Password:</string>
+    <string name="invalid_credentials" translatable="true">"Invalid credentials. Please reenter them.</string>
+    <string name="invalid_credentials_notification_title" translatable="true">Invalid Credentials</string>
+    <string name="invalid_credentials_notification_subject" translatable="true">Please reenter them.</string>
+    <string name="invalid_credentials_message" translatable="true">Message not sent.\nInvalid Credentials.\nPlease reenter them.</string>
+    <string name="valid_credentials" translatable="true">Credentials Validated.</string>
+
+
+    <!-- SharedPreference Strings-->
+    <string name="preferences" translatable="false">org.lightsys.emailhelper_preferences</string>
+
+    <!-- Keys -->
+    <string name="key_update_frequency" translatable="false">updateFrequency</string>
+    <string name="key_update_time_period" translatable="false">updateTimePeriod</string>
+    <string name="key_update_show_notifications" translatable="false">showNotifications</string>
+    <string name="key_update_show_messages" translatable="false">showMessages</string>
+    <string name="key_email" translatable="false">email</string>
+    <string name="key_password" translatable="false">password</string>
+    <string name="key_valid_credentials" translatable="false">Check_Credentials</string>
+    <!-- Values -->
+    <string name="value_time_period_minutes" translatable="false">1</string>
+    <string name="value_time_period_hours" translatable="false">2</string>
+    <!-- Defaults -->
+    <string name="default_update_frequency" translatable="false">30</string>
+    <string name="default_email" translatable="false"></string>
+    <string name="default_password" translatable="false"></string>
+    <!-- Titles -->
+    <string name="title_update_frequency" translatable="true">Update Frequency</string>
+    <string name="title_update_time_period" translatable="true">Update Time Period</string>
+    <string name="entry_time_period_minutes" translatable="true">Minutes</string>
+    <string name="entry_time_period_hours" translatable="true">Hours</string>
+    <string name="title_update_show_notifications" translatable="true">Show Notifications</string>
+    <string name="title_update_show_messages" translatable="true">Show Messages</string>
+    <!-- Summaries -->
+    <string name="summary_notifications_on" translatable="true">On</string>
+    <string name="summary_notifications_off" translatable="true">Off</string>
+    <string name="summary_messages_on" translatable="true">On</string>
+    <string name="summary_messages_off" translatable="true">Off</string>
+    <!-- QR Code Strings -->
+    <string name="title_activity_qr_output">My QR code</string>
+    <string name="title_activity_qr_input">Scan QR Code</string>
+    <string name="msg_default_status">Scan a QR code to import contact data.</string>
+
+    <string name="key_first_name" translatable="false">firstName</string>
+    <string name="key_last_name" translatable="false">lastName</string>
+    <string name="default_first_name" translatable="true">Enter first name for your contact card.</string>
+    <string name="default_last_name" translatable="true">Enter last name for your contact card.</string>
+    <string name="title_first_name" translatable="true">First Name</string>
+    <string name="title_last_name" translatable="true">Last Name</string>
+
 </resources>

@@ -1,16 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.ben.emailhelper"
-        minSdkVersion 15
-        targetSdkVersion 25
+        applicationId "org.lightsys.emailhelper"
+        minSdkVersion 16
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -18,24 +16,48 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        pickFirst 'META-INF/LICENSE.txt' // picks the JavaMail license file
+    }
+}
+
+repositories {
+    jcenter()
+    maven {
+        url "https://maven.java.net/content/groups/public/"
+    }
 }
 
 dependencies {
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile files('build/libs/activation.jar')
-    compile files('build/libs/additionnal.jar')
-    compile files('build/libs/mail.jar')
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:support-vector-drawable:25.3.1'
-    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-    compile 'org.jsoup:jsoup:1.10.3'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.sun.mail:android-mail:1.6.0'
+    implementation 'com.sun.mail:android-activation:1.6.0'
+    //These are included under Apache 2.0 licence
+    //from https://github.com/shamanland/xdroid
+    implementation 'com.shamanland:xdroid-toaster:0.3.0'
+
+    //from https://github.com/zxing/zxing
+    implementation 'com.google.zxing:zxing-parent:3.3.3'
+    //from https://github.com/kenglxn/QRGen
+    implementation 'com.github.kenglxn.qrgen:android:2.4.0'
+    //from https://github.com/KingsMentor/MobileVisionBarcodeScanner/blob/master/license
+    implementation('com.github.KingsMentor:MobileVisionBarcodeScanner:v1.2') { transitive = true; }
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:preference-v7:27.1.1'
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:support-vector-drawable:27.1.1'
+    implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+    implementation 'org.jsoup:jsoup:1.10.3'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
 }
-apply plugin: 'com.google.gms.google-services'

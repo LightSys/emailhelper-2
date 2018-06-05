@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.ben.emailhelper.SettingsFragment">
+    tools:context="org.lightsys.emailhelper.SettingsFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:text="@string/fragment_credentials_email"
             android:textSize="20sp"
             android:layout_marginTop="25dp"
             android:layout_marginLeft="30dp"/>
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Password"
+            android:text="@string/fragment_credentials_password"
             android:textSize="20sp"
             android:layout_below="@+id/emailField"
             android:layout_marginTop="25dp"

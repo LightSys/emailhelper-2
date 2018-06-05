@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="array_time_period_labels">
+        <item>@string/entry_time_period_minutes</item>
+        <item>@string/entry_time_period_hours</item>
+    </array>
+    <array name="array_time_period_values">
+        <item>@string/value_time_period_minutes</item>
+        <item>@string/value_time_period_hours</item>
+    </array>
+
+</resources>
