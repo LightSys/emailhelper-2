@@ -72,10 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
-        if (result == -1)
-            return false;
-        else
-            return true;
+        return result != -1;
     }
     public boolean insertConversationData(Contact newContact, String time, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -85,10 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
-        if (result == -1)
-            return false;
-        else
-            return true;
+        return result != -1;
     }
 
     public Cursor getConversationData() {
@@ -109,10 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONTACT_COL_2, firstName);
         contentValues.put(CONTACT_COL_3, lastName);
         long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
-        if (result == -1)
-            return false;
-        else
-            return true;
+        return result != -1;
     }
     public boolean insertContactData(Contact newContact) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -190,7 +181,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
         Cursor res = db.rawQuery(query,new String[] {email});
-        query = "delete from "+CONVERSATION_TABLE_NAME+" where EMAIL = ?";
         res.moveToNext();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call

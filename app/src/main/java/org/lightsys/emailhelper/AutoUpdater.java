@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -22,6 +23,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Random;
 import xdroid.toaster.Toaster;
+
+import static android.provider.CalendarContract.CalendarCache.URI;
 import static java.lang.Math.pow;
 
 
@@ -67,7 +70,7 @@ public class AutoUpdater extends Service {
                 int updateTimePeriod = Integer.valueOf(sp.getString(getResources().getString(R.string.key_update_time_period),getResources().getString(R.string.value_time_period_minutes)));
                 long updateTime = (long) (updateFrequency * pow(60,updateTimePeriod) * ONE_SECOND);
                 if(testing){
-                    updateTime = ONE_MINUTE;
+                    updateTime = 20 * ONE_SECOND;
                 }
 
                 timerHandler.postDelayed(this, updateTime);//continuously calls for updates
@@ -126,7 +129,7 @@ public class AutoUpdater extends Service {
             return;
         }
 
-        Context context = this;
+        Context context = getApplicationContext();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder nBuild;
         PowerManager.WakeLock screenWakeLock = null;
@@ -140,25 +143,35 @@ public class AutoUpdater extends Service {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){//this uses the new oreo style if necessary
             int importance = NotificationManager.IMPORTANCE_HIGH;
 
-            NotificationChannel notificationChannel = new NotificationChannel("3142","EMAIL_HELPER",importance);
+            NotificationChannel notificationChannel = new NotificationChannel("3142",getString(R.string.app_name),importance);
             notificationChannel.enableLights(true);
-            notificationChannel.enableVibration(false);
+            notificationChannel.enableVibration(true);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setLegacyStreamType(1)
+                    .build();
+            notificationChannel.setSound(Settings.System.DEFAULT_NOTIFICATION_URI, audioAttributes);
             notificationManager.createNotificationChannel(notificationChannel);
             nBuild = new NotificationCompat.Builder(context,"3142");
+
         }
         else{
             nBuild = new NotificationCompat.Builder(context);
+
         }
         nBuild.setContentTitle(title)
                 .setContentText(subject)
-                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+
                 .setSmallIcon(R.drawable.ic_bell)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notifications_black_24dp))
                 .setContentIntent(intent)
                 .setPriority(1)
                 .setAutoCancel(true)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI,1)
                 // BigTextStyle allows notification to be expanded if text is more than one line
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(subject));
+
         n = nBuild.build();
 
         // Turn on the device and send the notification.
@@ -171,8 +184,8 @@ public class AutoUpdater extends Service {
         }
 
         try {
-            Random inc = new Random();
-            notificationManager.notify((int)(System.currentTimeMillis()/1000 + inc.nextInt(100)), n);
+            //Random inc = new Random();
+            notificationManager.notify((int)(System.currentTimeMillis()%10000), n);// + inc.nextInt(100)
         } catch (Exception e) {
             // ignore
         }
@@ -186,10 +199,9 @@ public class AutoUpdater extends Service {
         if(infos != null){
             for(int i = 0; i < infos.size();i++){
                 if(infos.get(i).processName.equals(getString(R.string.package_name))){
-                    int help = infos.get(i).importance;
-                    int test = 0;
-                    if(infos.get(i).importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
+                    if(infos.get(i).importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND){
                         return true;
+                    }
                 }
             }
         }

@@ -17,13 +17,15 @@
     </string>
 
     <!-- General Strings -->
-    <string name="settings" translatable="true">Settings</string>
+    <string name="settings" translatable="true">EmailHelper Settings</string>
     <string name="contacts" translatable="true">Contacts</string>
     <string name="new_contact" translatable="true">New Contact</string>
     <string name="action_new_contact" translatable="true">New Contact Button</string>
     <string name="refresh_finished" translatable="true">Refresh finished.</string>
     <string name="fragment_credentials_email" translatable="true">Email:</string>
     <string name="fragment_credentials_password" translatable="true">Password:</string>
+
+    <!-- Strings for credentials validation -->
     <string name="invalid_credentials" translatable="true">"Invalid credentials. Please reenter them.</string>
     <string name="invalid_credentials_notification_title" translatable="true">Invalid Credentials</string>
     <string name="invalid_credentials_notification_subject" translatable="true">Please reenter them.</string>
@@ -31,7 +33,7 @@
     <string name="valid_credentials" translatable="true">Credentials Validated.</string>
 
 
-    <!-- SharedPreference Strings-->
+    <!-- SharedPreference String-->
     <string name="preferences" translatable="false">org.lightsys.emailhelper_preferences</string>
 
     <!-- Keys -->
@@ -41,26 +43,26 @@
     <string name="key_update_show_messages" translatable="false">showMessages</string>
     <string name="key_email" translatable="false">email</string>
     <string name="key_password" translatable="false">password</string>
-    <string name="key_valid_credentials" translatable="false">Check_Credentials</string>
+    <string name="key_valid_credentials" translatable="false">checkCredentials</string>
     <!-- Values -->
     <string name="value_time_period_minutes" translatable="false">1</string>
     <string name="value_time_period_hours" translatable="false">2</string>
     <!-- Defaults -->
     <string name="default_update_frequency" translatable="false">30</string>
-    <string name="default_email" translatable="false"></string>
-    <string name="default_password" translatable="false"></string>
+    <string name="default_email" translatable="false"> </string>
+    <string name="default_password" translatable="false"> </string>
     <!-- Titles -->
+    <string name="title_notifications" translatable="true">Notifications Settings</string>
     <string name="title_update_frequency" translatable="true">Update Frequency</string>
     <string name="title_update_time_period" translatable="true">Update Time Period</string>
     <string name="entry_time_period_minutes" translatable="true">Minutes</string>
     <string name="entry_time_period_hours" translatable="true">Hours</string>
     <string name="title_update_show_notifications" translatable="true">Show Notifications</string>
     <string name="title_update_show_messages" translatable="true">Show Messages</string>
+    <string name="title_user_settings" translatable="true">User Settings</string>
     <!-- Summaries -->
-    <string name="summary_notifications_on" translatable="true">On</string>
-    <string name="summary_notifications_off" translatable="true">Off</string>
-    <string name="summary_messages_on" translatable="true">On</string>
-    <string name="summary_messages_off" translatable="true">Off</string>
+    <string name="summary_basic_on" translatable="true">On</string>
+    <string name="summary_basic_off" translatable="true">Off</string>
     <!-- QR Code Strings -->
     <string name="title_activity_qr_output">My QR code</string>
     <string name="title_activity_qr_input">Scan QR Code</string>

@@ -74,8 +74,8 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
             inbox.open(Folder.READ_WRITE);
             while (res.moveToNext()) {
                 sender = new FromTerm(new InternetAddress(res.getString(0)));
-                Date today = db.getContactDate(res.getString(0));
-                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT,today);
+                Date createdDate = db.getContactDate(res.getString(0));
+                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,createdDate);
                 SearchTerm andTerm = new AndTerm(sender, newerThan);
                 Message messages[] = inbox.search(andTerm);
                 Stack<ConversationWindow> test = new Stack<>();//The purpose of this stack is to organize more messages into time order.
