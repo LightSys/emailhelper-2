@@ -60,6 +60,7 @@
     <string name="title_update_show_notifications" translatable="true">Show Notifications</string>
     <string name="title_update_show_messages" translatable="true">Show Messages</string>
     <string name="title_user_settings" translatable="true">User Settings</string>
+    <string name="title_edit_contact_activity" translatable="true">Edit Contact</string>
     <!-- Summaries -->
     <string name="summary_basic_on" translatable="true">On</string>
     <string name="summary_basic_off" translatable="true">Off</string>
@@ -74,5 +75,8 @@
     <string name="default_last_name" translatable="true">Enter last name for your contact card.</string>
     <string name="title_first_name" translatable="true">First Name</string>
     <string name="title_last_name" translatable="true">Last Name</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

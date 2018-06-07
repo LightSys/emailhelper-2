@@ -141,10 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(WINDOW_COL_5, messageID);
         contentValues.put(WINDOW_COL_6, sent_by_me);
         long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
-        if (result == -1)
-            return false;
-        else
-            return true;
+        return result != -1;
     }
 
     public Cursor getWindowData(String email) {
@@ -186,6 +183,54 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
         contentValues.put(CONVO_COL_2,res.getString(res.getColumnIndex(CONVO_COL_2)));
         contentValues.put(CONVO_COL_3,currentTime);//Updates the time
+        contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
+        db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
+        db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        res.close();
+    }
+    public void updateConversation(String email, Contact updatedContact){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query,new String[] {email});
+        res.moveToNext();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, updatedContact.getEmail());//Use of email so there is not an extra function call
+        contentValues.put(CONVO_COL_2,updatedContact.getFirstName()+" "+updatedContact.getLastName());
+        contentValues.put(CONVO_COL_3,res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
+        contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
+        db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
+        db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        res.close();
+    }
+    public void updateConversationWindowWithDifferentEmail(String email, Contact updatedContact){
+        //TODO figure this out
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from "+ CONVERSATION_WINDOW_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query,new String[] {email});
+        String updatedEmail = updatedContact.getEmail();
+        String updatedName = updatedContact.getFirstName()+" "+updatedContact.getLastName();
+        while(res.moveToNext()){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(WINDOW_COL_1,updatedEmail);
+            contentValues.put(WINDOW_COL_2,updatedName);
+            contentValues.put(WINDOW_COL_3,res.getString(res.getColumnIndex(WINDOW_COL_3)));
+            contentValues.put(WINDOW_COL_4,res.getString(res.getColumnIndex(WINDOW_COL_4)));
+            contentValues.put(WINDOW_COL_5,res.getString(res.getColumnIndex(WINDOW_COL_5)));
+            contentValues.put(WINDOW_COL_6,res.getInt(res.getColumnIndex(WINDOW_COL_6)));
+            db.insert(CONVERSATION_WINDOW_NAME,null,contentValues);
+        }
+        db.delete(CONVERSATION_WINDOW_NAME, "EMAIL = ?", new String[] {email});
+
+    }
+    public void changeConversationData(String email, Contact updatedContact){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from "+ CONVERSATION_WINDOW_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query,new String[] {email});
+        res.moveToNext();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, updatedContact.getEmail());//Use of email so there is not an extra function call
+        contentValues.put(CONVO_COL_2,updatedContact.getFirstName()+" "+updatedContact.getLastName());
+        contentValues.put(CONVO_COL_3,res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
         contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
         db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
         db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
@@ -255,4 +300,5 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         today.setYear(Integer.valueOf(date.substring(4)));
         return today;
     }
+
 }

@@ -76,14 +76,19 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" /></activity>
+                android:value=".MainActivity" />
+        </activity>
         <activity
             android:name=".qr.launchQRScanner"
             android:label="@string/title_activity_qr_input"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" /></activity>
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".Contact.editContactActivity"
+            android:label="@string/title_edit_contact_activity"
+            android:parentActivityName=".Contact.ContactActivity"></activity>
     </application>
 
 </manifest>

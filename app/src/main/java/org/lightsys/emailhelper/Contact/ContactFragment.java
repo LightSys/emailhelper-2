@@ -10,8 +10,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import org.lightsys.emailhelper.DatabaseHelper;
@@ -123,11 +121,18 @@ public class ContactFragment extends android.app.Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Contact contact = contactList.get(position);
-                Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + " is selected!", Toast.LENGTH_SHORT).show();
+
             }
             @Override
-            public void onLongClick(View view, int position) {}
+            public void onLongClick(View view, int position) {
+                Contact contact = contactList.get(position);
+                Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + " is selected!", Toast.LENGTH_SHORT).show();
+                Intent editContact = new Intent(getActivity().getApplicationContext(),editContactActivity.class);
+                editContact.putExtra("email",contact.getEmail());
+                editContact.putExtra("first_name",contact.getFirstName());
+                editContact.putExtra("last_name",contact.getLastName());
+                startActivity(editContact);
+            }
         }));
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
