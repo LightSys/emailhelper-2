@@ -18,6 +18,8 @@ import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.HelperClass;
 import org.lightsys.emailhelper.R;
+import org.lightsys.emailhelper.SendMail;
+
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,15 +107,14 @@ public class ConversationWindowFragment extends android.app.Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        ConversationWindow conversationWindow = new ConversationWindow(HelperClass._Email, null, messageSend.getText().toString(), null, true);
+                        ConversationWindow conversationWindow = new ConversationWindow(HelperClass.Email, null, messageSend.getText().toString(), null, true);
                         conversationWindowList.add(conversationWindow);
                         cAdapter.notifyDataSetChanged();
 
                         persistantMessage = messageSend.getText().toString();                       //This is so we can clear the EditText field as soon as the button is
                                                                                                     //pressed and not have to wait until after the Async Task is finished.
                         boolean isInserted = db.insertWindowData(passedEmail, null, persistantMessage, true, null);
-
-                        SendNewEmail sendInstance = new SendNewEmail();
+                        SendMail sendInstance = new SendMail(passedEmail,persistantMessage);
                         sendInstance.execute();
 
                         messageSend.getText().clear();
@@ -136,54 +137,5 @@ public class ConversationWindowFragment extends android.app.Fragment {
             System.out.println(res.getString(2));
         }
         cAdapter.notifyDataSetChanged();
-    }
-
-    /**********************************************************************************************
-     *              The Async class used to send the email on a different thread.                 *
-     **********************************************************************************************/
-
-    private class SendNewEmail extends AsyncTask<URL, Integer, Long> {
-        protected void onProgressUpdate() {
-        }
-        @Override
-        protected Long doInBackground(URL... params) {
-            sendMailTLS();
-            return null;
-        }
-        protected void onPostExecute(Long result) {
-        }
-    }
-
-    /**********************************************************************************************
-     *  I'm pretty sure that we will need to have a different host and port depending on the type *
-     *  of email the person is using. This one works with Gmail. Something to maybe do would be   *
-     *  put the different hosts in the HelperClass file and just pull whatever ones are needed    *
-     *  for the email provider being used.
-     *  -Nick
-     **********************************************************************************************/
-
-    public void sendMailTLS() {
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() { protected PasswordAuthentication getPasswordAuthentication() {return new PasswordAuthentication(HelperClass._Email, HelperClass._Password);}});
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(HelperClass._Email));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(passedEmail));
-            message.setSubject("Conversation Email");
-            message.setText(persistantMessage);
-            Transport.send(message);
-        }
-        catch(AuthenticationFailedException e){
-            e.printStackTrace();
-            System.out.println("Messaging Exception.");
-            Toaster.toastLong(R.string.invalid_credentials_message);
-        }catch (MessagingException e) {
-            e.printStackTrace();
-        }
     }
 }

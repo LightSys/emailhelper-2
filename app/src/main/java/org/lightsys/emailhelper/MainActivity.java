@@ -65,19 +65,21 @@ public class MainActivity extends AppCompatActivity{
 
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
-//        HelperClass._Email = sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email));
-//        HelperClass._Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
+//        HelperClass.Email = sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email));
+//        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
 //        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
         //TODO replace hard code
-        HelperClass._Email = password.User;
-        HelperClass._Password = password.auth;
+        HelperClass.setEmail(password.User);
+        HelperClass.Password = password.auth;
         HelperClass.savedCredentials = true;
         SharedPreferences.Editor myEdit = sharedPref.edit();
         myEdit.putString(getString(R.string.key_email),password.User);
         myEdit.apply();
+
         Contact send1 = password.sender1;
         db.insertContactData(send1.getEmail(),send1.getFirstName(),send1.getLastName());
         db.insertConversationData(send1.getEmail(),send1.getFirstName()+" "+send1.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
+
         Contact send2 = password.sender2;
         db.insertContactData(send2.getEmail(),send2.getFirstName(),send2.getLastName());
         db.insertConversationData(send2.getEmail(),send2.getFirstName()+" "+send2.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());

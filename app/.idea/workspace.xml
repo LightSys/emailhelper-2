@@ -11,15 +11,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa4f89d0-5e47-4407-9443-0686d2a62f99" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/editContactActivity.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/SendMail.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_fake_service.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_edit_contact.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_new_contact.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_new_contact.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/CredentialsFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/CredentialsFragment.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/HelperClass.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/HelperClass.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -41,31 +42,17 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="editContactActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/editContactActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1">
-              <caret line="20" column="60" lean-forward="false" selection-start-line="20" selection-start-column="60" selection-end-line="20" selection-end-column="60" />
-              <folding>
-                <element signature="e#1939#2534#0" expanded="true" />
-                <element signature="e#2533#2534#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="resourceFile" />
         <option value="valueResourceFile" />
-        <option value="Class" />
         <option value="layoutResourceFile" />
         <option value="Interface" />
         <option value="layoutResourceFile_vertical" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -2091,8 +2078,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/res/layout/activity_contact_new.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/NewContactFragment.java" />
         <option value="$PROJECT_DIR$/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/src/main/res/drawable/ic_person_add_black_24dp.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_contact.xml" />
@@ -2102,15 +2087,10 @@
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/NewContactActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MessageWindowActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Observer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/HelperClass.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Observed.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationAdapter.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_settings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/emailNotification.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/password.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java" />
         <option value="$PROJECT_DIR$/src/main/res/drawable/ic_center_focus_strong_black_24dp.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/content_qr_output.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/QR_output.java" />
@@ -2124,9 +2104,7 @@
         <option value="$PROJECT_DIR$/src/main/res/menu/menu_message.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/QRActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/launchQRScanner.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/QRActivity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" />
         <option value="$PROJECT_DIR$/src/main/res/values/bools.xml" />
         <option value="$PROJECT_DIR$/src/main/res/xml/settings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AutoUpdater.java" />
@@ -2135,13 +2113,22 @@
         <option value="$PROJECT_DIR$/src/main/res/layout/help.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_new_contact.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactActivity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/editContactActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/editContactFragment.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/editContactActivity.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_edit_contact.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_edit_contact.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/CredentialsFragment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/SendMail.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/password.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/HelperClass.java" />
       </list>
     </option>
   </component>
@@ -2194,6 +2181,13 @@
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="emailhelper" type="cbb59c9e:AndroidPsiDirectoryNode" />
               <item name="Contact" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="emailhelper" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="Conversation" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="app" type="1abcf292:AndroidViewProjectNode" />
@@ -2447,13 +2441,13 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22103004" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32889965" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32889965" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27206773" sideWeight="0.49713877" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27206773" sideWeight="0.49713877" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2528,12 +2522,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AutoUpdater.java</url>
-          <line>148</line>
-          <properties />
-          <option name="timeStamp" value="308" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/editContactActivity.java</url>
           <line>68</line>
           <properties />
@@ -2588,73 +2576,44 @@
           <option name="timeStamp" value="335" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java</url>
-          <line>175</line>
+          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/SendMail.java</url>
+          <line>72</line>
           <properties />
-          <option name="timeStamp" value="336" />
+          <option name="timeStamp" value="425" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java</url>
-          <line>180</line>
+          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/SendMail.java</url>
+          <line>76</line>
           <properties />
-          <option name="timeStamp" value="337" />
+          <option name="timeStamp" value="426" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java</url>
-          <line>184</line>
+          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java</url>
+          <line>118</line>
           <properties />
-          <option name="timeStamp" value="338" />
+          <option name="timeStamp" value="427" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java</url>
+          <line>122</line>
+          <properties />
+          <option name="timeStamp" value="428" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java</url>
+          <line>125</line>
+          <properties />
+          <option name="timeStamp" value="429" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="339" />
+      <option name="time" value="430" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/password.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="53" lean-forward="false" selection-start-line="6" selection-start-column="53" selection-end-line="6" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_contact.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_conversation_window.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_conversation.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="-3">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/conversation_list_row.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -2670,14 +2629,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-85">
           <caret line="16" column="96" lean-forward="false" selection-start-line="16" selection-start-column="96" selection-end-line="16" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1175">
-          <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2823,14 +2774,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-408">
-          <caret line="102" column="0" lean-forward="false" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/xml/settings.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -2903,14 +2846,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-680">
-          <caret line="100" column="58" lean-forward="false" selection-start-line="100" selection-start-column="58" selection-end-line="100" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-5">
@@ -2937,62 +2872,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-804">
-          <caret line="94" column="45" lean-forward="false" selection-start-line="94" selection-start-column="45" selection-end-line="99" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3333#3479#0" expanded="false" />
-            <element signature="e#3478#3479#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/NewContactFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="455">
           <caret line="80" column="24" lean-forward="false" selection-start-line="80" selection-start-column="24" selection-end-line="82" selection-end-column="66" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AutoUpdater.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1548">
-          <caret line="145" column="113" lean-forward="false" selection-start-line="145" selection-start-column="113" selection-end-line="145" selection-end-column="113" />
-          <folding>
-            <element signature="e#1764#2771#0" expanded="true" />
-            <element signature="e#2149#2204#0" expanded="true" />
-            <element signature="e#2205#2264#0" expanded="true" />
-            <element signature="e#2336#2393#0" expanded="true" />
-            <element signature="e#2394#2454#0" expanded="true" />
-            <element signature="e#2770#2771#0" expanded="true" />
-            <element signature="e#2980#3011#0" expanded="true" />
-            <element signature="e#3687#3745#0" expanded="true" />
-            <element signature="e#3746#3806#0" expanded="true" />
-            <element signature="e#4580#4626#0" expanded="true" />
-            <element signature="e#4657#4721#0" expanded="true" />
-            <element signature="e#5694#5722#0" expanded="true" />
-            <element signature="e#8273#8305#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="175" column="0" lean-forward="false" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3911#4232#0" expanded="false" />
-            <element signature="e#4231#4232#0" expanded="false" />
-            <element signature="e#4336#5762#0" expanded="false" />
-            <element signature="e#5761#5762#0" expanded="false" />
-            <element signature="e#7808#7982#0" expanded="false" />
-            <element signature="e#7981#7982#0" expanded="false" />
-            <element signature="e#8535#8571#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3042,14 +2926,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="25" column="4" lean-forward="false" selection-start-line="25" selection-start-column="4" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_edit_contact.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3085,9 +2961,124 @@
         <state relative-caret-position="1">
           <caret line="20" column="60" lean-forward="false" selection-start-line="20" selection-start-column="60" selection-end-line="20" selection-end-column="60" />
           <folding>
-            <element signature="e#1939#2534#0" expanded="true" />
-            <element signature="e#2533#2534#0" expanded="true" />
+            <element signature="e#1939#2534#0" expanded="false" />
+            <element signature="e#2533#2534#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="90" column="78" lean-forward="false" selection-start-line="90" selection-start-column="78" selection-end-line="90" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="115" column="83" lean-forward="false" selection-start-line="115" selection-start-column="83" selection-end-line="115" selection-end-column="83" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="170" column="20" lean-forward="false" selection-start-line="170" selection-start-column="20" selection-end-line="170" selection-end-column="20" />
+          <folding>
+            <element signature="e#2893#3254#0" expanded="false" />
+            <element signature="e#3253#3254#0" expanded="false" />
+            <element signature="e#3390#3536#0" expanded="false" />
+            <element signature="e#3535#3536#0" expanded="false" />
+            <element signature="e#4199#4228#0" expanded="false" />
+            <element signature="e#4310#4632#0" expanded="false" />
+            <element signature="e#4631#4632#0" expanded="false" />
+            <element signature="e#6318#6362#0" expanded="false" />
+            <element signature="e#6397#6444#0" expanded="false" />
+            <element signature="e#6483#6539#0" expanded="false" />
+            <element signature="e#6838#6880#0" expanded="false" />
+            <element signature="e#7076#7116#0" expanded="false" />
+            <element signature="e#7257#7296#0" expanded="false" />
+            <element signature="e#8701#8729#0" expanded="false" />
+            <element signature="e#8838#8866#0" expanded="false" />
+            <element signature="e#8942#8968#0" expanded="false" />
+            <element signature="e#10031#10268#0" expanded="false" />
+            <element signature="e#10267#10268#0" expanded="false" />
+            <element signature="e#10462#10698#0" expanded="false" />
+            <element signature="e#10697#10698#0" expanded="false" />
+            <element signature="e#14462#14506#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="708">
+          <caret line="109" column="99" lean-forward="false" selection-start-line="109" selection-start-column="99" selection-end-line="109" selection-end-column="99" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/CredentialsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="71" column="102" lean-forward="false" selection-start-line="71" selection-start-column="102" selection-end-line="71" selection-end-column="102" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/HelperClass.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="772">
+          <caret line="82" column="24" lean-forward="false" selection-start-line="82" selection-start-column="24" selection-end-line="82" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/password.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="75" lean-forward="false" selection-start-line="11" selection-start-column="75" selection-end-line="11" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/SendMail.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1009">
+          <caret line="125" column="0" lean-forward="false" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="383">
+          <caret line="81" column="0" lean-forward="false" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <folding>
+            <element signature="e#4040#4041#0" expanded="true" />
+            <element signature="e#4071#4072#0" expanded="true" />
+            <element signature="e#4248#4249#0" expanded="true" />
+            <element signature="e#4281#4282#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AutoUpdater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1624">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

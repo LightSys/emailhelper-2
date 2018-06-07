@@ -16,6 +16,7 @@ import org.lightsys.emailhelper.Conversation.ConversationFragment;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 
 import java.io.IOException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +30,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
+import javax.mail.Store;
 import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMultipart;
@@ -65,10 +67,13 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         SearchTerm sender;
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
+        props.put("mail.stmp.auth","true");
+        props.put("mail.smtp.starttls.enable","true");
+        props.put("mail.imap.port","993");
         try {
             Session session = Session.getDefaultInstance(props, null);
             IMAPStore store = (IMAPStore) session.getStore("imaps");
-            store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
+            store.connect(HelperClass.incoming, HelperClass.Email, HelperClass.Password);
             Folder inbox = store.getFolder("Inbox");
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);

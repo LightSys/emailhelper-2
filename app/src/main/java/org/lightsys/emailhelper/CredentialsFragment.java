@@ -31,17 +31,17 @@ public class CredentialsFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_settings, container, false);
         emailField = (EditText) rootView.findViewById(R.id.emailField);
-        emailField.setHint(HelperClass._Email);                                                     //This one is so it shows up when the fragment is first opened
+        emailField.setHint(HelperClass.Email);           //This one is so it shows up when the fragment is first opened
         emailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                     emailField.setHint("");
                 else
-                    emailField.setHint(HelperClass._Email);
+                    emailField.setHint(HelperClass.Email);
             }
         });
         passwordField = (EditText) rootView.findViewById(R.id.passwordField);
-        passwordField.setHint("••••••••");                                                          //This one is so it shows up when the fragment is first opened
+        passwordField.setHint("••••••••"); //This one is so it shows up when the fragment is first opened
         passwordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
@@ -60,16 +60,16 @@ public class CredentialsFragment extends android.app.Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HelperClass._Email = emailField.getText().toString();
-                        HelperClass._Password = passwordField.getText().toString();
+                        HelperClass.Email = emailField.getText().toString();
+                        HelperClass.Password = passwordField.getText().toString();
 
                         // Create object of SharedPreferences
                         SharedPreferences sharedPref = getActivity().getSharedPreferences("myPreferences", 0);
                         // New get Editor
                         SharedPreferences.Editor editor = sharedPref.edit();
                         // Put your values
-                        editor.putString(getResources().getString(R.string.key_email), HelperClass._Email);
-                        editor.putString(getResources().getString(R.string.key_password), HelperClass._Password);
+                        editor.putString(getResources().getString(R.string.key_email), HelperClass.Email);
+                        editor.putString(getResources().getString(R.string.key_password), HelperClass.Password);
                         // Apply your edits
                         editor.apply();
                     }

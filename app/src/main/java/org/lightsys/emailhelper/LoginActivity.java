@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.constraint.solver.widgets.Helper;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -166,8 +167,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String password = mPasswordView.getText().toString();
 
         // Save the 'global' variables of HelperClass
-        HelperClass._Email = email;
-        HelperClass._Password = password;
+        HelperClass.Email = email;
+        HelperClass.Password = password;
         HelperClass.savedCredentials = true;
 
         // Create object of SharedPreferences
@@ -222,10 +223,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(URL... urls) {
             try{
                 Properties props = System.getProperties();
-                props.setProperty("mail.store.protocol", "imaps");
+                //props.setProperty("mail.store.protocol", "imaps");
                 Session session = Session.getDefaultInstance(props, null);
-                IMAPStore store = (IMAPStore) session.getStore("imaps");
-                store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
+                IMAPStore store = (IMAPStore) session.getStore("pop3");
+                //store.connect(HelperClass._Host, HelperClass._Email, HelperClass._Password);
                 Folder inbox = store.getFolder("Inbox");
                 UIDFolder uf = (UIDFolder) inbox;
                 inbox.open(Folder.READ_WRITE);
@@ -234,6 +235,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return null;
 
             }catch(MessagingException e){
+                Toaster.toastLong(R.string.invalid_credentials);
                 return null;
             }
             Toaster.toastLong(R.string.valid_credentials);

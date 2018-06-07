@@ -86,9 +86,9 @@ public class ContactFragment extends android.app.Fragment {
             //Need to delete it from DB before getting rid of it from the list
             Integer deletedRows = db.deleteContactData(contactList.get(itemPosition).getEmail());
             if (deletedRows > 0)
-                Toast.makeText(getActivity().getApplicationContext(), "Data Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Contact Deleted", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(getActivity().getApplicationContext(), "Data Not Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Contact Not Deleted", Toast.LENGTH_SHORT).show();
 
             //Remove swiped item from list and notify the RecyclerView
             contactList.remove(itemPosition);
