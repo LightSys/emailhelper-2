@@ -32,13 +32,13 @@ public class editContactActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         final TextView firstname = findViewById(R.id.editContactActivity_first_name_edit);
-        originalFirstName = getIntent().getStringExtra("first_name");
+        originalFirstName = getIntent().getStringExtra(getString(R.string.intent_first_name));
         firstname.setText(originalFirstName);
         final TextView lastname = findViewById(R.id.editContactActivity_last_name_edit);
-        originalLastName = getIntent().getStringExtra("last_name");
+        originalLastName = getIntent().getStringExtra(getString(R.string.intent_last_name));
         lastname.setText(originalLastName);
         final TextView email = findViewById(R.id.editContactActivity_email_edit);
-        originalEmail = getIntent().getStringExtra("email");
+        originalEmail = getIntent().getStringExtra(getString(R.string.intent_email));
         email.setText(originalEmail);
         Button saveContactButton = (Button) findViewById(R.id.saveContactButton);
         saveContactButton.setOnClickListener(new View.OnClickListener() {

@@ -65,9 +65,10 @@
     <string name="summary_basic_on" translatable="true">On</string>
     <string name="summary_basic_off" translatable="true">Off</string>
     <!-- QR Code Strings -->
-    <string name="title_activity_qr_output">My QR code</string>
-    <string name="title_activity_qr_input">Scan QR Code</string>
-    <string name="msg_default_status">Scan a QR code to import contact data.</string>
+    <string name="title_activity_qr_output" translatable="true">My QR code</string>
+    <string name="title_activity_qr_input" translatable="true">Scan QR Code</string>
+    <string name="msg_default_status" translatable="true">Scan a QR code to import contact data.</string>
+    <string name="barcode_without_name" translatable="true">QR has been created without a name.\nTo change this enter one in settings.</string>
 
     <string name="key_first_name" translatable="false">firstName</string>
     <string name="key_last_name" translatable="false">lastName</string>
@@ -77,12 +78,41 @@
     <string name="title_last_name" translatable="true">Last Name</string>
 
     <!-- Contact Settings Strings -->
-    <string name="title_activity_contact_settings">Contact Settings</string>
-    <string name="contact_settings_name_text_title">Name</string>
-    <string name="contact_settings_email_text_title">Email</string>
-    <string name="contact_settings_notifications_checkbox">Send notifications for this email</string>
-    <string name="contact_settings_edit_contact_button">Edit Contact</string>
-    <string name="contact_settings_DASN_button">Delete and Start New Conversation</string>
-    <string name="contact_settings_delete_button">Delete Conversation</string>
+    <string name="title_activity_contact_settings" translatable="true">Contact Settings</string>
+    <string name="contact_settings_name_text_title" translatable="true">Name</string>
+    <string name="contact_settings_email_text_title" translatable="true">Email</string>
+    <string name="contact_settings_notifications_checkbox" translatable="true">Send notifications for this email</string>
+    <string name="contact_settings_edit_contact_button" translatable="true">Edit Contact</string>
+    <string name="contact_settings_DASN_button" translatable="true">Delete and Start New Conversation</string>
+    <string name="contact_settings_delete_button" translatable="true">Delete Conversation</string>
+
+    <!-- Intent Strings -->
+    <string name="intent_first_name" translatable="false">first_name</string>
+    <string name="intent_last_name" translatable="false">last_name</string>
+    <string name="intent_email" translatable="false">email</string>
+
+    <!-- New Contact Fragment Strings -->
+    <string name="contact_added_prestring" translatable="true"></string>
+    <string name="contact_added_poststring" translatable="true"> added to Contacts.</string>
+    <string name="contact_not_added_prestring" translatable="true"></string>
+    <string name="contact_not_added_poststring" translatable="true"> is already in the Database.</string>
+    <string name="conversation_added_prestring" translatable="true">A conversation with </string>
+    <string name="conversation_added_poststring" translatable="true"> was started.</string>
+    <string name="conversation_not_added_prestring" translatable="true">A conversation with </string>
+    <string name="conversation_not_added_poststring" translatable="true"> was already in the Database.</string>
+
+    <!-- Toast Strings -->
+    <string name="is_selected" translatable="true">is selected!</string>
+    <string name="conversation_deleted_prestring" translatable="true">Conversation with </string>
+    <string name="conversation_deleted_poststring" translatable="true">deleted.</string>
+    <string name="conversation_not_deleted_prestring" translatable="true">Conversation with </string>
+    <string name="conversation_not_deleted_poststring" translatable="true">not deleted.</string>
+
+    <!-- Notification Strings -->
+    <string name="notification_title_prestring" translatable="true">New message from</string>
+    <string name="notification_title_poststring" translatable="true"></string>
+
+    <!-- Emails Strings -->
+    <string name="getSubjectLine" translatable="true">Conversation Email</string>
 
 </resources>

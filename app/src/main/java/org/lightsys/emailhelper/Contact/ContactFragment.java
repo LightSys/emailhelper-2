@@ -123,21 +123,21 @@ public class ContactFragment extends android.app.Fragment {
             @Override
             public void onClick(View view, int position) {
                 Contact contact = contactList.get(position);
-                Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + " is selected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContactDetails = new Intent(getActivity().getApplicationContext(),ContactSettingsActivity.class);
-                editContactDetails.putExtra("email",contact.getEmail());
-                editContactDetails.putExtra("first_name",contact.getFirstName());
-                editContactDetails.putExtra("last_name",contact.getLastName());
+                editContactDetails.putExtra(getString(R.string.intent_email),contact.getEmail());
+                editContactDetails.putExtra(getString(R.string.intent_first_name),contact.getFirstName());
+                editContactDetails.putExtra(getString(R.string.intent_last_name),contact.getLastName());
                 startActivity(editContactDetails);
             }
             @Override
             public void onLongClick(View view, int position) {
                 Contact contact = contactList.get(position);
-                Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + " is selected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContact = new Intent(getActivity().getApplicationContext(),editContactActivity.class);
-                editContact.putExtra("email",contact.getEmail());
-                editContact.putExtra("first_name",contact.getFirstName());
-                editContact.putExtra("last_name",contact.getLastName());
+                editContact.putExtra(getString(R.string.intent_email),contact.getEmail());
+                editContact.putExtra(getString(R.string.intent_first_name),contact.getFirstName());
+                editContact.putExtra(getString(R.string.intent_last_name),contact.getLastName());
                 startActivity(editContact);
             }
         }));

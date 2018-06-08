@@ -73,15 +73,15 @@ public class NewContactFragment extends android.app.Fragment {
                         Date today = Calendar.getInstance().getTime();
                         boolean isConvo = db.insertConversationData(insertEmail, insertFirstName + " " + insertLastName, CommonMethods.getCurrentTime(), today.toString());
                         if (isInserted) {
-                            Toast.makeText(getActivity().getApplicationContext(), insertFirstName + " " + insertLastName +" added to Contacts.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.contact_added_prestring)+insertFirstName + " " + insertLastName +getString(R.string.contact_added_poststring), Toast.LENGTH_SHORT).show();
                         }else{
-                            Toast.makeText(getActivity().getApplicationContext(), insertFirstName + " " + insertLastName+" is already in the Database", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.contact_not_added_prestring)+insertFirstName + " " + insertLastName+getString(R.string.contact_not_added_poststring), Toast.LENGTH_SHORT).show();
                         }
                         if(isConvo){
-                            Toast.makeText(getActivity().getApplicationContext(), "A conversation with "+insertFirstName + " " + insertLastName+" was started.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_added_prestring)+insertFirstName + " " + insertLastName+getString(R.string.conversation_added_poststring), Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(getActivity().getApplicationContext(), "A conversation with "+insertFirstName + " " + insertLastName+" was already in the Database", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_not_added_prestring)+insertFirstName + " " + insertLastName+getString(R.string.conversation_not_added_poststring), Toast.LENGTH_SHORT).show();
                         }
                         NewContactActivity newContactActivity = (NewContactActivity) getActivity();
                         Intent upIntent = new Intent(newContactActivity.getApplicationContext(),ContactActivity.class);

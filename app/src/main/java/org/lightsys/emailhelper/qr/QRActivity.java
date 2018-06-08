@@ -45,7 +45,7 @@ public class QRActivity extends AppCompatActivity {
         ImageView myImage = findViewById(R.id.imageView);
         myImage.setImageBitmap(myBit);
         if(!hasCreated){
-            Toaster.toastLong("QR has been created without a name.\nTo change this enter one in settings.");
+            Toaster.toastLong(getString(R.string.barcode_without_name));
         }
     }
 

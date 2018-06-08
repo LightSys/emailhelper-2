@@ -33,7 +33,7 @@ public class MessageWindowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_window);
         intent = getIntent();
-        email = intent.getStringExtra("email");
+        email = intent.getStringExtra(getString(R.string.intent_email));
         passToFragment();
         setFragmentNoBackStack(chats);
         ActionBar actionBar = this.getSupportActionBar();
@@ -49,7 +49,7 @@ public class MessageWindowActivity extends AppCompatActivity {
 
     public void passToFragment() {
         Bundle bundle = new Bundle();
-        bundle.putString("email", email);
+        bundle.putString(getString(R.string.intent_email), email);
         chats.setArguments(bundle);
     }
 }

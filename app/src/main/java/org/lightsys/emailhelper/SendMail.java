@@ -1,5 +1,6 @@
 package org.lightsys.emailhelper;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import java.net.URL;
@@ -25,10 +26,12 @@ import xdroid.toaster.Toaster;
 public class SendMail extends AsyncTask<URL, Integer, Long> {
     private String passedEmail;
     private String persistantMessage;
+    Context c;
 
-    public SendMail(String recipient, String message){
+    public SendMail(String recipient, String message,Context context){
         passedEmail = recipient;
         persistantMessage = message;
+        c = context;
     }
     protected void onProgressUpdate() {
     }
@@ -64,7 +67,8 @@ public class SendMail extends AsyncTask<URL, Integer, Long> {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(HelperClass.Email));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(passedEmail));
-            message.setSubject("Conversation Email");
+            message.setSubject(c.getResources().getString(R.string.getSubjectLine));
+
             message.setText(persistantMessage);
             Transport transport = session.getTransport("smtp");
             transport.send(message);

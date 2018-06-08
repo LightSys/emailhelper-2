@@ -110,10 +110,10 @@ public class ConversationFragment extends android.app.Fragment{
             //Need to delete it from DB before getting rid of it from the list
             Integer deletedRows = db.deleteConversationData(conversationList.get(itemPosition).getEmail());
             if (deletedRows > 0)
-                Toast.makeText(getActivity().getApplicationContext(), "Conversation with "+conversationList.get(itemPosition).getName()+" Deleted.",
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_deleted_prestring)+conversationList.get(itemPosition).getName()+getString(R.string.conversation_deleted_poststring),
                         Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(getActivity().getApplicationContext(), "Conversation Not Deleted",
+                Toast.makeText(getActivity().getApplicationContext(),getString(R.string.conversation_not_deleted_prestring)+conversationList.get(itemPosition).getName()+getString(R.string.conversation_not_deleted_poststring),
                         Toast.LENGTH_SHORT).show();
 
             //Remove swiped item from list and notify the RecyclerView
@@ -145,7 +145,7 @@ public class ConversationFragment extends android.app.Fragment{
                 Conversation conversation = conversationList.get(position);
                 Toast.makeText(getActivity().getApplicationContext(), conversation.getName() + " is selected!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity().getBaseContext(), MessageWindowActivity.class);
-                intent.putExtra("email", conversation.getEmail());
+                intent.putExtra(getString(R.string.intent_email), conversation.getEmail());
                 startActivity(intent);
             }
             @Override

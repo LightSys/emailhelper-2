@@ -62,7 +62,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if (rootView == null) {
-            passedEmail = getArguments().getString("email");
+            passedEmail = getArguments().getString(getString(R.string.intent_email));
             rootView = inflater.inflate(R.layout.fragment_conversation_window, container, false);
             makeRecyclerView(rootView);
             sendMessageButton = (ImageButton) rootView.findViewById(R.id.sendMessageButton);
@@ -114,7 +114,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
                         persistantMessage = messageSend.getText().toString();                       //This is so we can clear the EditText field as soon as the button is
                                                                                                     //pressed and not have to wait until after the Async Task is finished.
                         boolean isInserted = db.insertWindowData(passedEmail, null, persistantMessage, true, null);
-                        SendMail sendInstance = new SendMail(passedEmail,persistantMessage);
+                        SendMail sendInstance = new SendMail(passedEmail,persistantMessage,getActivity().getApplicationContext());
                         sendInstance.execute();
 
                         messageSend.getText().clear();

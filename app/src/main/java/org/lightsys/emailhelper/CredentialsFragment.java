@@ -64,7 +64,7 @@ public class CredentialsFragment extends android.app.Fragment {
                         HelperClass.Password = passwordField.getText().toString();
 
                         // Create object of SharedPreferences
-                        SharedPreferences sharedPref = getActivity().getSharedPreferences("myPreferences", 0);
+                        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preferences), 0);
                         // New get Editor
                         SharedPreferences.Editor editor = sharedPref.edit();
                         // Put your values

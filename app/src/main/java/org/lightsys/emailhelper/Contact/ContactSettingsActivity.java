@@ -28,9 +28,9 @@ public class ContactSettingsActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        firstName = getIntent().getStringExtra("first_name");
-        lastName = getIntent().getStringExtra("last_name");
-        email = getIntent().getStringExtra("email");
+        firstName = getIntent().getStringExtra(getString(R.string.intent_first_name));
+        lastName = getIntent().getStringExtra(getString(R.string.intent_last_name));
+        email = getIntent().getStringExtra(getString(R.string.intent_email));
         TextView name = findViewById(R.id.name_textView);
         name.setText(firstName +" "+lastName);
         TextView emailText = findViewById(R.id.email_textView);
@@ -53,9 +53,9 @@ public class ContactSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent editContact = new Intent(getApplicationContext(),editContactActivity.class);
-                editContact.putExtra("first_name",firstName);
-                editContact.putExtra("last_name",lastName);
-                editContact.putExtra("email",email);
+                editContact.putExtra(getString(R.string.intent_first_name),firstName);
+                editContact.putExtra(getString(R.string.intent_last_name),lastName);
+                editContact.putExtra(getString(R.string.intent_email),email);
                 startActivity(editContact);
             }
         });

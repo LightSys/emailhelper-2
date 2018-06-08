@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         HelperClass.savedCredentials = true;
 
         // Create object of SharedPreferences
-        SharedPreferences sharedPref = getSharedPreferences("myPreferences", 0);
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
         // New get Editor
         SharedPreferences.Editor editor = sharedPref.edit();
         // Put your values
