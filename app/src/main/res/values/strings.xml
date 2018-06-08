@@ -71,8 +71,8 @@
 
     <string name="key_first_name" translatable="false">firstName</string>
     <string name="key_last_name" translatable="false">lastName</string>
-    <string name="default_first_name" translatable="true">Enter first name for your contact card.</string>
-    <string name="default_last_name" translatable="true">Enter last name for your contact card.</string>
+    <string name="default_first_name" translatable="true">Enter first name</string>
+    <string name="default_last_name" translatable="true">Enter last name</string>
     <string name="title_first_name" translatable="true">First Name</string>
     <string name="title_last_name" translatable="true">Last Name</string>
 

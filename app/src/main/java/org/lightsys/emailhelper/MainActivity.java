@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity{
 
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
-//        HelperClass.Email = sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email));
+//        HelperClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
 //        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
 //        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
         //TODO replace hard code
