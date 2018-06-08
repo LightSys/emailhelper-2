@@ -85,10 +85,11 @@ public class ContactFragment extends android.app.Fragment {
 
             //Need to delete it from DB before getting rid of it from the list
             Integer deletedRows = db.deleteContactData(contactList.get(itemPosition).getEmail());
+            db.deleteConversationData(contactList.get(itemPosition).getEmail());
             if (deletedRows > 0)
-                Toast.makeText(getActivity().getApplicationContext(), "Contact Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), contactList.get(itemPosition).getFirstName()+" "+contactList.get(itemPosition).getLastName()+" deleted from contacts.", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(getActivity().getApplicationContext(), "Contact Not Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), contactList.get(itemPosition).getFirstName()+" "+contactList.get(itemPosition).getLastName()+" not deleted from contacts.", Toast.LENGTH_SHORT).show();
 
             //Remove swiped item from list and notify the RecyclerView
             contactList.remove(itemPosition);
@@ -121,7 +122,13 @@ public class ContactFragment extends android.app.Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
+                Contact contact = contactList.get(position);
+                Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + " is selected!", Toast.LENGTH_SHORT).show();
+                Intent editContactDetails = new Intent(getActivity().getApplicationContext(),ContactSettingsActivity.class);
+                editContactDetails.putExtra("email",contact.getEmail());
+                editContactDetails.putExtra("first_name",contact.getFirstName());
+                editContactDetails.putExtra("last_name",contact.getLastName());
+                startActivity(editContactDetails);
             }
             @Override
             public void onLongClick(View view, int position) {

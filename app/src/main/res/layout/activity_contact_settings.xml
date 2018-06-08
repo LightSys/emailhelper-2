@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Contact.ContactSettingsActivity">
+
+
+    <TextView
+        android:id="@+id/name_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:text="@string/contact_settings_name_text_title"/>
+
+    <TextView
+        android:id="@+id/email_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/contact_settings_email_text_title" />
+
+    <CheckBox
+        android:id="@+id/display_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/contact_settings_notifications_checkbox" />
+
+    <Button
+        android:id="@+id/edit_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_settings_edit_contact_button" />
+
+    <Button
+        android:id="@+id/delete_and_start_new_conversation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_settings_DASN_button" />
+
+    <Button
+        android:id="@+id/delete_converstation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_settings_delete_button" />
+
+</LinearLayout>

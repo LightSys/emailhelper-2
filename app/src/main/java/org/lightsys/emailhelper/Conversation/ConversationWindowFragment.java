@@ -41,7 +41,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
     private RecyclerView recyclerView;
     private ConversationWindowAdapter cAdapter;
     View rootView;
-    String passedEmail = "";                                                                        //This is the email of the person we are getting messages from
+    String passedEmail = ""; //This is the email of the person we are getting messages from
 
     public ImageButton sendMessageButton;
 

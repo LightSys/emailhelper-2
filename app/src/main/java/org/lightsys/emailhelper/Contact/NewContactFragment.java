@@ -72,11 +72,16 @@ public class NewContactFragment extends android.app.Fragment {
 
                         Date today = Calendar.getInstance().getTime();
                         boolean isConvo = db.insertConversationData(insertEmail, insertFirstName + " " + insertLastName, CommonMethods.getCurrentTime(), today.toString());
-                        if (isConvo) {
-                            Toast.makeText(getActivity().getApplicationContext(), "Conversation Inserted", Toast.LENGTH_SHORT).show();
+                        if (isInserted) {
+                            Toast.makeText(getActivity().getApplicationContext(), insertFirstName + " " + insertLastName +" added to Contacts.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getActivity().getApplicationContext(), insertFirstName + " " + insertLastName+" is already in the Database", Toast.LENGTH_SHORT).show();
+                        }
+                        if(isConvo){
+                            Toast.makeText(getActivity().getApplicationContext(), "A conversation with "+insertFirstName + " " + insertLastName+" was started.", Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(getActivity().getApplicationContext(), "Conversation Not Inserted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "A conversation with "+insertFirstName + " " + insertLastName+" was already in the Database", Toast.LENGTH_SHORT).show();
                         }
                         NewContactActivity newContactActivity = (NewContactActivity) getActivity();
                         Intent upIntent = new Intent(newContactActivity.getApplicationContext(),ContactActivity.class);

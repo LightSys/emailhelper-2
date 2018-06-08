@@ -83,7 +83,8 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,createdDate);
                 SearchTerm andTerm = new AndTerm(sender, newerThan);
                 Message messages[] = inbox.search(andTerm);
-                Stack<ConversationWindow> test = new Stack<>();//The purpose of this stack is to organize more messages into time order.
+                Stack<ConversationWindow> sendNotifications = new Stack<>();//The purpose of this stack is to organize more messages into time order.
+                Stack<ConversationWindow> dontSendNotifications = new Stack<>();
                 for (int i = messages.length - 1; i >= 0; i--) {
                     Message message = messages[i];
                     String messageID = Long.toString(uf.getUID(message));
@@ -95,22 +96,33 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                     if (isInserted == false) {
                         break;
                     } else {
-                        test.push(convo);
-                        if(true){
-
+                        if(db.getNotificationSettings(res.getString(0))){
+                            sendNotifications.push(convo);
+                        }else{
+                            dontSendNotifications.push(convo);
                         }
+
+
                         String Title = "New Message from " + db.getContactName(convo.getEmail());
                         String NotificationMessage = convo.getMessage();
                         boolean showMessage = sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages));
                         if(!showMessage){
                             NotificationMessage = NotificationMessage.substring(0,subject.length());
                         }
-                        receivedNew.push(Title,NotificationMessage);
                     }
 
                 }
-                while (!test.isEmpty()) {
-                    ConversationWindow convo = test.pop();
+                Stack<ConversationWindow> temp = new Stack<>();
+                while(!sendNotifications.isEmpty()){
+                    temp.push(sendNotifications.pop());
+                }
+                while (!temp.isEmpty()) {
+                    ConversationWindow convo = temp.pop();
+                    db.insertWindowData(convo.getEmail(), convo.getName(), convo.getMessage(), false, convo.getMessageId());
+                    db.updateConversation(convo.getEmail(),CommonMethods.getCurrentTime());
+                }
+                while(!dontSendNotifications.isEmpty()){
+                    ConversationWindow convo = dontSendNotifications.pop();
                     db.insertWindowData(convo.getEmail(), convo.getName(), convo.getMessage(), false, convo.getMessageId());
                     db.updateConversation(convo.getEmail(),CommonMethods.getCurrentTime());
                 }

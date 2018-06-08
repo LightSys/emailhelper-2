@@ -86,9 +86,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".Contact.editContactActivity"
+        <activity
+            android:name=".Contact.editContactActivity"
             android:label="@string/title_edit_contact_activity"
-            android:parentActivityName=".Contact.ContactActivity"></activity>
+            android:parentActivityName=".Contact.ContactActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Contact.ContactActivity" />
+        </activity>
+        <activity
+            android:name=".Contact.ContactSettingsActivity"
+            android:label="@string/title_activity_contact_settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Contact.ContactActivity" />
+        </activity>
+
     </application>
 
 </manifest>
