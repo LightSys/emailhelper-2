@@ -18,6 +18,7 @@
 
     <!-- General Strings -->
     <string name="settings" translatable="true">EmailHelper Settings</string>
+    <string name="messages" translatable="true">Messages</string>
     <string name="contacts" translatable="true">Contacts</string>
     <string name="new_contact" translatable="true">New Contact</string>
     <string name="action_new_contact" translatable="true">New Contact Button</string>
@@ -93,20 +94,20 @@
 
     <!-- New Contact Fragment Strings -->
     <string name="contact_added_prestring" translatable="true"></string>
-    <string name="contact_added_poststring" translatable="true"> added to Contacts.</string>
+    <string name="contact_added_poststring" translatable="true">" added to Contacts."</string>
     <string name="contact_not_added_prestring" translatable="true"></string>
-    <string name="contact_not_added_poststring" translatable="true"> is already in the Database.</string>
-    <string name="conversation_added_prestring" translatable="true">A conversation with </string>
-    <string name="conversation_added_poststring" translatable="true"> was started.</string>
-    <string name="conversation_not_added_prestring" translatable="true">A conversation with </string>
-    <string name="conversation_not_added_poststring" translatable="true"> was already in the Database.</string>
+    <string name="contact_not_added_poststring" translatable="true">" is already in the Database."</string>
+    <string name="conversation_added_prestring" translatable="true">"A conversation with "</string>
+    <string name="conversation_added_poststring" translatable="true">" was started."</string>
+    <string name="conversation_not_added_prestring" translatable="true">"A conversation with "</string>
+    <string name="conversation_not_added_poststring" translatable="true">" was already in the Database."</string>
 
     <!-- Toast Strings -->
-    <string name="is_selected" translatable="true">is selected!</string>
-    <string name="conversation_deleted_prestring" translatable="true">Conversation with </string>
-    <string name="conversation_deleted_poststring" translatable="true">deleted.</string>
-    <string name="conversation_not_deleted_prestring" translatable="true">Conversation with </string>
-    <string name="conversation_not_deleted_poststring" translatable="true">not deleted.</string>
+    <string name="is_selected" translatable="true">" is selected!"</string>
+    <string name="conversation_deleted_prestring" translatable="true">"Conversation with "</string>
+    <string name="conversation_deleted_poststring" translatable="true">" deleted."</string>
+    <string name="conversation_not_deleted_prestring" translatable="true">"Conversation with "</string>
+    <string name="conversation_not_deleted_poststring" translatable="true">" not deleted."</string>
 
     <!-- Notification Strings -->
     <string name="notification_title_prestring" translatable="true">New message from</string>

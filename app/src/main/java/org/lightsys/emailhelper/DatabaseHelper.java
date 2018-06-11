@@ -26,6 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public static String CONVO_COL_2 = "NAME";
     public static String CONVO_COL_3 = "TIME";
     public static String CONVO_COL_4 = "CREATED_DATE";
+    public static String CONVO_COL_5 = "NEW_MAIL";
     // Contact variables
     public static final String CONTACT_TABLE_NAME = "saved_contacts";
     public static String CONTACT_COL_1 = "EMAIL";
@@ -46,12 +47,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     public DatabaseHelper(Context context) {
         super (context, DATABASE_NAME, null, 1);
-        SQLiteDatabase db = this.getWritableDatabase();
     }
 
     @Override
     public void onCreate (SQLiteDatabase db) {
-        String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3, CONVO_COL_4);
+        String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT, %s BOOL)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3, CONVO_COL_4,CONVO_COL_5);
         String contactQuery = String.format("create table " + CONTACT_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT)", CONTACT_COL_1, CONTACT_COL_2, CONTACT_COL_3);
         String windowQuery = String.format("create table " + CONVERSATION_WINDOW_NAME + " ( %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", WINDOW_COL_1, WINDOW_COL_2, WINDOW_COL_3, WINDOW_COL_4, WINDOW_COL_5, WINDOW_COL_6, WINDOW_COL_7);
         String notiQuery = String.format("create table "+NOTIFICATION_SEND_LIST + " ( %s TEXT PRIMARY KEY, %s BOOLEAN)",NOTIFICATION_COL_PRIMARY,NOTIFICATION_COL_BOOL);
@@ -102,6 +102,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_2, name);
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
+        contentValues.put(CONVO_COL_5, false);
+        long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        return result != -1;
+    }
+    public boolean insertConversationData(String email, String name, String time, String date, boolean newmail){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, email);
+        contentValues.put(CONVO_COL_2, name);
+        contentValues.put(CONVO_COL_3, time);
+        contentValues.put(CONVO_COL_4, date);
+        contentValues.put(CONVO_COL_5, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         return result != -1;
     }
@@ -112,14 +124,36 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_2, newContact.getFirstName()+" "+newContact.getLastName());
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
+        contentValues.put(CONVO_COL_5, false);
+        long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        return result != -1;
+    }
+    public boolean insertConversationData(Contact newContact, String time, String date,boolean newmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, newContact.getEmail());
+        contentValues.put(CONVO_COL_2, newContact.getFirstName()+" "+newContact.getLastName());
+        contentValues.put(CONVO_COL_3, time);
+        contentValues.put(CONVO_COL_4, date);
+        contentValues.put(CONVO_COL_5, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         return result != -1;
     }
 
-    public Cursor getConversationData() {
+    public void resetNewMailBoolean(String email){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from " + CONVERSATION_TABLE_NAME, null);
-        return res;
+        String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query,new String[] {email});
+        res.moveToNext();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
+        contentValues.put(CONVO_COL_2,res.getString(res.getColumnIndex(CONVO_COL_2)));
+        contentValues.put(CONVO_COL_3,res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
+        contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
+        contentValues.put(CONVO_COL_5,false);
+        db.update(CONVERSATION_TABLE_NAME,contentValues, "EMAIL = ?", new String[] {email});
+        res.close();
+
     }
 
     public Integer deleteConversationData(String email) {
@@ -186,8 +220,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     public Cursor getContactData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
-        return res;
+        return db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
+    }
+    public Cursor getConversationData(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("select * from " + CONVERSATION_TABLE_NAME, null);
     }
 
     public String getContactName(String email) {
@@ -218,8 +255,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_2,res.getString(res.getColumnIndex(CONVO_COL_2)));
         contentValues.put(CONVO_COL_3,currentTime);//Updates the time
         contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
-        db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
-        db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        contentValues.put(CONVO_COL_5,true);
+        db.delete(CONVERSATION_TABLE_NAME,"EMAIL = ?",new String[]{email});//why not update?
+        db.insert(CONVERSATION_TABLE_NAME,null,contentValues);//This way the panels will reorder when a new time is given
         res.close();
     }
     public void updateConversation(String email, Contact updatedContact){
@@ -232,29 +270,25 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_2,updatedContact.getFirstName()+" "+updatedContact.getLastName());
         contentValues.put(CONVO_COL_3,res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
         contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
-        db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
-        db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        contentValues.put(CONVO_COL_5,res.getString(res.getColumnIndex(CONVO_COL_5)));
+        db.update(CONVERSATION_TABLE_NAME,contentValues,"EMAIL = ?",new String[]{email});
         res.close();
     }
     public void updateConversationWindowWithDifferentEmail(String email, Contact updatedContact){
-        //TODO figure this out
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from "+ CONVERSATION_WINDOW_NAME + " where EMAIL = ?";
         Cursor res = db.rawQuery(query,new String[] {email});
         String updatedEmail = updatedContact.getEmail();
         String updatedName = updatedContact.getFirstName()+" "+updatedContact.getLastName();
-        while(res.moveToNext()){
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(WINDOW_COL_1,updatedEmail);
-            contentValues.put(WINDOW_COL_2,updatedName);
-            contentValues.put(WINDOW_COL_3,res.getString(res.getColumnIndex(WINDOW_COL_3)));
-            contentValues.put(WINDOW_COL_4,res.getString(res.getColumnIndex(WINDOW_COL_4)));
-            contentValues.put(WINDOW_COL_5,res.getString(res.getColumnIndex(WINDOW_COL_5)));
-            contentValues.put(WINDOW_COL_6,res.getInt(res.getColumnIndex(WINDOW_COL_6)));
-            db.insert(CONVERSATION_WINDOW_NAME,null,contentValues);
-        }
-        db.delete(CONVERSATION_WINDOW_NAME, "EMAIL = ?", new String[] {email});
-
+        res.moveToNext();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(WINDOW_COL_1,updatedEmail);
+        contentValues.put(WINDOW_COL_2,updatedName);
+        contentValues.put(WINDOW_COL_3,res.getString(res.getColumnIndex(WINDOW_COL_3)));
+        contentValues.put(WINDOW_COL_4,res.getString(res.getColumnIndex(WINDOW_COL_4)));
+        contentValues.put(WINDOW_COL_5,res.getString(res.getColumnIndex(WINDOW_COL_5)));
+        contentValues.put(WINDOW_COL_6,res.getInt(res.getColumnIndex(WINDOW_COL_6)));
+        db.update(CONVERSATION_WINDOW_NAME,contentValues,"EMAIL = ?",new String[]{email});
     }
     public void changeConversationData(String email, Contact updatedContact){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -266,8 +300,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(CONVO_COL_2,updatedContact.getFirstName()+" "+updatedContact.getLastName());
         contentValues.put(CONVO_COL_3,res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
         contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
-        db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
-        db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
+        contentValues.put(CONVO_COL_5,res.getString(res.getColumnIndex(CONVO_COL_5)));
+        db.update(CONVERSATION_TABLE_NAME,contentValues, "EMAIL = ?", new String[] {email});
         res.close();
     }
     public Date getContactDate(String email){

@@ -22,7 +22,6 @@ import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.GetMail;
 import org.lightsys.emailhelper.MessageWindowActivity;
-import org.lightsys.emailhelper.NotificationBase;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 import org.lightsys.emailhelper.emailNotification;
@@ -30,6 +29,7 @@ import org.lightsys.emailhelper.emailNotification;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class ConversationFragment extends android.app.Fragment{
 
@@ -74,8 +74,6 @@ public class ConversationFragment extends android.app.Fragment{
         // Lookup the swipe container view
         swipeContainer = rootView.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
-        //TODO to easily find where the refresh code is.
-
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -129,7 +127,7 @@ public class ConversationFragment extends android.app.Fragment{
     public void makeRecyclerView(View view) {
         db = new DatabaseHelper(getActivity().getApplicationContext());                             //Creates instance of database
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);                        //Makes the RecyclerView
+        recyclerView = view.findViewById(R.id.recycler_view);                        //Makes the RecyclerView
 
         cAdapter = new ConversationAdapter(conversationList);//Adapter for the Conversations
 
@@ -143,9 +141,11 @@ public class ConversationFragment extends android.app.Fragment{
             @Override
             public void onClick(View view, int position) {
                 Conversation conversation = conversationList.get(position);
-                Toast.makeText(getActivity().getApplicationContext(), conversation.getName() + " is selected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), conversation.getName() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity().getBaseContext(), MessageWindowActivity.class);
                 intent.putExtra(getString(R.string.intent_email), conversation.getEmail());
+                conversation.resetNewMail();
+                db.resetNewMailBoolean(conversation.getEmail());
                 startActivity(intent);
             }
             @Override
@@ -167,9 +167,14 @@ public class ConversationFragment extends android.app.Fragment{
         cAdapter.notifyItemRangeRemoved(0,size);
 
         Cursor res = db.getConversationData();
+        Stack<Conversation> temp = new Stack<>();
         while (res.moveToNext()) {
-            Conversation conversation = new Conversation(res.getString(0), res.getString(1), res.getString(2));
-            conversationList.add(conversation);
+            Conversation conversation = new Conversation(res.getString(0), res.getString(1), res.getString(2),1==res.getInt(res.getColumnIndex(db.CONVO_COL_5)));
+            temp.push(conversation);
+            //conversationList.add(conversation);
+        }
+        while(!temp.isEmpty()){
+            conversationList.add(temp.pop());
         }
         cAdapter.notifyDataSetChanged();
     }

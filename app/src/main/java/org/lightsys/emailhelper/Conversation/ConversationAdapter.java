@@ -1,5 +1,6 @@
 package org.lightsys.emailhelper.Conversation;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Conversation conversation = conversationList.get(position);
+        holder.name.setTypeface(null, Typeface.NORMAL);
+        if(conversation.getMailStatus()){
+            holder.name.setTypeface(null,Typeface.BOLD);
+        }
         holder.email.setText(conversation.getEmail());
         holder.name.setText(conversation.getName());
         holder.time.setText(conversation.getTime());

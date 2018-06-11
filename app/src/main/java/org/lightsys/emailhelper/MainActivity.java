@@ -25,7 +25,6 @@ import org.lightsys.emailhelper.qr.launchQRScanner;
 public class MainActivity extends AppCompatActivity{
 
     // TODO: Remove or figure out how to make the DividerItemDecoration work
-    // TODO: Add multiple mail services
     // TODO: Polling or push notifications
 
     static private final int QR_RESULT = 1;
@@ -76,11 +75,11 @@ public class MainActivity extends AppCompatActivity{
         myEdit.putString(getString(R.string.key_email),password.User);
         myEdit.apply();
 
-        Contact send1 = password.sender1;
+        Contact send1 = password.sender2;
         db.insertContactData(send1.getEmail(),send1.getFirstName(),send1.getLastName());
         db.insertConversationData(send1.getEmail(),send1.getFirstName()+" "+send1.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
 
-        Contact send2 = password.sender2;
+        Contact send2 = password.sender1;
         db.insertContactData(send2.getEmail(),send2.getFirstName(),send2.getLastName());
         db.insertConversationData(send2.getEmail(),send2.getFirstName()+" "+send2.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
         //Hard code ^^^^^

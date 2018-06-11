@@ -41,10 +41,10 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
 public class GetMail extends AsyncTask<URL, Integer, Long> {
-    DatabaseHelper db;
+    private DatabaseHelper db;
     SharedPreferences sp;
     Resources r;
-    Context c;
+    private Context c;
 
     public GetMail(Context context){
         c = context;
@@ -93,7 +93,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                     String output = subject + "\n" + body;
                     ConversationWindow convo = new ConversationWindow(res.getString(0), null, output, messageID, false);
                     boolean isInserted = db.willInsertWindowData(res.getString(0), res.getString(0), output, false, messageID);
-                    if (isInserted == false) {
+                    if (!isInserted) {
                         break;
                     } else {
                         convos.push(convo);
@@ -130,7 +130,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         return receivedNew;
     }
 
-    public static String getTextFromMessage(Message message) throws MessagingException, IOException {
+    private static String getTextFromMessage(Message message) throws MessagingException, IOException {
         String result = "";
         if (message.isMimeType("text/plain")) {
             result = message.getContent().toString();
@@ -141,26 +141,26 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         return result;
     }
 
-    public static String getSubjectFromMessage(Message message) throws MessagingException {
+    private static String getSubjectFromMessage(Message message) throws MessagingException {
         String result = "";
-        result = message.getSubject().toString();
+        result = message.getSubject();
         return result;
     }
-    public static String getTextFromMimeMultipart(Multipart mimeMultipart)  throws MessagingException, IOException {
-        String result = "";
+    private static String getTextFromMimeMultipart(Multipart mimeMultipart)  throws MessagingException, IOException {
+        StringBuilder result = new StringBuilder();
         int count = mimeMultipart.getCount();
         for (int i = 0; i < count; i++) {
             BodyPart bodyPart = mimeMultipart.getBodyPart(i);
             if (bodyPart.isMimeType("text/plain")) {
-                result = result + bodyPart.getContent();
+                result.append(bodyPart.getContent());
                 break; // without break same text appears twice in my tests
             } else if (bodyPart.isMimeType("text/html")) {
                 String html = (String) bodyPart.getContent();
-                result = result + org.jsoup.Jsoup.parse(html).text();
+                result.append(org.jsoup.Jsoup.parse(html).text());
             } else if (bodyPart.getContent() instanceof MimeMultipart){
-                result = result + getTextFromMimeMultipart((MimeMultipart)bodyPart.getContent());
+                result.append(getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent()));
             }
         }
-        return result;
+        return result.toString();
     }
 }

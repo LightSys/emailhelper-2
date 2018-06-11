@@ -136,6 +136,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
             conversationWindowList.add(conversationWindow);
             System.out.println(res.getString(2));
         }
+
         cAdapter.notifyDataSetChanged();
     }
 }
