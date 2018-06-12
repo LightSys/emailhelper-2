@@ -86,6 +86,8 @@
     <string name="contact_settings_edit_contact_button" translatable="true">Edit Contact</string>
     <string name="contact_settings_DASN_button" translatable="true">Delete and Start New Conversation</string>
     <string name="contact_settings_delete_button" translatable="true">Delete Conversation</string>
+    <string name="action_edit_contact" translatable="true">Edit Contact</string>
+    <string name="action_edit_contact_settings" translatable="true">Edit Contact Settings</string>
 
     <!-- Intent Strings -->
     <string name="intent_first_name" translatable="false">first_name</string>
@@ -110,7 +112,7 @@
     <string name="conversation_not_deleted_poststring" translatable="true">" not deleted."</string>
 
     <!-- Notification Strings -->
-    <string name="notification_title_prestring" translatable="true">New message from</string>
+    <string name="notification_title_prestring" translatable="true">"New message from "</string>
     <string name="notification_title_poststring" translatable="true"></string>
 
     <!-- Emails Strings -->

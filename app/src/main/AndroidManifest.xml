@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MessageWindowActivity"
+            android:name=".Conversation.ConversationActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

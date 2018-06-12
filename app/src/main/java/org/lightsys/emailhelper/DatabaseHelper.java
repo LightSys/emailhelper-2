@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.lightsys.emailhelper.Contact.Contact;
+import org.lightsys.emailhelper.Conversation.Conversation;
+import org.lightsys.emailhelper.Conversation.ConversationWindow;
 
 import java.util.Date;
 
@@ -183,7 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return result == -1;
     }
 
-    public boolean willInsertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
+    public boolean willInsertWindowData(String messageID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + messageID;
         Cursor cursor = db.rawQuery(query, null);
@@ -194,7 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return true;
     }
 
-    public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
+    public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID,String filePath) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + messageID;
         Cursor cursor = db.rawQuery(query, null);
@@ -206,8 +208,27 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(WINDOW_COL_1, email);
         contentValues.put(WINDOW_COL_2, name);
         contentValues.put(WINDOW_COL_3, message);
+        contentValues.put(WINDOW_COL_4, filePath);
         contentValues.put(WINDOW_COL_5, messageID);
         contentValues.put(WINDOW_COL_6, sent_by_me);
+        long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
+        return result != -1;
+    }
+    public boolean insertWindowData(ConversationWindow convo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + convo.getMessageId();
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.getCount() > 0) {
+            cursor.close();
+            return false;
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(WINDOW_COL_1, convo.getEmail());
+        contentValues.put(WINDOW_COL_2, convo.getName());
+        contentValues.put(WINDOW_COL_3, convo.getMessage());
+        contentValues.put(WINDOW_COL_4,convo.getAttachmentFilePath());
+        contentValues.put(WINDOW_COL_5, convo.getMessageId());
+        contentValues.put(WINDOW_COL_6, convo.getSent());
         long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
         return result != -1;
     }
@@ -221,6 +242,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public Cursor getContactData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
+    }
+    public Contact getContact(String email){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res =  db.rawQuery("select * from " + CONTACT_TABLE_NAME + " WHERE EMAIL = ?", new String[]{email});
+        res.moveToNext();
+        return new Contact(res.getString(0),res.getString(1),res.getString(2));
     }
     public Cursor getConversationData(){
         SQLiteDatabase db = this.getWritableDatabase();

@@ -21,7 +21,6 @@ import android.widget.Toast;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.GetMail;
-import org.lightsys.emailhelper.MessageWindowActivity;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 import org.lightsys.emailhelper.emailNotification;
@@ -142,7 +141,7 @@ public class ConversationFragment extends android.app.Fragment{
             public void onClick(View view, int position) {
                 Conversation conversation = conversationList.get(position);
                 Toast.makeText(getActivity().getApplicationContext(), conversation.getName() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity().getBaseContext(), MessageWindowActivity.class);
+                Intent intent = new Intent(getActivity().getBaseContext(), ConversationActivity.class);
                 intent.putExtra(getString(R.string.intent_email), conversation.getEmail());
                 conversation.resetNewMail();
                 db.resetNewMailBoolean(conversation.getEmail());

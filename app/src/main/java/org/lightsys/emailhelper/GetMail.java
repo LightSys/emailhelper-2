@@ -11,11 +11,16 @@ import android.widget.Toast;
 
 import com.sun.mail.imap.IMAPStore;
 
+import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Conversation.Conversation;
 import org.lightsys.emailhelper.Conversation.ConversationFragment;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.Calendar;
@@ -29,6 +34,7 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.UIDFolder;
@@ -44,7 +50,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
     private DatabaseHelper db;
     SharedPreferences sp;
     Resources r;
-    private Context c;
+    private static Context c;
 
     public GetMail(Context context){
         c = context;
@@ -78,41 +84,45 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
             while (res.moveToNext()) {
-                sender = new FromTerm(new InternetAddress(res.getString(0)));
-                Date createdDate = db.getContactDate(res.getString(0));
+                String email = res.getString(0);
+                String name = db.getContactName(email);
+                sender = new FromTerm(new InternetAddress(email));
+                Date createdDate = db.getContactDate(email);
                 SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,createdDate);
                 SearchTerm andTerm = new AndTerm(sender, newerThan);
                 Message messages[] = inbox.search(andTerm);
                 Stack<ConversationWindow> convos = new Stack<>();//The purpose of this stack is to organize more messages into time order.
-                //Stack<ConversationWindow> dontSendNotifications = new Stack<>();
                 for (int i = messages.length - 1; i >= 0; i--) {
                     Message message = messages[i];
                     String messageID = Long.toString(uf.getUID(message));
+                    if(!db.willInsertWindowData(messageID)){
+                        break;
+                    }
                     String subject = getSubjectFromMessage(message);
                     String body = getTextFromMessage(message);
                     String output = subject + "\n" + body;
-                    ConversationWindow convo = new ConversationWindow(res.getString(0), null, output, messageID, false);
-                    boolean isInserted = db.willInsertWindowData(res.getString(0), res.getString(0), output, false, messageID);
-                    if (!isInserted) {
-                        break;
-                    } else {
-                        convos.push(convo);
-                        String Title = r.getString(R.string.notification_title_prestring)+ db.getContactName(convo.getEmail())+r.getString(R.string.notification_title_poststring);
-                        String NotificationMessage = convo.getMessage();
-                        boolean showMessage = sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages));
-                        if(!showMessage){
-                            NotificationMessage = NotificationMessage.substring(0,subject.length());
-                        }
-                        if(db.getNotificationSettings(res.getString(0))){
-                            receivedNew.push(Title,NotificationMessage);
-                        }
-
+                    String filePath = getAttachment(email,(Multipart) message.getContent());
+                    if(filePath != null){
+                        output += "\n Attachment Saved to "+filePath+".";
                     }
+                    ConversationWindow convo = new ConversationWindow(email, name, output, messageID, false,filePath);
+                    convos.push(convo);
+                    String Title = r.getString(R.string.notification_title_prestring)+ name +r.getString(R.string.notification_title_poststring);
+                    String NotificationMessage = convo.getMessage();
+                    boolean showMessage = sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages));
+                    if(!showMessage){
+                        NotificationMessage = NotificationMessage.substring(0,subject.length());
+                    }
+                    if(db.getNotificationSettings(email)){
+                        receivedNew.push(Title,NotificationMessage);
+                    }
+
+
 
                 }
                 while(!convos.isEmpty()){
                     ConversationWindow convo = convos.pop();
-                    db.insertWindowData(convo.getEmail(), convo.getName(), convo.getMessage(), false, convo.getMessageId());
+                    db.insertWindowData(convo);
                     db.updateConversation(convo.getEmail(),CommonMethods.getCurrentTime());
                 }
             }
@@ -160,7 +170,33 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
             } else if (bodyPart.getContent() instanceof MimeMultipart){
                 result.append(getTextFromMimeMultipart((MimeMultipart) bodyPart.getContent()));
             }
+
         }
         return result.toString();
     }
+    private static String getAttachment(String email, Multipart mimeMultipart) throws MessagingException, IOException {
+        int count = mimeMultipart.getCount();
+        String filePath = null;
+        for(int i = 0;i<count;i++) {
+            BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+            String temp = bodyPart.getDisposition();
+            if(temp != null) {
+                if (temp.equalsIgnoreCase(Part.ATTACHMENT)) {//checks for an attachment
+                    c.getDir(email,Context.MODE_PRIVATE);
+                    File tempFile = new File(c.getDir(email,Context.MODE_PRIVATE),bodyPart.getFileName());
+                    FileOutputStream outputStream = new FileOutputStream(tempFile);
+                    InputStream inputStream = bodyPart.getInputStream();
+                    byte[] buffer = new byte[4096];
+                    int byteRead;
+                    while ((byteRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, byteRead);
+                    }
+                    outputStream.close();
+                    filePath = tempFile.getAbsolutePath();
+                }
+            }
+        }
+        return filePath;
+    }
+
 }
