@@ -1,6 +1,7 @@
 package org.lightsys.emailhelper.qr;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -22,6 +23,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import net.glxn.qrgen.core.scheme.VCard;
 
 import org.lightsys.emailhelper.CommonMethods;
+import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
@@ -70,34 +72,31 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
                 newContact.setLastName(name.substring(name.indexOf(" ")+1));
                 db = new DatabaseHelper(getApplicationContext());
                 dialog.dismiss();
-                AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
-                builder.setMessage("Would you like to add "+newContact.getFirstName()+" "+newContact.getLastName()+" to contacts?");
-                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        db.insertContactData(newContact);
-                        db.insertConversationData(newContact, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
-                        Intent resultIntent = new Intent();
-                        setResult(Activity.RESULT_OK, resultIntent);
-                        finish();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent resultIntent = new Intent();
-                        setResult(Activity.RESULT_OK, resultIntent);
-                        finish();
-                    }
-                });
-                builder.create().show();
-
-
+                String confirmMessage = "Would you like to add "+newContact.getFirstName()+" "+newContact.getLastName()+" to contacts?";
+                String confirmWord= "Confirm";
+                new ConfirmDialog(confirmMessage,confirmWord,activityContext,addContactRunnable,cancelRunnable);
             }
+            Runnable addContactRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    db.insertContactData(newContact);
+                    db.insertConversationData(newContact, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
+                    Intent resultIntent = new Intent();
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }
+            };
+            Runnable cancelRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    Intent resultIntent = new Intent();
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }
+            };
         });
-
-
     }
+
 
     // for multiple callback
     @Override

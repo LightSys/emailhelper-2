@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.GetMail;
@@ -107,30 +108,29 @@ public class ConversationFragment extends android.app.Fragment{
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             deleteRow = viewHolder.getAdapterPosition();
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Are you sure you want to delete the conversation with "+conversationList.get(deleteRow).getName()+" ?");
-            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Integer deletedRows = db.deleteConversationData(conversationList.get(deleteRow).getEmail());
-                    if (deletedRows > 0)
-                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_deleted_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_deleted_poststring),
-                                Toast.LENGTH_SHORT).show();
-                    conversationList.remove(deleteRow);
-                    cAdapter.notifyDataSetChanged();
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(getActivity().getApplicationContext(),getString(R.string.conversation_not_deleted_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_not_deleted_poststring),
-                            Toast.LENGTH_SHORT).show();
-                    prepareConversationData();
-                }
-            });
-            builder.create().show();
+            String deletionMessage = "Are you sure you want to delete the conversation with "+conversationList.get(deleteRow).getName()+" ?";
+            String deletionWord = "Delete";
+            new ConfirmDialog(deletionMessage,deletionWord,getActivity(),deletionRunnable,cancelRunnable);
         }
+        Runnable deletionRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Integer deletedRows = db.deleteConversationData(conversationList.get(deleteRow).getEmail());
+                if (deletedRows > 0)
+                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_deleted_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_deleted_poststring), Toast.LENGTH_SHORT).show();
+                conversationList.remove(deleteRow);
+                prepareConversationData();
+            }
+        };
+        Runnable cancelRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity().getApplicationContext(),getString(R.string.conversation_not_deleted_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_not_deleted_poststring), Toast.LENGTH_SHORT).show();
+                prepareConversationData();
+            }
+        };
     };
+
 
     /**********************************************************************************************
      *        Has all the steps needed to make the RecyclerView that holds the conversations.     *

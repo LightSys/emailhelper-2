@@ -193,33 +193,31 @@ public class AttachmentActivity extends AppCompatActivity {
             //Need to delete it from DB before getting rid of it from the list
             attachment = "/data/user/0/org.lightsys.emailhelper/app_"+email+"/"+attachmentName;
             attachmentFile = new File(attachment);
-
-
-            //Remove swiped item from list and notify the RecyclerView
-            AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
-            builder.setMessage("Are you sure that you want to delete "+attachmentName+"?");
-            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                    db.deleteAttachment(email, attachment);
-                    adapter.attachments.remove(deleteRow);
-                    adapter = new AttachmentAdapter(email,db);
-                    attachments.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                    attachmentFile.delete();
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                    adapter = new AttachmentAdapter(email,db);
-                    attachments.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            builder.create().show();
+            String deletionMessage = "Are you sure that you want to delete "+attachmentName+"?";
+            new ConfirmDialog(deletionMessage,"Delete",activityContext,deletionRunnable,cancelRunnable);
         }
+        Runnable deletionRunnable = new Runnable() {
+            @Override
+            public void run() {
+                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                db.deleteAttachment(email, attachment);
+                adapter.attachments.remove(deleteRow);
+                attachmentFile.delete();
+                prepareAttachmentData();
+            }
+        };
+        Runnable cancelRunnable = new Runnable() {
+            @Override
+            public void run() {
+                prepareAttachmentData();
+            }
+        };
     };
+
+    public void prepareAttachmentData(){
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        adapter = new AttachmentAdapter(email,db);
+        attachments.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 }

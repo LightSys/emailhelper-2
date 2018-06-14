@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.R;
@@ -85,31 +87,30 @@ public class ContactFragment extends android.app.Fragment {
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             deleteRow = viewHolder.getAdapterPosition();
             deleteName = contactList.get(deleteRow).getFirstName()+" "+contactList.get(deleteRow).getLastName();
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Are you sure you want to delete "+deleteName+" from contacts?");
-            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Integer deletedRows = db.deleteContactData(contactList.get(deleteRow).getEmail());
-                    db.deleteConversationData(contactList.get(deleteRow).getEmail());
-                    if (deletedRows > 0)//Remove from Database
-                        Toast.makeText(getActivity().getApplicationContext(), deleteName+" deleted from contacts.", Toast.LENGTH_SHORT).show();
-                    contactList.remove(deleteRow);//Then delete from list
-                    contactAdapter.notifyDataSetChanged();
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(getActivity().getApplicationContext(), deleteName+" not deleted from contacts.", Toast.LENGTH_SHORT).show();
-                    prepareContactData();
-                }
-            });
-            builder.create().show();
+            String deletionMessage = "Are you sure you want to delete "+deleteName+" from contacts?";
+            String deletionWord = "Delete";
+            new ConfirmDialog(deletionMessage,deletionWord,getActivity(),deletionRunnable,cancelRunnable);
         }
+        Runnable deletionRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Integer deletedRows = db.deleteContactData(contactList.get(deleteRow).getEmail());
+                db.deleteConversationData(contactList.get(deleteRow).getEmail());
+                if (deletedRows > 0)//Remove from Database
+                    Toast.makeText(getActivity().getApplicationContext(), deleteName+" deleted from contacts.", Toast.LENGTH_SHORT).show();
+                contactList.remove(deleteRow);//Then delete from list
+                prepareContactData();
+            }
+        };
+        Runnable cancelRunnable = new Runnable(){
+            @Override
+            public void run() {
+                Toast.makeText(getActivity().getApplicationContext(), deleteName+" not deleted from contacts.", Toast.LENGTH_SHORT).show();
+                prepareContactData();
+            }
+        };
     };
+
 
     /**********************************************************************************************
      *          Has all the steps needed to make the RecyclerView that holds the contacts.        *
@@ -167,7 +168,6 @@ public class ContactFragment extends android.app.Fragment {
      **********************************************************************************************/
 
     public void prepareContactData() {
-
         int size = contactList.size();                                                              //I clear the list here so that we can update it after new contacts are added from the
         contactList.clear();                                                                        //new contact fragment
         contactAdapter.notifyItemRangeRemoved(0,size);
