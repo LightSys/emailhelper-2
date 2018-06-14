@@ -5,29 +5,16 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
-
 import com.sun.mail.imap.IMAPStore;
-
-import org.lightsys.emailhelper.Contact.Contact;
-import org.lightsys.emailhelper.Conversation.Conversation;
-import org.lightsys.emailhelper.Conversation.ConversationFragment;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Stack;
-
 import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Folder;
@@ -36,8 +23,8 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
-import javax.mail.Store;
 import javax.mail.UIDFolder;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.AndTerm;
@@ -50,7 +37,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
     private DatabaseHelper db;
     SharedPreferences sp;
     Resources r;
-    private static Context c;
+    private Context c;
 
     public GetMail(Context context){
         c = context;
@@ -64,33 +51,22 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         getMail();
         return null;
     }
-    protected void onPostExecute(Long result) {
-
-    }
+    protected void onPostExecute(Long result) {}
     public emailNotification getMail() {
         emailNotification receivedNew = new emailNotification();
         Cursor res = db.getContactData();
-        SearchTerm sender;
         Properties props = System.getProperties();
-        props.setProperty("mail.store.protocol", "imaps");
-        props.put("mail.stmp.auth","true");
-        props.put("mail.smtp.starttls.enable","true");
-        props.put("mail.imap.port","993");
+        setProperties(props);
         try {
-            Session session = Session.getDefaultInstance(props, null);
-            IMAPStore store = (IMAPStore) session.getStore("imaps");
-            store.connect(HelperClass.incoming, HelperClass.Email, HelperClass.Password);
-            Folder inbox = store.getFolder("Inbox");
+            Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
             while (res.moveToNext()) {
                 String email = res.getString(0);
                 String name = db.getContactName(email);
-                sender = new FromTerm(new InternetAddress(email));
-                Date createdDate = db.getContactDate(email);
-                SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,createdDate);
-                SearchTerm andTerm = new AndTerm(sender, newerThan);
-                Message messages[] = inbox.search(andTerm);
+
+                SearchTerm searchTerm = getSearchTerm(email);
+                Message messages[] = inbox.search(searchTerm);
                 Stack<ConversationWindow> convos = new Stack<>();//The purpose of this stack is to organize more messages into time order.
                 for (int i = messages.length - 1; i >= 0; i--) {
                     Message message = messages[i];
@@ -98,27 +74,21 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                     if(!db.willInsertWindowData(messageID)){
                         break;
                     }
-                    String subject = getSubjectFromMessage(message);
-                    String body = getTextFromMessage(message);
-                    String output = subject + "\n" + body;
-                    Boolean attachments = getAttachments(email,message);
-                    if(attachments){
-                        output += "\n Attachment(s) were saved from this email.\n To view go to Contact Settings.";
+
+                    String content = getMessageContent(message);
+                    if(getAttachments(email,message)){
+                        content += "\n Attachment(s) were saved from this email.\n To view go to Contact Settings.";
                     }
-                    ConversationWindow convo = new ConversationWindow(email, name, output, messageID, false);
+                    ConversationWindow convo = new ConversationWindow(email, name, content, messageID, false);
                     convos.push(convo);
                     String Title = r.getString(R.string.notification_title_prestring)+ name +r.getString(R.string.notification_title_poststring);
                     String NotificationMessage = convo.getMessage();
-                    boolean showMessage = sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages));
-                    if(!showMessage){
-                        NotificationMessage = NotificationMessage.substring(0,subject.length());
+                    if(!sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages))){
+                        NotificationMessage = NotificationMessage.substring(0,message.getSubject().length());
                     }
                     if(db.getNotificationSettings(email)){
                         receivedNew.push(Title,NotificationMessage);
                     }
-
-
-
                 }
                 while(!convos.isEmpty()){
                     ConversationWindow convo = convos.pop();
@@ -139,8 +109,30 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return receivedNew;
     }
-
-    private static String getTextFromMessage(Message message) throws MessagingException, IOException {
+    private String getMessageContent(Message message) throws MessagingException, IOException {
+        String subject = message.getSubject();
+        String body = getTextFromMessage(message);
+        return subject + "\n" + body;
+    }
+    private SearchTerm getSearchTerm(String email) throws AddressException {
+        SearchTerm sender = new FromTerm(new InternetAddress(email));
+        Date createdDate = db.getContactDate(email);
+        SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,createdDate);
+        return new AndTerm(sender, newerThan);
+    }
+    private Folder getInbox(Properties props) throws MessagingException {
+        Session session = Session.getDefaultInstance(props, null);
+        IMAPStore store = (IMAPStore) session.getStore("imaps");
+        store.connect(HelperClass.incoming, HelperClass.Email, HelperClass.Password);
+        return store.getFolder("Inbox");
+    }
+    private void setProperties(Properties properties){
+        properties.setProperty("mail.store.protocol", "imaps");
+        properties.put("mail.stmp.auth","true");
+        properties.put("mail.smtp.starttls.enable","true");
+        properties.put("mail.imap.port","993");
+    }
+    private String getTextFromMessage(Message message) throws MessagingException, IOException {
         String result = "";
         if (message.isMimeType("text/plain")) {
             result = message.getContent().toString();
@@ -150,13 +142,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return result;
     }
-
-    private static String getSubjectFromMessage(Message message) throws MessagingException {
-        String result = "";
-        result = message.getSubject();
-        return result;
-    }
-    private static String getTextFromMimeMultipart(Multipart mimeMultipart)  throws MessagingException, IOException {
+    private String getTextFromMimeMultipart(Multipart mimeMultipart)  throws MessagingException, IOException {
         StringBuilder result = new StringBuilder();
         int count = mimeMultipart.getCount();
         for (int i = 0; i < count; i++) {
@@ -175,18 +161,12 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return result.toString();
     }
-
-    /**
-     * @return whether or not attachments were added to the database
-     * @throws MessagingException
-     * @throws IOException
-     */
-    private static boolean getAttachments(String email, Message message) throws MessagingException, IOException {
+    private boolean getAttachments(String email, Message message) throws MessagingException, IOException {
         boolean hasAttachments = false;
         if(message.isMimeType("multipart/*")){
             Multipart mimeMultipart = (Multipart)message.getContent();
             int count = mimeMultipart.getCount();
-            String filePath = null;
+            String filePath;
             for(int i = 0;i<count;i++) {
                 BodyPart bodyPart = mimeMultipart.getBodyPart(i);
                 String temp = bodyPart.getDisposition();

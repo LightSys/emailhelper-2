@@ -106,23 +106,19 @@ public class ConversationWindowFragment extends android.app.Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         ConversationWindow conversationWindow = new ConversationWindow(HelperClass.Email, null, messageSend.getText().toString(), null, true);
                         conversationWindowList.add(conversationWindow);
                         cAdapter.notifyDataSetChanged();
-
-                        persistantMessage = messageSend.getText().toString();                       //This is so we can clear the EditText field as soon as the button is
-                                                                                                    //pressed and not have to wait until after the Async Task is finished.
+                        persistantMessage = messageSend.getText().toString();
+                        // ^ This is so we can clear the EditText field as soon as the button is
+                        //pressed and not have to wait until after the Async Task is finished.
                         boolean isInserted = db.insertWindowData(passedEmail, null, persistantMessage, true, null);
                         SendMail sendInstance = new SendMail(passedEmail,persistantMessage,getActivity().getApplicationContext());
                         sendInstance.execute();
-
                         messageSend.getText().clear();
-
                         InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                         db.updateConversation(passedEmail, CommonMethods.getCurrentTime());
-
                     }
                 }
         );

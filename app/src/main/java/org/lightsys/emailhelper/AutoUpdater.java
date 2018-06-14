@@ -21,10 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import java.net.URL;
 import java.util.List;
-import java.util.Random;
 import xdroid.toaster.Toaster;
-
-import static android.provider.CalendarContract.CalendarCache.URI;
 import static java.lang.Math.pow;
 
 
@@ -113,7 +110,6 @@ public class AutoUpdater extends Service {
         }
         @Override
         protected void onPostExecute(Long l){
-
         }
     }
     /**********************************************************************************************

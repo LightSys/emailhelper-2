@@ -1,11 +1,9 @@
 package org.lightsys.emailhelper.qr;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,14 +12,9 @@ import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
-
 import com.google.android.gms.samples.vision.barcodereader.BarcodeCapture;
 import com.google.android.gms.samples.vision.barcodereader.BarcodeGraphic;
 import com.google.android.gms.vision.barcode.Barcode;
-
-import net.glxn.qrgen.core.scheme.VCard;
-
 import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.Contact.Contact;
@@ -35,6 +28,7 @@ import xyz.belvi.mobilevisionbarcodescanner.BarcodeRetriever;
 /**
  * Created by otter57 on 5/9/17.
  * https://android-arsenal.com/details/1/4516
+ * Pulled from eventApp for use in Email Helper
  */
 
 public class launchQRScanner extends AppCompatActivity implements BarcodeRetriever{
