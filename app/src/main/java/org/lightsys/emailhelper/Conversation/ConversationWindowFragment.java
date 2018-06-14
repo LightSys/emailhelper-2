@@ -107,13 +107,13 @@ public class ConversationWindowFragment extends android.app.Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        ConversationWindow conversationWindow = new ConversationWindow(HelperClass.Email, null, messageSend.getText().toString(), null, true,null);
+                        ConversationWindow conversationWindow = new ConversationWindow(HelperClass.Email, null, messageSend.getText().toString(), null, true);
                         conversationWindowList.add(conversationWindow);
                         cAdapter.notifyDataSetChanged();
 
                         persistantMessage = messageSend.getText().toString();                       //This is so we can clear the EditText field as soon as the button is
                                                                                                     //pressed and not have to wait until after the Async Task is finished.
-                        boolean isInserted = db.insertWindowData(passedEmail, null, persistantMessage, true, null,null);
+                        boolean isInserted = db.insertWindowData(passedEmail, null, persistantMessage, true, null);
                         SendMail sendInstance = new SendMail(passedEmail,persistantMessage,getActivity().getApplicationContext());
                         sendInstance.execute();
 
@@ -131,8 +131,8 @@ public class ConversationWindowFragment extends android.app.Fragment {
     public void prepareWindowRows() {
         Cursor res = db.getWindowData(passedEmail);
         while (res.moveToNext()) {
-            boolean sentValue = (res.getInt(5) == 1);
-            ConversationWindow conversationWindow = new ConversationWindow(res.getString(0), res.getString(1), res.getString(2), res.getString(4), sentValue,res.getString(3));
+            boolean sentValue = (res.getInt(4) == 1);
+            ConversationWindow conversationWindow = new ConversationWindow(res.getString(0), res.getString(1), res.getString(2), res.getString(3), sentValue);
             conversationWindowList.add(conversationWindow);
             System.out.println(res.getString(2));
         }

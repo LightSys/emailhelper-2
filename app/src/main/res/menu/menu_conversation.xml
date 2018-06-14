@@ -4,18 +4,19 @@
     android:layout_height="24dp"
     android:layout_width="wrap_content">
     <item
-        android:id="@+id/action_edit_contact_settings"
-        android:icon="@drawable/ic_settings_black_24dp"
-        android:title="@string/action_edit_contact_settings"
-        android:layout_height="4dp"
-        android:layout_width="4dp"
-        app:showAsAction="ifRoom"/>
-    <item
         android:id="@+id/action_edit_contact"
         android:icon="@drawable/person_white_24dp"
         android:title="@string/action_edit_contact"
         android:layout_height="4dp"
         android:layout_width="4dp"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_edit_contact_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/action_edit_contact_settings"
+        android:layout_height="4dp"
+        android:layout_width="4dp"
+        app:showAsAction="ifRoom"/>
+
 
 </menu>

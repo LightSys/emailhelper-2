@@ -39,13 +39,16 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public static String WINDOW_COL_1 = "EMAIL";
     public static String WINDOW_COL_2 = "NAME";
     public static String WINDOW_COL_3 = "MESSAGE";
-    public static String WINDOW_COL_4 = "ATTACHMENT";
     public static String WINDOW_COL_5 = "MESSAGE_ID";
     public static String WINDOW_COL_6 = "SENT_BY_ME";
     public static String WINDOW_COL_7 = "DB_ID";
     public static final String NOTIFICATION_SEND_LIST = "notification_send_list";
     public static String NOTIFICATION_COL_PRIMARY = "EMAIL";
     public static String NOTIFICATION_COL_BOOL    = "NOTIFICATION_BOOL";
+    public static final String ATTACHMENT_DATABASE = "attachment_database";
+    public static String ATTACHMENT_EMAIL = "EMAIL";
+    public static String ATTACHMENT_NAME = "ATTACHMENT";
+    public static String ATTACHMENT_PRIMARY = "MESSAGE_ID";
 
     public DatabaseHelper(Context context) {
         super (context, DATABASE_NAME, null, 1);
@@ -55,12 +58,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void onCreate (SQLiteDatabase db) {
         String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT, %s BOOL)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3, CONVO_COL_4,CONVO_COL_5);
         String contactQuery = String.format("create table " + CONTACT_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT)", CONTACT_COL_1, CONTACT_COL_2, CONTACT_COL_3);
-        String windowQuery = String.format("create table " + CONVERSATION_WINDOW_NAME + " ( %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", WINDOW_COL_1, WINDOW_COL_2, WINDOW_COL_3, WINDOW_COL_4, WINDOW_COL_5, WINDOW_COL_6, WINDOW_COL_7);
+        String windowQuery = String.format("create table " + CONVERSATION_WINDOW_NAME + " ( %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", WINDOW_COL_1, WINDOW_COL_2, WINDOW_COL_3, WINDOW_COL_5, WINDOW_COL_6, WINDOW_COL_7);
         String notiQuery = String.format("create table "+NOTIFICATION_SEND_LIST + " ( %s TEXT PRIMARY KEY, %s BOOLEAN)",NOTIFICATION_COL_PRIMARY,NOTIFICATION_COL_BOOL);
+        String attachmentQuery = String.format("create table "+ ATTACHMENT_DATABASE + " ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)",ATTACHMENT_PRIMARY,ATTACHMENT_EMAIL, ATTACHMENT_NAME);
         db.execSQL(conversationQuery);
         db.execSQL(contactQuery);
         db.execSQL(windowQuery);
         db.execSQL(notiQuery);
+        db.execSQL(attachmentQuery);
     }
 
     @Override
@@ -69,11 +74,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + CONTACT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CONVERSATION_WINDOW_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_SEND_LIST);
+        db.execSQL("DROP TABLE IF EXISTS " + ATTACHMENT_DATABASE);
         onCreate(db);
     }
     public boolean insertNotifications(String email){
         return insertNotifications(email,true);
     }
+
+    /**
+     * @param email email for the setting
+     * @param send boolean value of whether to send notifications to the email
+     * @return whether or not the set was inserted
+     */
     public boolean insertNotifications(String email,boolean send){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues c = new ContentValues();
@@ -82,18 +94,34 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         long result = db.insert(NOTIFICATION_SEND_LIST,null,c);
         return -1 != result;
     }
+
+    /**
+     * @param email the email in question
+     * @return returns the value in the database for the given email
+     *         returns false if the email is not in the database
+     */
     public boolean getNotificationSettings(String email){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from "+ NOTIFICATION_SEND_LIST + " where EMAIL = ?";
         Cursor res = db.rawQuery(query,new String[] {email});
+        if(res == null){
+            return false;
+        }
         res.moveToNext();
         int result = res.getInt(res.getColumnIndex(NOTIFICATION_COL_BOOL));
         return result == 1;
     }
+
+    /**
+     * @param email sets the email to the new value of send in the database
+     * @param send whether or not to send emails to the email
+     */
     public void setNotificationSettings(String email,boolean send) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTIFICATION_COL_PRIMARY,email);
+        contentValues.put(NOTIFICATION_COL_BOOL,send);
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(NOTIFICATION_SEND_LIST, "EMAIL = ?",new String[]{email});
-        insertNotifications(email,true);
+        db.update(NOTIFICATION_SEND_LIST,contentValues,"EMAIL = ?",new String[]{email});
     }
 
 
@@ -108,6 +136,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         return result != -1;
     }
+
+    /**
+     * @param email email of the new Conversation
+     * @param name name of the new Conversation
+     * @param time time of the new Conversation
+     * @param date created date of the new Conversation
+     * @param newmail whether there is newMail from this email
+     * @return returns if the conversation was inserted into the Database
+     */
     public boolean insertConversationData(String email, String name, String time, String date, boolean newmail){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -119,6 +156,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         return result != -1;
     }
+
+    /**
+     * @param newContact contact info of the new Conversation
+     * @param time time of the new Conversation
+     * @param date created date of the new Conversation
+     * @return returns if the conversation was inserted into the Database
+     */
     public boolean insertConversationData(Contact newContact, String time, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -142,6 +186,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return result != -1;
     }
 
+    /**
+     * @param email email for the settings to be reset
+     */
     public void resetNewMailBoolean(String email){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
@@ -158,12 +205,21 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     }
 
+    /** Deletes the conversation from the Database
+     * @param email email to be deleted
+     * @return returns if the conversation was deleted from the Database
+     */
     public Integer deleteConversationData(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(CONVERSATION_WINDOW_NAME,"EMAIL = ?",new String[]{email});
         return db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
     }
 
+    /** Adds the Contact to Database
+     * @param email
+     * @param firstName
+     * @param lastName
+     * @return
+     */
     public boolean insertContactData(String email, String firstName, String lastName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -174,6 +230,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
         return result != -1;
     }
+    /** Adds the Contact to Database
+     * @param newContact
+     * @return
+     */
     public boolean insertContactData(Contact newContact) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -185,6 +245,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return result == -1;
     }
 
+
+    /**
+     * @return whether or not the message will be inserted into the database
+     */
     public boolean willInsertWindowData(String messageID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + messageID;
@@ -196,7 +260,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return true;
     }
 
-    public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID,String filePath) {
+    /** This function will add the message into the database.
+     * @return
+     */
+    public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + messageID;
         Cursor cursor = db.rawQuery(query, null);
@@ -208,12 +275,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(WINDOW_COL_1, email);
         contentValues.put(WINDOW_COL_2, name);
         contentValues.put(WINDOW_COL_3, message);
-        contentValues.put(WINDOW_COL_4, filePath);
         contentValues.put(WINDOW_COL_5, messageID);
         contentValues.put(WINDOW_COL_6, sent_by_me);
         long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
         return result != -1;
     }
+
+    /**This function adds the message into the database
+     * @return
+     */
     public boolean insertWindowData(ConversationWindow convo) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + convo.getMessageId();
@@ -226,23 +296,34 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(WINDOW_COL_1, convo.getEmail());
         contentValues.put(WINDOW_COL_2, convo.getName());
         contentValues.put(WINDOW_COL_3, convo.getMessage());
-        contentValues.put(WINDOW_COL_4,convo.getAttachmentFilePath());
         contentValues.put(WINDOW_COL_5, convo.getMessageId());
         contentValues.put(WINDOW_COL_6, convo.getSent());
         long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
         return result != -1;
     }
 
+    /**
+     * @param email
+     * @return the messages for the given email
+     */
     public Cursor getWindowData(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONVERSATION_WINDOW_NAME + " where EMAIL = ?", new String[]{email}, null);
         return res;
     }
 
+    /**
+     * @return a cursor that points the the the contacts in the database
+     */
     public Cursor getContactData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
     }
+
+    /**This function get returns the contact info for a given email.
+     * @param email
+     * @return
+     */
     public Contact getContact(String email){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res =  db.rawQuery("select * from " + CONTACT_TABLE_NAME + " WHERE EMAIL = ?", new String[]{email});
@@ -254,6 +335,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return db.rawQuery("select * from " + CONVERSATION_TABLE_NAME, null);
     }
 
+    /**
+     * @return the name associated with the given email
+     */
     public String getContactName(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         String name = "";
@@ -272,6 +356,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(CONTACT_TABLE_NAME, "EMAIL = ?", new String[] {email});
     }
+
+    /**This function updates the conversation withh the new time and puts the conversation at the top of the database
+     *
+     * @param email
+     * @param currentTime
+     */
     public void updateConversation(String email, String currentTime){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
@@ -287,6 +377,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.insert(CONVERSATION_TABLE_NAME,null,contentValues);//This way the panels will reorder when a new time is given
         res.close();
     }
+
+    /**This function updates the conversation with new information
+     * @param email
+     * @param updatedContact
+     */
     public void updateConversation(String email, Contact updatedContact){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from "+ CONVERSATION_TABLE_NAME + " where EMAIL = ?";
@@ -307,34 +402,24 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         Cursor res = db.rawQuery(query,new String[] {email});
         String updatedEmail = updatedContact.getEmail();
         String updatedName = updatedContact.getFirstName()+" "+updatedContact.getLastName();
-        res.moveToNext();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(WINDOW_COL_1,updatedEmail);
-        contentValues.put(WINDOW_COL_2,updatedName);
-        contentValues.put(WINDOW_COL_3,res.getString(res.getColumnIndex(WINDOW_COL_3)));
-        contentValues.put(WINDOW_COL_4,res.getString(res.getColumnIndex(WINDOW_COL_4)));
-        contentValues.put(WINDOW_COL_5,res.getString(res.getColumnIndex(WINDOW_COL_5)));
-        contentValues.put(WINDOW_COL_6,res.getInt(res.getColumnIndex(WINDOW_COL_6)));
-        db.update(CONVERSATION_WINDOW_NAME,contentValues,"EMAIL = ?",new String[]{email});
-    }
-    public void changeConversationData(String email, Contact updatedContact){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "select * from "+ CONVERSATION_WINDOW_NAME + " where EMAIL = ?";
-        Cursor res = db.rawQuery(query,new String[] {email});
-        res.moveToNext();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(CONVO_COL_1, updatedContact.getEmail());//Use of email so there is not an extra function call
-        contentValues.put(CONVO_COL_2,updatedContact.getFirstName()+" "+updatedContact.getLastName());
-        contentValues.put(CONVO_COL_3,res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
-        contentValues.put(CONVO_COL_4,res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
-        contentValues.put(CONVO_COL_5,res.getString(res.getColumnIndex(CONVO_COL_5)));
-        db.update(CONVERSATION_TABLE_NAME,contentValues, "EMAIL = ?", new String[] {email});
+        while(res.moveToNext()){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(WINDOW_COL_1,updatedEmail);
+            contentValues.put(WINDOW_COL_2,updatedName);
+            contentValues.put(WINDOW_COL_3,res.getString(res.getColumnIndex(WINDOW_COL_3)));
+            contentValues.put(WINDOW_COL_5,res.getString(res.getColumnIndex(WINDOW_COL_5)));
+            contentValues.put(WINDOW_COL_6,res.getInt(res.getColumnIndex(WINDOW_COL_6)));
+            db.update(CONVERSATION_WINDOW_NAME,contentValues,"EMAIL = ?",new String[]{email});
+        }
         res.close();
+
     }
+
+    /**
+     * @return the createdDate for the given email
+     */
     public Date getContactDate(String email){
-        //The goal of this function is to take in a email string.
-        //Then search the database for the entry.
-        //The entry created date is converted to a special formatted output string used in getMail.
+        //
         Date today;
         String date = "";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -396,4 +481,39 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return today;
     }
 
+    /**This function gets the attachments for the email
+     * @param email
+     * @return
+     */
+    public Cursor getAttachments(String email){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select "+ATTACHMENT_NAME+" from " + ATTACHMENT_DATABASE + " where "+ATTACHMENT_EMAIL+" = ?";
+        return db.rawQuery(query,new String[]{email});
+    }
+
+    /**This function inserts an attachment with an email and the file path for the saved attachment
+     * @param email
+     * @param filePath
+     * @return
+     */
+    public boolean insertAttachment(String email, String filePath){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ATTACHMENT_EMAIL,email);
+        contentValues.put(ATTACHMENT_NAME,filePath);
+        long ret = db.insert(ATTACHMENT_DATABASE,null,contentValues);
+        return ret != -1;
+    }
+
+    /**This fucntion deletes the attachment.
+     * @param email
+     * @param filePath
+     * @return
+     */
+    public boolean deleteAttachment(String email, String filePath){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String where = "EMAIL = ? AND ATTACHMENT = ?";
+        long ret = db.delete(ATTACHMENT_DATABASE,where,new String[]{email,filePath});
+        return ret != -1;
+    }
 }

@@ -35,6 +35,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/contact_settings_edit_contact_button" />
+    <Button
+        android:id="@+id/show_attachments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_settings_show_attachments_button" />
+
 
     <Button
         android:id="@+id/delete_and_start_new_conversation"

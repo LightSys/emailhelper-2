@@ -101,11 +101,11 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                     String subject = getSubjectFromMessage(message);
                     String body = getTextFromMessage(message);
                     String output = subject + "\n" + body;
-                    String filePath = getAttachment(email,(Multipart) message.getContent());
-                    if(filePath != null){
-                        output += "\n Attachment Saved to "+filePath+".";
+                    Boolean attachments = getAttachments(email,message);
+                    if(attachments){
+                        output += "\n Attachment(s) were saved from this email.\n To view go to Contact Settings.";
                     }
-                    ConversationWindow convo = new ConversationWindow(email, name, output, messageID, false,filePath);
+                    ConversationWindow convo = new ConversationWindow(email, name, output, messageID, false);
                     convos.push(convo);
                     String Title = r.getString(R.string.notification_title_prestring)+ name +r.getString(R.string.notification_title_poststring);
                     String NotificationMessage = convo.getMessage();
@@ -161,6 +161,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         int count = mimeMultipart.getCount();
         for (int i = 0; i < count; i++) {
             BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+
             if (bodyPart.isMimeType("text/plain")) {
                 result.append(bodyPart.getContent());
                 break; // without break same text appears twice in my tests
@@ -174,29 +175,42 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return result.toString();
     }
-    private static String getAttachment(String email, Multipart mimeMultipart) throws MessagingException, IOException {
-        int count = mimeMultipart.getCount();
-        String filePath = null;
-        for(int i = 0;i<count;i++) {
-            BodyPart bodyPart = mimeMultipart.getBodyPart(i);
-            String temp = bodyPart.getDisposition();
-            if(temp != null) {
-                if (temp.equalsIgnoreCase(Part.ATTACHMENT)) {//checks for an attachment
-                    c.getDir(email,Context.MODE_PRIVATE);
-                    File tempFile = new File(c.getDir(email,Context.MODE_PRIVATE),bodyPart.getFileName());
-                    FileOutputStream outputStream = new FileOutputStream(tempFile);
-                    InputStream inputStream = bodyPart.getInputStream();
-                    byte[] buffer = new byte[4096];
-                    int byteRead;
-                    while ((byteRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, byteRead);
+
+    /**
+     * @return whether or not attachments were added to the database
+     * @throws MessagingException
+     * @throws IOException
+     */
+    private static boolean getAttachments(String email, Message message) throws MessagingException, IOException {
+        boolean hasAttachments = false;
+        if(message.isMimeType("multipart/*")){
+            Multipart mimeMultipart = (Multipart)message.getContent();
+            int count = mimeMultipart.getCount();
+            String filePath = null;
+            for(int i = 0;i<count;i++) {
+                BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+                String temp = bodyPart.getDisposition();
+                if (temp != null) {
+                    if (temp.equalsIgnoreCase(Part.ATTACHMENT)) {//checks for an attachment
+                        c.getDir(email, Context.MODE_PRIVATE);
+                        File tempFile = new File(c.getDir(email, Context.MODE_PRIVATE), bodyPart.getFileName());
+                        FileOutputStream outputStream = new FileOutputStream(tempFile);
+                        InputStream inputStream = bodyPart.getInputStream();
+                        byte[] buffer = new byte[4096];
+                        int byteRead;
+                        while ((byteRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, byteRead);
+                        }
+                        outputStream.close();
+                        filePath = tempFile.getAbsolutePath();
+                        DatabaseHelper db = new DatabaseHelper(c);
+                        db.insertAttachment(email, filePath);
+                        hasAttachments = true;
                     }
-                    outputStream.close();
-                    filePath = tempFile.getAbsolutePath();
                 }
             }
         }
-        return filePath;
+        return hasAttachments;
     }
 
 }

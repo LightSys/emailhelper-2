@@ -12,16 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.lightsys.emailhelper.Contact.Contact;
-import org.lightsys.emailhelper.Contact.ContactActivity;
 import org.lightsys.emailhelper.Contact.ContactSettingsActivity;
-import org.lightsys.emailhelper.Contact.NewContactActivity;
-import org.lightsys.emailhelper.Contact.editContactActivity;
-import org.lightsys.emailhelper.Conversation.ConversationWindowFragment;
+import org.lightsys.emailhelper.Contact.EditContactActivity;
 import org.lightsys.emailhelper.DatabaseHelper;
-import org.lightsys.emailhelper.LoginActivity;
 import org.lightsys.emailhelper.R;
-import org.lightsys.emailhelper.SettingsActivity;
-import org.lightsys.emailhelper.qr.QRActivity;
 
 /**************************************************************************************************
  *  This is the activity where everything happens in the message window, outside of a             *
@@ -77,7 +71,7 @@ public class ConversationActivity extends AppCompatActivity {
         Contact contact = new DatabaseHelper(getApplicationContext()).getContact(email);
         switch(id){
             case R.id.action_edit_contact:
-                Intent editContact = new Intent(getApplicationContext(),editContactActivity.class);
+                Intent editContact = new Intent(getApplicationContext(),EditContactActivity.class);
                 editContact.putExtra(getString(R.string.intent_email),contact.getEmail());
                 editContact.putExtra(getString(R.string.intent_first_name),contact.getFirstName());
                 editContact.putExtra(getString(R.string.intent_last_name),contact.getLastName());

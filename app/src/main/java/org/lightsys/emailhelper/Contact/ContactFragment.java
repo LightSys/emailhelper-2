@@ -134,7 +134,7 @@ public class ContactFragment extends android.app.Fragment {
             public void onLongClick(View view, int position) {
                 Contact contact = contactList.get(position);
                 Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
-                Intent editContact = new Intent(getActivity().getApplicationContext(),editContactActivity.class);
+                Intent editContact = new Intent(getActivity().getApplicationContext(),EditContactActivity.class);
                 editContact.putExtra(getString(R.string.intent_email),contact.getEmail());
                 editContact.putExtra(getString(R.string.intent_first_name),contact.getFirstName());
                 editContact.putExtra(getString(R.string.intent_last_name),contact.getLastName());

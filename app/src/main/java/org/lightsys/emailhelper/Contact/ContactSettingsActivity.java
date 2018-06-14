@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import org.lightsys.emailhelper.AttachmentActivity;
 import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
@@ -25,9 +26,6 @@ public class ContactSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_settings);
         ActionBar actionBar = this.getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
         firstName = getIntent().getStringExtra(getString(R.string.intent_first_name));
         lastName = getIntent().getStringExtra(getString(R.string.intent_last_name));
         email = getIntent().getStringExtra(getString(R.string.intent_email));
@@ -52,7 +50,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
         editContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent editContact = new Intent(getApplicationContext(),editContactActivity.class);
+                Intent editContact = new Intent(getApplicationContext(),EditContactActivity.class);
                 editContact.putExtra(getString(R.string.intent_first_name),firstName);
                 editContact.putExtra(getString(R.string.intent_last_name),lastName);
                 editContact.putExtra(getString(R.string.intent_email),email);
@@ -81,7 +79,14 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 navigateUpTo(upIntent);
             }
         });
+        Button showAttachments = (Button) findViewById(R.id.show_attachments);
+        showAttachments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent attach = new Intent(getApplicationContext(),AttachmentActivity.class);
+                attach.putExtra(getString(R.string.intent_email),email);
+                startActivity(attach);
+            }
+        });
     }
-
-
 }

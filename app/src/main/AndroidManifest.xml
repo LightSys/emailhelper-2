@@ -30,7 +30,8 @@
         </activity>
         <activity
             android:name=".Conversation.ConversationActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -54,7 +55,8 @@
         <activity
             android:name=".Contact.ContactActivity"
             android:label="@string/contacts"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -62,7 +64,8 @@
         <activity
             android:name=".Contact.NewContactActivity"
             android:label="@string/new_contact"
-            android:parentActivityName=".Contact.ContactActivity">
+            android:parentActivityName=".Contact.ContactActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Contact.ContactActivity" />
@@ -87,21 +90,38 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Contact.editContactActivity"
+            android:name=".Contact.EditContactActivity"
             android:label="@string/title_edit_contact_activity"
-            android:parentActivityName=".Contact.ContactActivity">
+            android:parentActivityName=".Contact.ContactActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Contact.ContactActivity" />
         </activity>
         <activity
             android:name=".Contact.ContactSettingsActivity"
-            android:label="@string/title_activity_contact_settings">
+            android:label="@string/title_activity_contact_settings"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Contact.ContactActivity" />
         </activity>
-
+        <activity
+            android:name=".AttachmentActivity"
+            android:label="@string/title_activity_attachment"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Contact.ContactSettingsActivity" />
+        </activity>
+        <activity
+            android:name=".ImageActivity"
+            android:label="@string/title_activity_image"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AttachmentActivity" />
+        </activity>
     </application>
 
 </manifest>

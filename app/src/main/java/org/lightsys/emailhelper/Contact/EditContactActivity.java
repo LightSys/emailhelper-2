@@ -18,7 +18,7 @@ import org.lightsys.emailhelper.Conversation.ConversationWindowFragment;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
-public class editContactActivity extends AppCompatActivity {
+public class EditContactActivity extends AppCompatActivity {
     String originalFirstName;
     String originalLastName;
     String originalEmail;

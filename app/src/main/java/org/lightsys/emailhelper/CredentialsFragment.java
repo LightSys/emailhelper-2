@@ -30,8 +30,8 @@ public class CredentialsFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_settings, container, false);
-        emailField = (EditText) rootView.findViewById(R.id.emailField);
-        emailField.setHint(HelperClass.Email);           //This one is so it shows up when the fragment is first opened
+        emailField = rootView.findViewById(R.id.emailField);
+        emailField.setHint(HelperClass.Email);//This one is so it shows up when the fragment is first opened
         emailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
@@ -40,7 +40,7 @@ public class CredentialsFragment extends android.app.Fragment {
                     emailField.setHint(HelperClass.Email);
             }
         });
-        passwordField = (EditText) rootView.findViewById(R.id.passwordField);
+        passwordField = rootView.findViewById(R.id.passwordField);
         passwordField.setHint("••••••••"); //This one is so it shows up when the fragment is first opened
         passwordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
