@@ -1,5 +1,7 @@
 package org.lightsys.emailhelper.Conversation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -41,6 +43,8 @@ public class ConversationFragment extends android.app.Fragment{
     SharedPreferences sp;
     Resources r;
     DatabaseHelper db;
+
+    int deleteRow;
 
     public ConversationFragment() {
     }
@@ -102,20 +106,29 @@ public class ConversationFragment extends android.app.Fragment{
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            int itemPosition = viewHolder.getAdapterPosition();
-
-            //Need to delete it from DB before getting rid of it from the list
-            Integer deletedRows = db.deleteConversationData(conversationList.get(itemPosition).getEmail());
-            if (deletedRows > 0)
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_deleted_prestring)+conversationList.get(itemPosition).getName()+getString(R.string.conversation_deleted_poststring),
-                        Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getActivity().getApplicationContext(),getString(R.string.conversation_not_deleted_prestring)+conversationList.get(itemPosition).getName()+getString(R.string.conversation_not_deleted_poststring),
-                        Toast.LENGTH_SHORT).show();
-
-            //Remove swiped item from list and notify the RecyclerView
-            conversationList.remove(itemPosition);
-            cAdapter.notifyDataSetChanged();
+            deleteRow = viewHolder.getAdapterPosition();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Are you sure you want to delete the conversation with "+conversationList.get(deleteRow).getName()+" ?");
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Integer deletedRows = db.deleteConversationData(conversationList.get(deleteRow).getEmail());
+                    if (deletedRows > 0)
+                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_deleted_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_deleted_poststring),
+                                Toast.LENGTH_SHORT).show();
+                    conversationList.remove(deleteRow);
+                    cAdapter.notifyDataSetChanged();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getActivity().getApplicationContext(),getString(R.string.conversation_not_deleted_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_not_deleted_poststring),
+                            Toast.LENGTH_SHORT).show();
+                    prepareConversationData();
+                }
+            });
+            builder.create().show();
         }
     };
 

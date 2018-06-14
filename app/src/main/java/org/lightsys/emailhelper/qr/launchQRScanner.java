@@ -3,6 +3,8 @@ package org.lightsys.emailhelper.qr;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.android.gms.samples.vision.barcodereader.BarcodeCapture;
 import com.google.android.gms.samples.vision.barcodereader.BarcodeGraphic;
@@ -36,6 +39,9 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
 
     private static final String QR_DATA_EXTRA = "qr_data";
     private Dialog dialog;
+    private DatabaseHelper db;
+    Contact newContact;
+    Context activityContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +63,36 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Contact newContact = new Contact();
+                newContact = new Contact();
                 newContact.setEmail(barcode.contactInfo.emails[0].address);
                 String name = (String)(barcode.contactInfo.name.formattedName);
                 newContact.setFirstName(name.substring(0,name.indexOf(" ")));
                 newContact.setLastName(name.substring(name.indexOf(" ")+1));
-                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.insertContactData(newContact);
-                db.insertConversationData(newContact, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
-                Intent resultIntent = new Intent();
-                setResult(Activity.RESULT_OK, resultIntent);
+                db = new DatabaseHelper(getApplicationContext());
                 dialog.dismiss();
-                finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
+                builder.setMessage("Would you like to add "+newContact.getFirstName()+" "+newContact.getLastName()+" to contacts?");
+                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.insertContactData(newContact);
+                        db.insertConversationData(newContact, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
+                        Intent resultIntent = new Intent();
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent resultIntent = new Intent();
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        finish();
+                    }
+                });
+                builder.create().show();
+
+
             }
         });
 

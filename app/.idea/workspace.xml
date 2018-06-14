@@ -11,33 +11,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa4f89d0-5e47-4407-9443-0686d2a62f99" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentAdapter.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ImageActivity.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_attachment.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_image.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/res/layout/attachment_item.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/res/layout/content_image.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/res/menu/menu_attachment.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ConfirmDialog.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactSettingsActivity.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactSettingsActivity.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/editContactActivity.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/EditContactActivity.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationActivity.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationActivity.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindow.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindow.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationWindowFragment.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/CredentialsFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/CredentialsFragment.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MainActivity.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_contact_settings.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_contact_settings.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_edit_contact.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_edit_contact.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_service.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/menu/menu_conversation.xml" afterPath="$PROJECT_DIR$/src/main/res/menu/menu_conversation.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/dimens.xml" afterPath="$PROJECT_DIR$/src/main/res/values/dimens.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/launchQRScanner.java" afterPath="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/launchQRScanner.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -59,7 +39,98 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="ConversationFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="398">
+              <caret line="130" column="36" lean-forward="false" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ContactFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="28" lean-forward="false" selection-start-line="14" selection-start-column="28" selection-end-line="14" selection-end-column="28" />
+              <folding>
+                <element signature="e#4649#5348#0" expanded="true" />
+                <element signature="e#5347#5348#0" expanded="true" />
+                <element signature="e#5399#5755#0" expanded="true" />
+                <element signature="e#5754#5755#0" expanded="true" />
+                <element signature="e#7654#7685#0" expanded="true" />
+                <element signature="e#7884#7916#0" expanded="true" />
+                <element signature="e#7982#8019#0" expanded="true" />
+                <element signature="e#8089#8125#0" expanded="true" />
+                <element signature="e#8452#8483#0" expanded="true" />
+                <element signature="e#8664#8696#0" expanded="true" />
+                <element signature="e#8755#8792#0" expanded="true" />
+                <element signature="e#8855#8891#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="launchQRScanner.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/launchQRScanner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="107">
+              <caret line="72" column="16" lean-forward="false" selection-start-line="72" selection-start-column="16" selection-end-line="92" selection-end-column="40" />
+              <folding>
+                <element signature="e#1919#3725#0" expanded="true" />
+                <element signature="e#2719#3252#0" expanded="true" />
+                <element signature="e#3251#3252#0" expanded="true" />
+                <element signature="e#3307#3656#0" expanded="true" />
+                <element signature="e#3655#3656#0" expanded="true" />
+                <element signature="e#3724#3725#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AttachmentActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="103">
+              <caret line="191" column="19" lean-forward="false" selection-start-line="191" selection-start-column="19" selection-end-line="191" selection-end-column="19" />
+              <folding>
+                <element signature="e#2234#2265#0" expanded="true" />
+                <element signature="e#2311#2343#0" expanded="true" />
+                <element signature="e#2768#2949#0" expanded="true" />
+                <element signature="e#2948#2949#0" expanded="true" />
+                <element signature="method#onResume#0;class#AttachmentActivity#0" expanded="false" />
+                <element signature="e#8390#8977#0" expanded="true" />
+                <element signature="e#8976#8977#0" expanded="true" />
+                <element signature="e#9028#9451#0" expanded="true" />
+                <element signature="e#9450#9451#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConfirmDialog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ConfirmDialog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="372">
+              <caret line="34" column="19" lean-forward="false" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#475#693#0" expanded="true" />
+                <element signature="e#692#693#0" expanded="true" />
+                <element signature="e#748#965#0" expanded="true" />
+                <element signature="e#964#965#0" expanded="true" />
+                <element signature="e#1033#1034#0" expanded="true" />
+                <element signature="e#1063#1064#0" expanded="true" />
+                <element signature="e#1092#1093#0" expanded="true" />
+                <element signature="e#1118#1119#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -2104,9 +2175,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/QRActivity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/launchQRScanner.java" />
-        <option value="$PROJECT_DIR$/src/main/res/values/bools.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/help.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/fragment_new_contact.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactActivity.java" />
@@ -2121,7 +2189,6 @@
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AutoUpdater.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/editContactActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/NewContactFragment.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/QRActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/MessageWindowActivity.java" />
@@ -2131,7 +2198,6 @@
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/conversation_list_row.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationAdapter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" />
         <option value="$PROJECT_DIR$/../build.gradle" />
         <option value="$PROJECT_DIR$/src/main/res/xml/settings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ConversationActivity.java" />
@@ -2151,14 +2217,19 @@
         <option value="$PROJECT_DIR$/src/main/res/menu/menu_conversation.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_attachment.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" />
         <option value="$PROJECT_DIR$/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ImageActivity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/launchQRScanner.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ConfirmDelete.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ConfirmDialog.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1440" />
     <option name="height" value="900" />
   </component>
@@ -2198,6 +2269,27 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="emailhelper" type="cbb59c9e:AndroidPsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="emailhelper" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="Contact" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="emailhelper" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="Conversation" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="emailhelper" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="qr" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="app" type="1abcf292:AndroidViewProjectNode" />
@@ -2442,7 +2534,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="1" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3279503" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2450,7 +2543,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35066506" sideWeight="0.369814" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3808948" sideWeight="0.37339056" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16809729" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="100" y="100" width="1240" height="286" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2464,9 +2557,9 @@
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31680775" sideWeight="0.4828326" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Device File Explorer" active="true" anchor="right" auto_hide="false" internal_type="SLIDING" type="WINDOWED" visible="true" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="-1234" y="-66" width="734" height="707" />
+      <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="WINDOWED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="-1234" y="-66" width="734" height="707" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39130434" sideWeight="0.63018596" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3808948" sideWeight="0.62660944" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2529,63 +2622,40 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java</url>
-          <line>135</line>
-          <properties />
-          <option name="timeStamp" value="682" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java</url>
-          <line>157</line>
+          <line>164</line>
           <properties />
           <option name="timeStamp" value="683" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java</url>
-          <line>404</line>
+          <line>405</line>
           <properties />
           <option name="timeStamp" value="684" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java</url>
+          <line>130</line>
+          <properties />
+          <option name="timeStamp" value="688" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="685" />
+      <option name="time" value="691" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="49" column="13" lean-forward="false" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/menu/menu_message.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
       <provider editor-type-id="android-designer2">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="136" column="16" lean-forward="false" selection-start-line="136" selection-start-column="16" selection-end-line="140" selection-end-column="43" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/content_attachment.xml" />
@@ -2593,6 +2663,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-170">
           <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2653,17 +2724,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/qrscan_layout.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/popup.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -2870,6 +2930,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-219">
           <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2885,6 +2946,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="433">
           <caret line="32" column="75" lean-forward="false" selection-start-line="32" selection-start-column="75" selection-end-line="32" selection-end-column="75" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2942,65 +3004,12 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1082">
-          <caret line="178" column="7" lean-forward="false" selection-start-line="178" selection-start-column="7" selection-end-line="178" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="283" column="55" lean-forward="false" selection-start-line="283" selection-start-column="55" selection-end-line="283" selection-end-column="55" />
-          <folding>
-            <element signature="e#4638#4639#0" expanded="false" />
-            <element signature="e#4692#4693#0" expanded="false" />
-            <element signature="docComment;method#insertNotifications#1;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#insertNotifications#1;class#DatabaseHelper#0" expanded="false" />
-            <element signature="docComment;method#getNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#getNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
-            <element signature="docComment;method#setNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#setNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#insertConversationData#3;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#insertContactData#1;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#getContactName#0;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#deleteContactData#0;class#DatabaseHelper#0" expanded="false" />
-            <element signature="method#getContactDate#0;class#DatabaseHelper#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ImageActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
           <caret line="15" column="60" lean-forward="false" selection-start-line="15" selection-start-column="60" selection-end-line="15" selection-end-column="60" />
           <folding>
-            <element signature="e#559#590#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-180">
-          <caret line="64" column="39" lean-forward="true" selection-start-line="64" selection-start-column="39" selection-end-line="64" selection-end-column="39" />
-          <folding>
-            <element signature="e#2030#2061#0" expanded="true" />
-            <element signature="e#2107#2139#0" expanded="true" />
-            <element signature="e#2564#2745#0" expanded="true" />
-            <element signature="e#2744#2745#0" expanded="true" />
-            <element signature="method#onResume#0;class#AttachmentActivity#0" expanded="false" />
-            <element signature="class#7009:8321" expanded="false" />
+            <element signature="e#559#590#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3054,6 +3063,125 @@
         <state relative-caret-position="330">
           <caret line="124" column="70" lean-forward="false" selection-start-line="124" selection-start-column="70" selection-end-line="124" selection-end-column="70" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/DatabaseHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="58" column="83" lean-forward="false" selection-start-line="58" selection-start-column="83" selection-end-line="58" selection-end-column="83" />
+          <folding>
+            <element signature="docComment;method#insertNotifications#1;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#insertNotifications#1;class#DatabaseHelper#0" expanded="false" />
+            <element signature="docComment;method#getNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#getNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
+            <element signature="docComment;method#setNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#setNotificationSettings#0;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#insertConversationData#3;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#insertContactData#1;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#getContactName#0;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#deleteContactData#0;class#DatabaseHelper#0" expanded="false" />
+            <element signature="method#getContactDate#0;class#DatabaseHelper#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/popup.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/GetMail.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/qr/launchQRScanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="72" column="16" lean-forward="false" selection-start-line="72" selection-start-column="16" selection-end-line="92" selection-end-column="40" />
+          <folding>
+            <element signature="e#1919#3725#0" expanded="true" />
+            <element signature="e#2719#3252#0" expanded="true" />
+            <element signature="e#3251#3252#0" expanded="true" />
+            <element signature="e#3307#3656#0" expanded="true" />
+            <element signature="e#3655#3656#0" expanded="true" />
+            <element signature="e#3724#3725#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Contact/ContactFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="28" lean-forward="false" selection-start-line="14" selection-start-column="28" selection-end-line="14" selection-end-column="28" />
+          <folding>
+            <element signature="e#4649#5348#0" expanded="true" />
+            <element signature="e#5347#5348#0" expanded="true" />
+            <element signature="e#5399#5755#0" expanded="true" />
+            <element signature="e#5754#5755#0" expanded="true" />
+            <element signature="e#7654#7685#0" expanded="true" />
+            <element signature="e#7884#7916#0" expanded="true" />
+            <element signature="e#7982#8019#0" expanded="true" />
+            <element signature="e#8089#8125#0" expanded="true" />
+            <element signature="e#8452#8483#0" expanded="true" />
+            <element signature="e#8664#8696#0" expanded="true" />
+            <element signature="e#8755#8792#0" expanded="true" />
+            <element signature="e#8855#8891#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/Conversation/ConversationFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="130" column="36" lean-forward="false" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/ConfirmDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="34" column="19" lean-forward="false" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#475#693#0" expanded="true" />
+            <element signature="e#692#693#0" expanded="true" />
+            <element signature="e#748#965#0" expanded="true" />
+            <element signature="e#964#965#0" expanded="true" />
+            <element signature="e#1033#1034#0" expanded="true" />
+            <element signature="e#1063#1064#0" expanded="true" />
+            <element signature="e#1092#1093#0" expanded="true" />
+            <element signature="e#1118#1119#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/lightsys/emailhelper/AttachmentActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="103">
+          <caret line="191" column="19" lean-forward="false" selection-start-line="191" selection-start-column="19" selection-end-line="191" selection-end-column="19" />
+          <folding>
+            <element signature="e#2234#2265#0" expanded="true" />
+            <element signature="e#2311#2343#0" expanded="true" />
+            <element signature="e#2768#2949#0" expanded="true" />
+            <element signature="e#2948#2949#0" expanded="true" />
+            <element signature="method#onResume#0;class#AttachmentActivity#0" expanded="false" />
+            <element signature="e#8390#8977#0" expanded="true" />
+            <element signature="e#8976#8977#0" expanded="true" />
+            <element signature="e#9028#9451#0" expanded="true" />
+            <element signature="e#9450#9451#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

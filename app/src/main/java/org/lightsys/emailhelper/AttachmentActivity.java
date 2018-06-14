@@ -1,6 +1,9 @@
 package org.lightsys.emailhelper;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -50,6 +53,10 @@ public class AttachmentActivity extends AppCompatActivity {
     String email;
     SwipeRefreshLayout swipeContainer;
 
+    Context activityContext = this;
+    String attachment;
+    int deleteRow;
+    File attachmentFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,19 +188,38 @@ public class AttachmentActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            int itemPosition = viewHolder.getAdapterPosition();
-            DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-            String attach = adapter.attachments.get(itemPosition);
+            deleteRow = viewHolder.getAdapterPosition();
+            String attachmentName = adapter.attachments.get(deleteRow);
             //Need to delete it from DB before getting rid of it from the list
-            attach = "/data/user/0/org.lightsys.emailhelper/app_"+email+"/"+attach;
-            File file = new File(attach);
-            file.delete();
-            boolean test = db.deleteAttachment(email, attach);
+            attachment = "/data/user/0/org.lightsys.emailhelper/app_"+email+"/"+attachmentName;
+            attachmentFile = new File(attachment);
+
+
             //Remove swiped item from list and notify the RecyclerView
-            adapter.attachments.remove(itemPosition);
-            adapter = new AttachmentAdapter(email,db);
-            attachments.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            AlertDialog.Builder builder = new AlertDialog.Builder(activityContext);
+            builder.setMessage("Are you sure that you want to delete "+attachmentName+"?");
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                    db.deleteAttachment(email, attachment);
+                    adapter.attachments.remove(deleteRow);
+                    adapter = new AttachmentAdapter(email,db);
+                    attachments.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    attachmentFile.delete();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                    adapter = new AttachmentAdapter(email,db);
+                    attachments.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+            });
+            builder.create().show();
         }
     };
 }

@@ -1,5 +1,7 @@
 package org.lightsys.emailhelper.Contact;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.R;
@@ -30,6 +31,8 @@ public class ContactFragment extends android.app.Fragment {
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
     View rootView;    //This variable had to be made global so that the list wouldn't duplicate data
+    int deleteRow;
+    String deleteName;
 
 
     public ContactFragment() {
@@ -80,20 +83,31 @@ public class ContactFragment extends android.app.Fragment {
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            deleteRow = viewHolder.getAdapterPosition();
+            deleteName = contactList.get(deleteRow).getFirstName()+" "+contactList.get(deleteRow).getLastName();
 
-            int itemPosition = viewHolder.getAdapterPosition();
 
-            //Need to delete it from DB before getting rid of it from the list
-            Integer deletedRows = db.deleteContactData(contactList.get(itemPosition).getEmail());
-            db.deleteConversationData(contactList.get(itemPosition).getEmail());
-            if (deletedRows > 0)
-                Toast.makeText(getActivity().getApplicationContext(), contactList.get(itemPosition).getFirstName()+" "+contactList.get(itemPosition).getLastName()+" deleted from contacts.", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getActivity().getApplicationContext(), contactList.get(itemPosition).getFirstName()+" "+contactList.get(itemPosition).getLastName()+" not deleted from contacts.", Toast.LENGTH_SHORT).show();
-
-            //Remove swiped item from list and notify the RecyclerView
-            contactList.remove(itemPosition);
-            contactAdapter.notifyDataSetChanged();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Are you sure you want to delete "+deleteName+" from contacts?");
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Integer deletedRows = db.deleteContactData(contactList.get(deleteRow).getEmail());
+                    db.deleteConversationData(contactList.get(deleteRow).getEmail());
+                    if (deletedRows > 0)//Remove from Database
+                        Toast.makeText(getActivity().getApplicationContext(), deleteName+" deleted from contacts.", Toast.LENGTH_SHORT).show();
+                    contactList.remove(deleteRow);//Then delete from list
+                    contactAdapter.notifyDataSetChanged();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getActivity().getApplicationContext(), deleteName+" not deleted from contacts.", Toast.LENGTH_SHORT).show();
+                    prepareContactData();
+                }
+            });
+            builder.create().show();
         }
     };
 
