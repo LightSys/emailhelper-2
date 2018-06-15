@@ -66,9 +66,8 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
                 newContact.setLastName(name.substring(name.indexOf(" ")+1));
                 db = new DatabaseHelper(getApplicationContext());
                 dialog.dismiss();
-                String confirmMessage = "Would you like to add "+newContact.getFirstName()+" "+newContact.getLastName()+" to contacts?";
-                String confirmWord= "Confirm";
-                new ConfirmDialog(confirmMessage,confirmWord,activityContext,addContactRunnable,cancelRunnable);
+                String confirmMessage = getString(R.string.QR_popup_message_prestring)+newContact.getFirstName()+" "+newContact.getLastName()+getString(R.string.QR_popup_message_poststring);
+                new ConfirmDialog(confirmMessage,getString(R.string.confirm_word),activityContext,addContactRunnable,cancelRunnable);
             }
             Runnable addContactRunnable = new Runnable() {
                 @Override
@@ -97,7 +96,7 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
     public void onRetrievedMultiple(final Barcode closetToClick, final List<BarcodeGraphic> barcodeGraphics) {
         runOnUiThread(new Runnable() {
             @Override
-            public void run() {
+            public void run() {//This seciton I'm not sure is necessary.
                 String message = "Code selected : " + closetToClick.displayValue + "\n\nother " +
                         "codes in frame include : \n";
                 for (int index = 0; index < barcodeGraphics.size(); index++) {

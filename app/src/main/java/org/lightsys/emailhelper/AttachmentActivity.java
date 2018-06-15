@@ -54,7 +54,7 @@ public class AttachmentActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeContainer;
 
     Context activityContext = this;
-    String attachment;
+    String attachmentFilePath;
     int deleteRow;
     File attachmentFile;
 
@@ -63,8 +63,9 @@ public class AttachmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attachment);
         ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setTitle(getString(R.string.attachments));
         email = getIntent().getStringExtra(getString(R.string.intent_email));
+        actionBar.setTitle(getString(R.string.attachments));
+
         attachments = (RecyclerView) findViewById(R.id.recycler_view_attachments);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         attachments.setLayoutManager(layoutManager);
@@ -119,34 +120,10 @@ public class AttachmentActivity extends AppCompatActivity {
             intent.putExtra("file_path",filePath);
             startActivity(intent);
         }
-        /*else{
-            String ext = MimeTypeMap.getFileExtensionFromUrl(filePath);
-            if(ext == "" && filePath.contains(".pdf")){
-                ext = "pdf";
-            }
-            String mimeType = null;
-            if(ext != null){
-                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
-            }
-            Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(filePath));
-            intent.setType(mimeType);
-            if(mimeType == null){
-                Toaster.toast("EmailHelper does not recognize the attachment");
-            }else{
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);PackageManager manager = getPackageManager();
-                List<ResolveInfo> capableApps = manager.queryIntentActivities(intent,0);
-                if(capableApps.size() > 0){
-                    startActivity(intent);
-                }else{
-                    Toaster.toast("No apps found capable to open selected attachment");
-                }
-            }
-        }*/
         else{
             Uri uri = Uri.parse(filePath);
             String ext = MimeTypeMap.getFileExtensionFromUrl(filePath);
-            if(ext == "" && filePath.contains(".pdf")){
+            if(ext.equals("") && filePath.contains(".pdf")){
                 ext = "pdf";
             }
             String mime = null;
@@ -162,7 +139,7 @@ public class AttachmentActivity extends AppCompatActivity {
             if(capableApps.size() > 0){
                 startActivity(intent);
             }else{
-                Toaster.toast("No apps found capable to open selected attachment");
+                Toaster.toast(getString(R.string.cannot_find_app_to_run));
             }
         }
     }
@@ -191,25 +168,28 @@ public class AttachmentActivity extends AppCompatActivity {
             deleteRow = viewHolder.getAdapterPosition();
             String attachmentName = adapter.attachments.get(deleteRow);
             //Need to delete it from DB before getting rid of it from the list
-            attachment = "/data/user/0/org.lightsys.emailhelper/app_"+email+"/"+attachmentName;
-            attachmentFile = new File(attachment);
-            String deletionMessage = "Are you sure that you want to delete "+attachmentName+"?";
-            new ConfirmDialog(deletionMessage,"Delete",activityContext,deletionRunnable,cancelRunnable);
+            File path = getDir(email,MODE_PRIVATE);
+            attachmentFile = new File(path,attachmentName);
+            attachmentFilePath = attachmentFile.getAbsolutePath();
+            String deletionMessage =getString(R.string.attachment_message_prestring)+attachmentName+getString(R.string.attachment_message_poststring);
+            new ConfirmDialog(deletionMessage,getString(R.string.delete_word),activityContext,deletionRunnable,cancelRunnable);
         }
         Runnable deletionRunnable = new Runnable() {
             @Override
             public void run() {
                 DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.deleteAttachment(email, attachment);
+                db.deleteAttachment(email, attachmentFilePath);
                 adapter.attachments.remove(deleteRow);
                 attachmentFile.delete();
                 prepareAttachmentData();
+                Toaster.toast(R.string.attachment_deleted_message);
             }
         };
         Runnable cancelRunnable = new Runnable() {
             @Override
             public void run() {
                 prepareAttachmentData();
+                Toaster.toast(R.string.attachment_not_deleted_message);
             }
         };
     };
@@ -219,5 +199,6 @@ public class AttachmentActivity extends AppCompatActivity {
         adapter = new AttachmentAdapter(email,db);
         attachments.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        int temp = 1;
     }
 }

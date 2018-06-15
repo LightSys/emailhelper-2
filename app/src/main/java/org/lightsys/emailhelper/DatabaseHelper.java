@@ -212,6 +212,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
      */
     public Integer deleteConversationData(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(CONVERSATION_WINDOW_NAME,"EMAIL = ?",new String[]{email});
         return db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[] {email});
     }
 

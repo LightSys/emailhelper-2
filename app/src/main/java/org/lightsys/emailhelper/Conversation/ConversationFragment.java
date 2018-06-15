@@ -108,9 +108,8 @@ public class ConversationFragment extends android.app.Fragment{
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             deleteRow = viewHolder.getAdapterPosition();
-            String deletionMessage = "Are you sure you want to delete the conversation with "+conversationList.get(deleteRow).getName()+" ?";
-            String deletionWord = "Delete";
-            new ConfirmDialog(deletionMessage,deletionWord,getActivity(),deletionRunnable,cancelRunnable);
+            String deletionMessage = getString(R.string.conversation_delete_message_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_delete_message_poststring);
+            new ConfirmDialog(deletionMessage,getString(R.string.delete_word),getActivity(),deletionRunnable,cancelRunnable);
         }
         Runnable deletionRunnable = new Runnable() {
             @Override

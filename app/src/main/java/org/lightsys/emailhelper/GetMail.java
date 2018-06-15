@@ -77,7 +77,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
 
                     String content = getMessageContent(message);
                     if(getAttachments(email,message)){
-                        content += "\n Attachment(s) were saved from this email.\n To view go to Contact Settings.";
+                        content += r.getString(R.string.attachment_message);
                     }
                     ConversationWindow convo = new ConversationWindow(email, name, content, messageID, false);
                     convos.push(convo);

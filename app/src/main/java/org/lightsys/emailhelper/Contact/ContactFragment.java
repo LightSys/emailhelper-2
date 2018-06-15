@@ -32,7 +32,7 @@ public class ContactFragment extends android.app.Fragment {
     private List<Contact> contactList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
-    View rootView;    //This variable had to be made global so that the list wouldn't duplicate data
+    View rootView;//This variable had to be made global so that the list wouldn't duplicate data
     int deleteRow;
     String deleteName;
 
@@ -79,7 +79,6 @@ public class ContactFragment extends android.app.Fragment {
          ******************************************************************************************/
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            Toast.makeText(getActivity().getApplicationContext(), "on Move", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -87,9 +86,8 @@ public class ContactFragment extends android.app.Fragment {
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             deleteRow = viewHolder.getAdapterPosition();
             deleteName = contactList.get(deleteRow).getFirstName()+" "+contactList.get(deleteRow).getLastName();
-            String deletionMessage = "Are you sure you want to delete "+deleteName+" from contacts?";
-            String deletionWord = "Delete";
-            new ConfirmDialog(deletionMessage,deletionWord,getActivity(),deletionRunnable,cancelRunnable);
+            String deletionMessage = getString(R.string.contact_delete_message_prestring)+deleteName+getString(R.string.contact_delete_message_poststring);
+            new ConfirmDialog(deletionMessage,getString(R.string.delete_word),getActivity(),deletionRunnable,cancelRunnable);
         }
         Runnable deletionRunnable = new Runnable() {
             @Override
@@ -97,7 +95,7 @@ public class ContactFragment extends android.app.Fragment {
                 Integer deletedRows = db.deleteContactData(contactList.get(deleteRow).getEmail());
                 db.deleteConversationData(contactList.get(deleteRow).getEmail());
                 if (deletedRows > 0)//Remove from Database
-                    Toast.makeText(getActivity().getApplicationContext(), deleteName+" deleted from contacts.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.contact_deleted_prestring)+deleteName+getString(R.string.contact_deleted_poststring), Toast.LENGTH_SHORT).show();
                 contactList.remove(deleteRow);//Then delete from list
                 prepareContactData();
             }
@@ -105,7 +103,7 @@ public class ContactFragment extends android.app.Fragment {
         Runnable cancelRunnable = new Runnable(){
             @Override
             public void run() {
-                Toast.makeText(getActivity().getApplicationContext(), deleteName+" not deleted from contacts.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.contact_not_deleted_prestring)+deleteName+getString(R.string.contact_not_deleted_poststring), Toast.LENGTH_SHORT).show();
                 prepareContactData();
             }
         };
@@ -168,8 +166,8 @@ public class ContactFragment extends android.app.Fragment {
      **********************************************************************************************/
 
     public void prepareContactData() {
-        int size = contactList.size();                                                              //I clear the list here so that we can update it after new contacts are added from the
-        contactList.clear();                                                                        //new contact fragment
+        int size = contactList.size();//I clear the list here so that we can update it after new contacts are added from the
+        contactList.clear();          //new contact fragment
         contactAdapter.notifyItemRangeRemoved(0,size);
 
         Cursor res = db.getContactData();
