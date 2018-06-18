@@ -63,15 +63,14 @@ public class NewContactFragment extends android.app.Fragment {
                         String insertLastName = lastNameField.getText().toString();
                         //Contact contact = new Contact(insertEmail, insertFirstName, insertLastName);
 
-                        boolean isInserted = db.insertContactData(insertEmail, insertFirstName,
-                                insertLastName);
+                        boolean isInserted = db.insertContactData(insertEmail, insertFirstName, insertLastName);
 
                         emailField.getText().clear();                                               //Empties EditText field when it is added to the list
                         firstNameField.getText().clear();                                           //Also make sure you don't clear it before you add the data to the DB
                         lastNameField.getText().clear();
 
                         Date today = Calendar.getInstance().getTime();
-                        boolean isConvo = db.insertConversationData(insertEmail, insertFirstName + " " + insertLastName, CommonMethods.getCurrentTime(), today.toString());
+                        boolean isConvo = db.insertConversationData(insertEmail, insertFirstName + " " + insertLastName, CommonMethods.getCurrentTime(), CommonMethods.getCurrentDate());
                         if (isInserted) {
                             Toast.makeText(getActivity().getApplicationContext(), getString(R.string.contact_added_prestring)+insertFirstName + " " + insertLastName +getString(R.string.contact_added_poststring), Toast.LENGTH_SHORT).show();
                         }else{
@@ -83,6 +82,8 @@ public class NewContactFragment extends android.app.Fragment {
                         else {
                             Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_not_added_prestring)+insertFirstName + " " + insertLastName+getString(R.string.conversation_not_added_poststring), Toast.LENGTH_SHORT).show();
                         }
+                        ContactFragment temp = new ContactFragment();
+                        temp.prepareContactData();
                         NewContactActivity newContactActivity = (NewContactActivity) getActivity();
                         Intent upIntent = new Intent(newContactActivity.getApplicationContext(),ContactActivity.class);
                         newContactActivity.navigateUpTo(upIntent);

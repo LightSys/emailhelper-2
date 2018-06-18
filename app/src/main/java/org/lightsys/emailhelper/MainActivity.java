@@ -66,10 +66,11 @@ public class MainActivity extends AppCompatActivity{
 
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
-//        HelperClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
-//        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
-//        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
+        HelperClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
+        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
+        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
         //TODO replace hard code
+        /*
         HelperClass.setEmail(password.User);
         HelperClass.Password = password.auth;
         HelperClass.savedCredentials = true;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity{
         db.insertContactData(send2.getEmail(),send2.getFirstName(),send2.getLastName());
         db.insertConversationData(send2.getEmail(),send2.getFirstName()+" "+send2.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
         //Hard code ^^^^^
+        */
 
         //Gets Credentials if the app doesn't have them
         if (!HelperClass.savedCredentials) {

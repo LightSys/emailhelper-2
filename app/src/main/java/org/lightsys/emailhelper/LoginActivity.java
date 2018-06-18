@@ -77,10 +77,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = findViewById(R.id.email);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String password = mPasswordView.getText().toString();
 
         // Save the 'global' variables of HelperClass
-        HelperClass.Email = email;
+        HelperClass.setEmail(email);
         HelperClass.Password = password;
         HelperClass.savedCredentials = true;
 
@@ -224,9 +224,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try{
                 Properties props = System.getProperties();
                 //props.setProperty("mail.store.protocol", "imaps");
+                props.setProperty("mail.store.protocol", "imaps");
+                props.put("mail.stmp.auth","true");
+                props.put("mail.smtp.starttls.enable","true");
+                props.put("mail.imap.port","993");
                 Session session = Session.getDefaultInstance(props, null);
-                IMAPStore store = (IMAPStore) session.getStore("pop3");
-                //store.connect(HelperClass._Host, HelperClass._Email, HelperClass._Password);
+                IMAPStore store = (IMAPStore) session.getStore("imaps");
+                store.connect(HelperClass.incoming, HelperClass.Email, HelperClass.Password);
                 Folder inbox = store.getFolder("Inbox");
                 UIDFolder uf = (UIDFolder) inbox;
                 inbox.open(Folder.READ_WRITE);
