@@ -89,7 +89,7 @@ public class AttachmentActivity extends AppCompatActivity {
                 try{
                     openFile(file);
                 }catch(Exception e){
-
+                    int temp = 0;
                 }
 
             }
@@ -99,39 +99,38 @@ public class AttachmentActivity extends AppCompatActivity {
     }
     //TODO test this function and see if it will open the files now
     private void openFile(File file) throws IOException {
-        File sdCardFile = new File("/data/data/org.lightsys.emailhelper/app_"+email+"/"+file.getName());
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-        try{
-            inputStream = new FileInputStream(file);
-            outputStream = new FileOutputStream(sdCardFile);
-            byte[] buffer = new byte[4096];
-            int read;
-            while((read = inputStream.read(buffer))>0){
-                outputStream.write(buffer,0,read);
-            }
-        }finally{
-            inputStream.close();
-            outputStream.close();
-        }
-        String filePath = sdCardFile.getAbsolutePath();
-        if(filePath.contains(".png")||filePath.contains(".jpg")||filePath.contains(".jpeg")){
-            Intent intent = new Intent(getApplicationContext(),ImageActivity.class);
+        String filePath = file.getAbsolutePath();
+        Uri uri = Uri.parse(filePath);
+        String ext = getExtension(filePath);
+        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+        Intent intent = new Intent();
+        if(mime.contains("image/")){
+            intent = new Intent(getApplicationContext(),ImageActivity.class);
             intent.putExtra("file_path",filePath);
             startActivity(intent);
-        }
-        else{
-            Uri uri = Uri.parse(filePath);
-            String ext = MimeTypeMap.getFileExtensionFromUrl(filePath);
+        }else{
+            File sdCardFile = new File("/data/data/org.lightsys.emailhelper/app_"+email+"/"+file.getName());
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try{
+                inputStream = new FileInputStream(file);
+                outputStream = new FileOutputStream(sdCardFile);
+                byte[] buffer = new byte[4096];
+                int read;
+                while((read = inputStream.read(buffer))>0){
+                    outputStream.write(buffer,0,read);
+                }
+            }finally{
+                inputStream.close();
+                outputStream.close();
+            }
+            uri = Uri.parse(sdCardFile.getAbsolutePath());
             if(ext.equals("") && filePath.contains(".pdf")){
                 ext = "pdf";
             }
-            String mime = null;
             if(ext != null){
                 mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
             }
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
             intent.setDataAndType(uri,mime);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             PackageManager manager = getPackageManager();
@@ -142,6 +141,18 @@ public class AttachmentActivity extends AppCompatActivity {
                 Toaster.toast(getString(R.string.cannot_find_app_to_run));
             }
         }
+    }
+
+    private String getExtension(String filePath) {
+        int temp = filePath.length()-1;
+        for(int i = temp;i>0;i--){
+            if(filePath.charAt(i)=='.'){
+                temp = i;
+                i = 0;
+            }
+        }
+        filePath = filePath.substring(temp+1);
+        return filePath;
     }
 
     @Override

@@ -33,6 +33,7 @@ public class Conversation {
         this.time = time;
         this.today = Calendar.getInstance().getTime();
         this.newMail = false;
+
     }
     public Conversation(String email, String name, String time, boolean newmail){
         this.email = email;
@@ -48,10 +49,12 @@ public class Conversation {
     public boolean getMailStatus(){return newMail;}
     public Date   getToday() {return today;}
 
+
     public void setEmail(String email) {this.email = email;}
     public void setName(String name) {this.name = name;}
     public void setTime(String time) {this.time = time;}
     public void setToday(Date today) {this.today = today;}
+
     public void setNewMail(){this.newMail =true;}
     public void resetNewMail(){this.newMail = false;}
 }

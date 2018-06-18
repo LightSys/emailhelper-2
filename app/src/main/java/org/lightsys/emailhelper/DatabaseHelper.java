@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public static String WINDOW_COL_1 = "EMAIL";
     public static String WINDOW_COL_2 = "NAME";
     public static String WINDOW_COL_3 = "MESSAGE";
+    public static String WINDOW_COL_4 = "HAS_ATTACHMENT";
     public static String WINDOW_COL_5 = "MESSAGE_ID";
     public static String WINDOW_COL_6 = "SENT_BY_ME";
     public static String WINDOW_COL_7 = "DB_ID";
@@ -48,7 +49,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public static final String ATTACHMENT_DATABASE = "attachment_database";
     public static String ATTACHMENT_EMAIL = "EMAIL";
     public static String ATTACHMENT_NAME = "ATTACHMENT";
-    public static String ATTACHMENT_PRIMARY = "MESSAGE_ID";
+    public static String ATTACHMENT_PRIMARY = "DATABASE_ID";
+    public static String ATTACHMENT_ID = "MESSAGE_ID";
 
     public DatabaseHelper(Context context) {
         super (context, DATABASE_NAME, null, 1);
@@ -59,9 +61,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         //This function only runs the first time the app is run. See comment above.
         String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT, %s BOOL)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3, CONVO_COL_4,CONVO_COL_5);
         String contactQuery = String.format("create table " + CONTACT_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT)", CONTACT_COL_1, CONTACT_COL_2, CONTACT_COL_3);
-        String windowQuery = String.format("create table " + CONVERSATION_WINDOW_NAME + " ( %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", WINDOW_COL_1, WINDOW_COL_2, WINDOW_COL_3, WINDOW_COL_5, WINDOW_COL_6, WINDOW_COL_7);
+        String windowQuery = String.format("create table " + CONVERSATION_WINDOW_NAME + " ( %s TEXT, %s TEXT, %s TEXT,%s BOOLEAN, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", WINDOW_COL_1, WINDOW_COL_2, WINDOW_COL_3,WINDOW_COL_4, WINDOW_COL_5, WINDOW_COL_6, WINDOW_COL_7);
         String notiQuery = String.format("create table "+NOTIFICATION_SEND_LIST + " ( %s TEXT PRIMARY KEY, %s BOOLEAN)",NOTIFICATION_COL_PRIMARY,NOTIFICATION_COL_BOOL);
-        String attachmentQuery = String.format("create table "+ ATTACHMENT_DATABASE + " ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)",ATTACHMENT_PRIMARY,ATTACHMENT_EMAIL, ATTACHMENT_NAME);
+        String attachmentQuery = String.format("create table "+ ATTACHMENT_DATABASE + " ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s TEXT)",ATTACHMENT_PRIMARY,ATTACHMENT_EMAIL, ATTACHMENT_NAME,ATTACHMENT_ID);
         db.execSQL(conversationQuery);
         db.execSQL(contactQuery);
         db.execSQL(windowQuery);
@@ -265,7 +267,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     /** This function will add the message into the database.
      * @return
      */
-    public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID) {
+    public boolean insertWindowData(String email, String name, String message, boolean sent_by_me, String messageID,Boolean hasAttachments) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + CONVERSATION_WINDOW_NAME + " where " + WINDOW_COL_5 + " = " + messageID;
         Cursor cursor = db.rawQuery(query, null);
@@ -277,6 +279,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(WINDOW_COL_1, email);
         contentValues.put(WINDOW_COL_2, name);
         contentValues.put(WINDOW_COL_3, message);
+        contentValues.put(WINDOW_COL_4,hasAttachments);
         contentValues.put(WINDOW_COL_5, messageID);
         contentValues.put(WINDOW_COL_6, sent_by_me);
         long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
@@ -298,6 +301,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put(WINDOW_COL_1, convo.getEmail());
         contentValues.put(WINDOW_COL_2, convo.getName());
         contentValues.put(WINDOW_COL_3, convo.getMessage());
+        contentValues.put(WINDOW_COL_4, convo.hasAttachments());
         contentValues.put(WINDOW_COL_5, convo.getMessageId());
         contentValues.put(WINDOW_COL_6, convo.getSent());
         long result = db.insert(CONVERSATION_WINDOW_NAME, null, contentValues);
@@ -492,22 +496,28 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         String query = "select "+ATTACHMENT_NAME+" from " + ATTACHMENT_DATABASE + " where "+ATTACHMENT_EMAIL+" = ?";
         return db.rawQuery(query,new String[]{email});
     }
+    public Cursor getAttachmentsforConvo(String messageID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select "+ATTACHMENT_NAME+" from " + ATTACHMENT_DATABASE + " where "+ATTACHMENT_ID+" = ?";
+        return db.rawQuery(query,new String[]{messageID});
+    }
 
     /**This function inserts an attachment with an email and the file path for the saved attachment
      * @param email
      * @param filePath
      * @return
      */
-    public boolean insertAttachment(String email, String filePath){
+    public boolean insertAttachment(String email, String filePath,String messageID){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ATTACHMENT_EMAIL,email);
         contentValues.put(ATTACHMENT_NAME,filePath);
+        contentValues.put(ATTACHMENT_ID,messageID);
         long ret = db.insert(ATTACHMENT_DATABASE,null,contentValues);
         return ret != -1;
     }
 
-    /**This fucntion deletes the attachment.
+    /**This function deletes the attachment.
      * @param email
      * @param filePath
      * @return

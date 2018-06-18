@@ -74,12 +74,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                     if(!db.willInsertWindowData(messageID)){
                         break;
                     }
-
-                    String content = getMessageContent(message);
-                    if(getAttachments(email,message)){
-                        content += r.getString(R.string.attachment_message);
-                    }
-                    ConversationWindow convo = new ConversationWindow(email, name, content, messageID, false);
+                    ConversationWindow convo = new ConversationWindow(email, name, getMessageContent(message), messageID, false,getAttachments(email,message,uf));
                     convos.push(convo);
                     String Title = r.getString(R.string.notification_title_prestring)+ name +r.getString(R.string.notification_title_poststring);
                     String NotificationMessage = convo.getMessage();
@@ -161,7 +156,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return result.toString();
     }
-    private boolean getAttachments(String email, Message message) throws MessagingException, IOException {
+    private boolean getAttachments(String email, Message message,UIDFolder uf) throws MessagingException, IOException {
         boolean hasAttachments = false;
         if(message.isMimeType("multipart/*")){
             Multipart mimeMultipart = (Multipart)message.getContent();
@@ -184,7 +179,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                         outputStream.close();
                         filePath = tempFile.getAbsolutePath();
                         DatabaseHelper db = new DatabaseHelper(c);
-                        db.insertAttachment(email, filePath);
+                        db.insertAttachment(email, filePath,Long.toString(uf.getUID(message)));
                         hasAttachments = true;
                     }
                 }

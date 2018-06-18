@@ -46,7 +46,6 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.attachment_item,viewGroup,false);
         AttachmentViewHolder viewHolder = new AttachmentViewHolder(view);
-
         return viewHolder;
 
     }

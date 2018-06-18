@@ -2,7 +2,6 @@ package org.lightsys.emailhelper.Conversation;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,19 +19,8 @@ import org.lightsys.emailhelper.HelperClass;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.SendMail;
 
-import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import xdroid.toaster.Toaster;
 
 public class ConversationWindowFragment extends android.app.Fragment {
 
@@ -43,10 +31,11 @@ public class ConversationWindowFragment extends android.app.Fragment {
     View rootView;
     String passedEmail = ""; //This is the email of the person we are getting messages from
 
+
     public ImageButton sendMessageButton;
 
     public EditText messageSend;
-    String persistantMessage;
+    String persistentMessage;
 
     public ConversationWindowFragment() {
         // Required empty public constructor
@@ -65,9 +54,9 @@ public class ConversationWindowFragment extends android.app.Fragment {
             passedEmail = getArguments().getString(getString(R.string.intent_email));
             rootView = inflater.inflate(R.layout.fragment_conversation_window, container, false);
             makeRecyclerView(rootView);
-            sendMessageButton = (ImageButton) rootView.findViewById(R.id.sendMessageButton);
-            messageSend = (EditText) rootView.findViewById(R.id.messageEditText);
-            prepareWindowRows();
+            sendMessageButton = rootView.findViewById(R.id.sendMessageButton);
+            messageSend = rootView.findViewById(R.id.messageEditText);
+            //prepareWindowRows();
             sendMessage();
         }
         return rootView;
@@ -82,7 +71,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.window_recycler_view);
 
-        cAdapter = new ConversationWindowAdapter(conversationWindowList);
+        cAdapter = new ConversationWindowAdapter(conversationWindowList,getActivity().getApplicationContext());
 
         LinearLayoutManager cLinearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         cLinearLayoutManager.setStackFromEnd(true);
@@ -106,14 +95,14 @@ public class ConversationWindowFragment extends android.app.Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ConversationWindow conversationWindow = new ConversationWindow(HelperClass.Email, null, messageSend.getText().toString(), null, true);
+                        ConversationWindow conversationWindow = new ConversationWindow(HelperClass.Email, null, messageSend.getText().toString(), null, true,false);
                         conversationWindowList.add(conversationWindow);
                         cAdapter.notifyDataSetChanged();
-                        persistantMessage = messageSend.getText().toString();
+                        persistentMessage = messageSend.getText().toString();
                         // ^ This is so we can clear the EditText field as soon as the button is
                         //pressed and not have to wait until after the Async Task is finished.
-                        boolean isInserted = db.insertWindowData(passedEmail, null, persistantMessage, true, null);
-                        SendMail sendInstance = new SendMail(passedEmail,persistantMessage,getActivity().getApplicationContext());
+                        boolean isInserted = db.insertWindowData(passedEmail, null, persistentMessage, true, null,false);
+                        SendMail sendInstance = new SendMail(passedEmail, persistentMessage,getActivity().getApplicationContext());
                         sendInstance.execute();
                         messageSend.getText().clear();
                         InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -127,12 +116,12 @@ public class ConversationWindowFragment extends android.app.Fragment {
     public void prepareWindowRows() {
         Cursor res = db.getWindowData(passedEmail);
         while (res.moveToNext()) {
-            boolean sentValue = (res.getInt(4) == 1);
-            ConversationWindow conversationWindow = new ConversationWindow(res.getString(0), res.getString(1), res.getString(2), res.getString(3), sentValue);
+            boolean sentValue = (res.getInt(5) == 1);
+            boolean temp = (1== res.getInt(res.getColumnIndex(db.WINDOW_COL_4)));
+            String messageID = res.getString(res.getColumnIndex(db.WINDOW_COL_5));
+            ConversationWindow conversationWindow = new ConversationWindow(res.getString(0), res.getString(1), res.getString(2),messageID, sentValue,temp);
             conversationWindowList.add(conversationWindow);
-            System.out.println(res.getString(2));
         }
-
         cAdapter.notifyDataSetChanged();
     }
 }

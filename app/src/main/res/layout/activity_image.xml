@@ -8,7 +8,12 @@
     android:paddingVertical="16dp"
     android:paddingHorizontal="16dp">
 
-    <include layout="@layout/content_image" />
-
+    <ImageView
+        android:id="@+id/attachment_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/bubble1"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 </android.support.design.widget.CoordinatorLayout>
