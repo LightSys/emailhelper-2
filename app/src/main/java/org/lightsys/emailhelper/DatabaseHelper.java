@@ -263,6 +263,23 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
         return true;
     }
+    public boolean containsContact(String email){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor;
+        try{
+            cursor = db.rawQuery("select * from saved_contacts where EMAIL = ?", new String[]{email}, null);
+            if(cursor.getCount()>0){
+                cursor.close();
+                return true;
+            }
+        }
+        catch(Exception e){
+            System.out.print(e);
+            return false;
+        }
+
+        return false;
+    }
 
     /** This function will add the message into the database.
      * @return
