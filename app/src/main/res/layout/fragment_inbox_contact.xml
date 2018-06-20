@@ -1,20 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app2="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_inbox_contact"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="org.lightsys.emailhelper.Contact.InboxContactFragment">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_inbox_contact_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:scrollbars="vertical"
-        app2:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        android:layout_alignParentLeft="true" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <CheckBox
+            android:id="@+id/showDatabaseContactsCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Contacts that are in the Database"
+            android:checked="true"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_inbox_contact_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/showDatabaseContactsCheckBox"
+            android:scrollbars="vertical"
+            app2:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+    </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -6,6 +6,9 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import com.sun.mail.imap.IMAPStore;
+
+import org.lightsys.emailhelper.Contact.Contact;
+import org.lightsys.emailhelper.Contact.ContactList;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +18,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Stack;
+
+import javax.mail.Address;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Folder;
@@ -48,7 +53,8 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
     }
     @Override
     protected Long doInBackground(URL... params) {
-        getMail();
+        //getContactsFromInbox();
+        //getMail();
         return null;
     }
     protected void onPostExecute(Long result) {}
@@ -187,5 +193,39 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return hasAttachments;
     }
+    public ContactList getContactsFromInbox(){
+        ContactList contactList = new ContactList();
+        Properties props = System.getProperties();
+        setProperties(props);
+        try {
+            Folder inbox = getInbox(props);
+            UIDFolder uf = (UIDFolder) inbox;
+            inbox.open(Folder.READ_WRITE);
+            Message messages[] = inbox.getMessages();
+            Date today = new Date();
+            if(today.getMonth() >= 2) {
+                today.setMonth(today.getMonth() - 3);
+            }else{
+                today.setYear(today.getYear()-1);
+                today.setMonth(today.getMonth()+9);
+            }
+            for (int i = messages.length - 1; i >= 0; i--) {
+                Message message = messages[i];
+                Date sent = message.getSentDate();
+                if(sent.before(today)){
+                    return contactList;
+                }
+                Address[] froms = message.getFrom();
+                String email = froms == null ? null : ((InternetAddress) froms[0]).getAddress();
+                Boolean temp =db.containsContact(email);
+                contactList.add(email,temp);
+            }
+        } catch(AuthenticationFailedException e){
+            e.printStackTrace();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contactList;
+    }
 }

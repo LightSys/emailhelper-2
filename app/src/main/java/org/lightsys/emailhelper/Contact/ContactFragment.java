@@ -63,6 +63,7 @@ public class ContactFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_contact, container, false);
         makeRecyclerView(rootView);
+
         return rootView;
     }
 

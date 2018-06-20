@@ -16,18 +16,37 @@ import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
-import java.util.Stack;
-
 public class InboxContactAdapter extends RecyclerView.Adapter<InboxContactAdapter.EmailContactItemViewHolder>{
     private int numItems;
     private ContactList contactList;
     Context context;
 
-    public InboxContactAdapter(ContactList contactList){
-        numItems = contactList.size();
-        this.contactList = contactList;
+    public InboxContactAdapter(ContactList contactList, boolean showDatabaseContacts){
+        if(showDatabaseContacts){
+            this.contactList = new ContactList();
+            for(int i = 0;i<contactList.size();i++){
+                ContactList.ContactListItem temp = contactList.get(i);
+                if(!temp.inContacts){
+                    this.contactList.add(temp.getContactEmail());
+                }
+            }
+            for(int i = 0;i<contactList.size();i++){
+                ContactList.ContactListItem temp = contactList.get(i);
+                if(temp.inContacts){
+                    this.contactList.add(temp.getContactEmail(),true);
+                }
+            }
+        }else{
+            this.contactList = new ContactList();
+            for(int i = 0;i<contactList.size();i++){
+                ContactList.ContactListItem temp = contactList.get(i);
+                if(!temp.inContacts){
+                   this.contactList.add(temp.getContactEmail());
+                }
+            }
+        }
 
-
+        numItems = this.contactList.size();
     }
 
     @NonNull

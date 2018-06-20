@@ -66,18 +66,18 @@ public class MainActivity extends AppCompatActivity{
 
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
-        HelperClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
-        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
-        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
+//        HelperClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
+//        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
+//        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
         //TODO replace hard code
-        /*
+
         HelperClass.setEmail(password.User);
         HelperClass.Password = password.auth;
         HelperClass.savedCredentials = true;
         SharedPreferences.Editor myEdit = sharedPref.edit();
         myEdit.putString(getString(R.string.key_email),password.User);
         myEdit.apply();
-
+        /*
         Contact send1 = password.sender2;
         db.insertContactData(send1.getEmail(),send1.getFirstName(),send1.getLastName());
         db.insertConversationData(send1.getEmail(),send1.getFirstName()+" "+send1.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity{
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
         }
-
-
+        GetMail temp = new GetMail(getApplicationContext());
+        temp.execute();
     }
     @Override
     public void onStart() {
@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity{
                 Intent startContacts = new Intent(this, ContactActivity.class);
                 startActivity(startContacts);
                 return true;
-            case R.id.message_menu_add_contact:
             case R.id.action_new_contact:
                 Intent startNewContact = new Intent(this, NewContactActivity.class);
                 startActivity(startNewContact);

@@ -1,12 +1,13 @@
 package org.lightsys.emailhelper.Contact;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,19 +15,21 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import org.lightsys.emailhelper.ConfirmDialog;
+import org.lightsys.emailhelper.Conversation.ConversationFragment;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.GetMail;
-import org.lightsys.emailhelper.NotificationBase;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
+import org.lightsys.emailhelper.emailNotification;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
+import xdroid.toaster.Toaster;
 
 public class InboxContactFragment extends android.app.Fragment {
 
@@ -39,6 +42,8 @@ public class InboxContactFragment extends android.app.Fragment {
     private InboxContactAdapter adapter;
     View rootView;//This variable had to be made global so that the list wouldn't duplicate data
     Context context;
+    CheckBox showDatabaseContacts;
+    SwipeRefreshLayout swipeContainer;
 
 
     public InboxContactFragment() {
@@ -49,6 +54,7 @@ public class InboxContactFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
+
 
 
     }
@@ -70,9 +76,36 @@ public class InboxContactFragment extends android.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_inbox_contact, container, false);
+        showDatabaseContacts = rootView.findViewById(R.id.showDatabaseContactsCheckBox);
+        SharedPreferences sp = context.getSharedPreferences(getString(R.string.preferences),0);
+        Resources r = context.getResources();
+        swipeContainer = rootView.findViewById(R.id.fragment_inbox_contact);
+        boolean showDatabaseContactsBoolean = sp.getBoolean(getString(R.string.key_show_database_contacts),r.getBoolean(R.bool.default_show_database_contacts));
+        showDatabaseContacts.setChecked(showDatabaseContactsBoolean);
+        showDatabaseContacts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences sp = context.getSharedPreferences(getString(R.string.preferences),0);
+                SharedPreferences.Editor edit = sp.edit();
+                edit.putBoolean(getString(R.string.key_show_database_contacts),isChecked);
+                edit.apply();
+                new refresh().execute();
+                swipeContainer.setRefreshing(true);
+            }
+        });
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh myRefresher = new refresh();
+                myRefresher.execute();
+            }
+        });
         makeRecyclerView(rootView);
+
+
 
         return rootView;
     }
@@ -121,7 +154,7 @@ public class InboxContactFragment extends android.app.Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_inbox_contact_view);//Makes the RecyclerView
 
-        adapter = new InboxContactAdapter(contactList);
+        adapter = new InboxContactAdapter(contactList, showDatabaseContacts.isChecked());
 
         RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(cLayoutManager);
@@ -156,8 +189,28 @@ public class InboxContactFragment extends android.app.Fragment {
      **********************************************************************************************/
 
     public void prepareContactData() {
-        adapter = new InboxContactAdapter(contactList);
+        adapter = new InboxContactAdapter(contactList,showDatabaseContacts.isChecked());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    public boolean getContactListStatus() {
+        return contactList != null;
+    }
+    class refresh extends AsyncTask<URL, Integer, Long> {
+        Handler handler;
+        @Override
+        protected Long doInBackground(URL... urls) {
+            handler = new Handler(Looper.getMainLooper());
+            GetMail mailer = new GetMail(getActivity().getApplicationContext());
+            contactList = mailer.getContactsFromInbox();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Long result){
+            swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
+            Toaster.toast(R.string.refresh_finished);
+            prepareContactData();
+        }
     }
 }
