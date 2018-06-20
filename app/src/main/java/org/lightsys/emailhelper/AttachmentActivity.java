@@ -97,7 +97,6 @@ public class AttachmentActivity extends AppCompatActivity {
             public void onLongClick(View view, int position) {}
         }));
     }
-    //TODO test this function and see if it will open the files now
     private void openFile(File file) throws IOException {
         String filePath = file.getAbsolutePath();
         Uri uri = Uri.parse(filePath);

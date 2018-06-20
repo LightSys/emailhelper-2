@@ -1,45 +1,25 @@
 package org.lightsys.emailhelper.Contact;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class ContactList {
-    private PriorityQueue<ContactListItem> contactList;
+    private emailHelperList contactList;
     public ContactList(){
-        contactList = new PriorityQueue<>(8,new myComparator());
+        contactList = new emailHelperList();
     }
-
     public void add(String email){
-        ContactListItem temp = new ContactListItem(email);
-        if(contains(email)){
-            ContactListItem changer = find(email);
-            changer.tick();
-        }
-        else{
-            contactList.add(temp);
-        }
+       contactList.add(email,false);
     }
     public void add(String email,boolean inContacts){
-        ContactListItem temp = new ContactListItem(email,inContacts);
-        if(contains(email)){
-            ContactListItem changer = find(email);
-            changer.tick();
-        }
-        else{
-            contactList.add(temp);
-        }
+        contactList.add(email,inContacts);
     }
 
     private ContactListItem find(String email){
-        ContactListItem ret;
-        Iterator<ContactListItem> temp = contactList.iterator();
-        while(temp.hasNext()){
-            ret = temp.next();
-            if(ret.contactEmail.equalsIgnoreCase(email)){
-                return ret;
+        for(int i = 0;i<contactList.size();i++){
+            ContactListItem temp = contactList.get(i);
+            if(temp != null){
+                return temp;
             }
         }
         return null;
@@ -49,22 +29,16 @@ public class ContactList {
     }
 
     public boolean contains(String email) {
-        Iterator<ContactListItem> temp = contactList.iterator();
-        while(temp.hasNext()){
-            ContactListItem item = temp.next();
-            if(item.contactEmail.equalsIgnoreCase(email)){
+        for(int i = 0;i<contactList.size();i++){
+            ContactListItem temp = contactList.get(i);
+            if(temp != null){
                 return true;
             }
         }
         return false;
     }
     public ContactListItem get(int index){
-        Object[] myArray =  contactList.toArray();
-        if(contactList.size()-1<index){
-            return null;
-        }
-        else
-            return (ContactListItem) myArray[index];
+        return contactList.get(index);
     }
 
     public class ContactListItem{
@@ -103,21 +77,71 @@ public class ContactList {
     public void clear(){
         contactList.clear();
     }
-    class myComparator implements Comparator<ContactListItem> {
 
-        @Override
-        public int compare(ContactListItem o1, ContactListItem o2) {
-            if(o1.contactEmail.equalsIgnoreCase(o2.contactEmail)){
-                return 0;
+    private class emailHelperList{
+        private int size;
+        private int maxSize;
+        ContactListItem[] array;
+
+        public emailHelperList(){
+            size = 0;
+            maxSize = 10;
+            array = new ContactListItem[maxSize];
+        }
+        public int size(){
+            return size;
+        }
+        private void resize(){
+            maxSize *=2;
+            ContactListItem[] tempArray = new ContactListItem[maxSize];
+            for(int i = 0;i<size;i++){
+                tempArray[i] = array[i];
             }
-            if(o1.inContacts && !o2.inContacts){
-                return 1;
+            array = tempArray;
+        }
+        public void clear(){
+            array = new ContactListItem[10];
+            maxSize = 10;
+            size = 0;
+        }
+
+        public void add(String email, boolean inContacts) {
+            size++;
+            if(size+1 >maxSize){
+                resize();
             }
-            else if(!o1.inContacts && o2.inContacts){
-                return -1;
+            for(int i = 0;i<size;i++){
+                if(array[i] == null){
+                    array[i] = new ContactListItem(email,inContacts);
+
+                    return;
+                }
+                if(array[i].getContactEmail().equalsIgnoreCase(email)){
+                    array[i].tick();
+                    size--;
+                    sort(i);
+                    return;
+                }
             }
-            else{
-                return o1.numOfReferences-o2.numOfReferences;
+            int tmep = 1;
+        }
+        private void sort(int size){//Merge sort? Optimize?
+            for(int i=size;i>0;i--){
+                if(array[i].numOfReferences>array[i-1].numOfReferences){
+                    ContactListItem temp = array[i];
+                    array[i]=array[i-1];
+                    array[i-1]=temp;
+                    int pause = 1;
+                }else{
+                    return;
+                }
+            }
+        }
+        public ContactListItem get(int index){
+            if(index >= size || index <0){
+                return null;
+            }else{
+                return array[index];
             }
         }
     }

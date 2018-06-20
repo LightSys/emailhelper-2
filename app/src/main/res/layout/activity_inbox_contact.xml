@@ -14,7 +14,7 @@
             android:id="@+id/showDatabaseContactsCheckBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show Contacts that are in the Database"
+            android:text="Show addresses that are in the Database"
             android:checked="true"/>
 
         <android.support.v7.widget.RecyclerView

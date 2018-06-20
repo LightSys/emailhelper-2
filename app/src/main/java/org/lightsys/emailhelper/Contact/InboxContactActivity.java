@@ -29,45 +29,16 @@ import java.net.URL;
 import xdroid.toaster.Toaster;
 
 public class InboxContactActivity extends AppCompatActivity {
-    //This is an instance of the database for testing
     DatabaseHelper db;
-
-    //These variables are used in the list view
     private ContactList contactList;
     private RecyclerView recyclerView;
     private InboxContactAdapter adapter;
     Context context;
+    Resources resources;
+    SharedPreferences sp;
     CheckBox showDatabaseContacts;
     SwipeRefreshLayout swipeContainer;
-    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
-
-        /******************************************************************************************
-         *  The onMove function has to be there for the ItemTouchHelper to be happy.              *
-         *  There shouldn't be anything that we need to use it for.                               *
-         *  -Nick                                                                                 *
-         ******************************************************************************************/
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-
-        }
-        Runnable deletionRunnable = new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        };
-        Runnable cancelRunnable = new Runnable(){
-            @Override
-            public void run() {
-
-            }
-        };
-    };
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,15 +47,52 @@ public class InboxContactActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        context = getApplicationContext();
-        db = new DatabaseHelper(context);
-        // Inflate the layout for this fragment
-        showDatabaseContacts = findViewById(R.id.showDatabaseContactsCheckBox);
-        SharedPreferences sp = context.getSharedPreferences(getString(R.string.preferences),0);
-        Resources r = context.getResources();
+        setUpClassVariables();
+        setUpCheckBox();
+        setUpContainer();
+    }
+    private void setUpContainer(){
         swipeContainer = findViewById(R.id.fragment_inbox_contact);
-        boolean showDatabaseContactsBoolean = sp.getBoolean(getString(R.string.key_show_database_contacts),r.getBoolean(R.bool.default_show_database_contacts));
-        showDatabaseContacts.setChecked(showDatabaseContactsBoolean);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new refresh().execute();
+            }
+        });
+        simpleItemTouchCallback  = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
+
+            /******************************************************************************************
+             *  The onMove function has to be there for the ItemTouchHelper to be happy.              *
+             *  There shouldn't be anything that we need to use it for.                               *
+             *  -Nick                                                                                 *
+             ******************************************************************************************/
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+            }
+            Runnable deletionRunnable = new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            };
+            Runnable cancelRunnable = new Runnable(){
+                @Override
+                public void run() {
+
+                }
+            };
+        };
+        makeRecyclerView();
+    }
+    private void setUpCheckBox(){
+        showDatabaseContacts = findViewById(R.id.showDatabaseContactsCheckBox);
+        showDatabaseContacts.setChecked(sp.getBoolean(getString(R.string.key_show_database_contacts),resources.getBoolean(R.bool.default_show_database_contacts)));
         showDatabaseContacts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -96,14 +104,15 @@ public class InboxContactActivity extends AppCompatActivity {
                 swipeContainer.setRefreshing(true);
             }
         });
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new refresh().execute();
-            }
-        });
-        makeRecyclerView();
     }
+    private void setUpClassVariables() {
+        context = getApplicationContext();
+        db = new DatabaseHelper(context);
+        resources = context.getResources();
+        sp = context.getSharedPreferences(getString(R.string.preferences),0);
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -112,14 +121,12 @@ public class InboxContactActivity extends AppCompatActivity {
     }
     public void makeRecyclerView() {
         recyclerView = findViewById(R.id.recycler_inbox_contact_view);//Makes the RecyclerView
-        adapter = new InboxContactAdapter(contactList, showDatabaseContacts.isChecked());
 
         RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(cLayoutManager);
         //This ItemDecoration was working at the start but I don't know I did to make it stop
         recyclerView.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
 
         /**
          *  We can probably make tapping on a contact open the NewContactFragment to change the info
@@ -138,13 +145,15 @@ public class InboxContactActivity extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-        prepareContactData();
     }
     public void prepareContactData() {
-        adapter = new InboxContactAdapter(contactList,showDatabaseContacts.isChecked());
+        SharedPreferences sp = context.getSharedPreferences(getString(R.string.preferences),0);
+        boolean temp = sp.getBoolean(getString(R.string.key_show_database_contacts),context.getResources().getBoolean(R.bool.default_show_database_contacts));
+        adapter = new InboxContactAdapter(contactList,temp);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
+    //Async class for refresh stuff
     class refresh extends AsyncTask<URL, Integer, Long> {
         Handler handler;
         @Override

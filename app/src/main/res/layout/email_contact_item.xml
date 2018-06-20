@@ -19,14 +19,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/email_contact_list"
         android:text="In Contacts"
-        android:textColor="@color/black"
-        android:clickable="false"/>
+        android:textColor="@color/black"/>
 
-    <Button
-        android:id="@+id/button_contact_list"
-        android:layout_width="48dp"
+    <TextView
+        android:id="@+id/messages_contact_list"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="+"
-        android:textAlignment="center" />
+        android:gravity="right"/>
 </RelativeLayout>

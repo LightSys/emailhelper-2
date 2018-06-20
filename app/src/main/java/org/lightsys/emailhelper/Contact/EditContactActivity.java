@@ -48,11 +48,8 @@ public class EditContactActivity extends AppCompatActivity {
                 editedContact.setFirstName((String)firstname.getText().toString());
                 editedContact.setLastName((String)lastname.getText().toString());
                 editedContact.setEmail((String)email.getText().toString());
-
                 saveContact(editedContact);
-
-                Intent upIntent = new Intent(getApplicationContext(),ContactActivity.class);
-                navigateUpTo(upIntent);
+                finish();
             }
         });
 
@@ -66,5 +63,4 @@ public class EditContactActivity extends AppCompatActivity {
         }
         db.updateConversation(originalEmail,editedContact);
     }
-
 }

@@ -25,7 +25,7 @@
     <string name="refresh_finished" translatable="true">Refresh finished.</string>
     <string name="fragment_credentials_email" translatable="true">Email:</string>
     <string name="fragment_credentials_password" translatable="true">Password:</string>
-    <string name="inbox_button_string" translatable="true">Show All Contacts from Inbox</string>
+    <string name="inbox_button_string" translatable="true">Show All Addresses from Inbox</string>
 
     <!-- Strings for credentials validation -->
     <string name="invalid_credentials" translatable="true">"Invalid credentials. Please reenter them.</string>

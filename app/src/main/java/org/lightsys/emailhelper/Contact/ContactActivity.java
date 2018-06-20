@@ -61,6 +61,11 @@ public class ContactActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        contactFragment.prepareContactData();
+    }
     public void setFragment(Fragment frag) {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

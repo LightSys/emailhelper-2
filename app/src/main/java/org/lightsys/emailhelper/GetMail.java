@@ -217,8 +217,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 }
                 Address[] froms = message.getFrom();
                 String email = froms == null ? null : ((InternetAddress) froms[0]).getAddress();
-                Boolean temp =db.containsContact(email);
-                contactList.add(email,temp);
+                contactList.add(email,db.containsContact(email));
             }
         } catch(AuthenticationFailedException e){
             e.printStackTrace();
