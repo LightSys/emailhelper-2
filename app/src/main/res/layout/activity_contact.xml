@@ -12,13 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
-    <CheckBox
-        android:id = "@+id/inbox_checkbox"
+    <Button
+        android:id = "@+id/inbox_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text = "@string/inbox_checkbox_string"
-        android:checked="false"
-        android:background="@color/white"/>
+        android:text = "@string/inbox_button_string" />
 
 </FrameLayout>

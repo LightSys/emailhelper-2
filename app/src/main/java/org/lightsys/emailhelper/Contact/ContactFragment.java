@@ -31,7 +31,7 @@ public class ContactFragment extends android.app.Fragment {
     //These variables are used in the list view
     private List<Contact> contactList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private ContactAdapter contactAdapter;
+    private ContactAdapter contactAdapter = new ContactAdapter(contactList);
     View rootView;//This variable had to be made global so that the list wouldn't duplicate data
     int deleteRow;
     String deleteName;
@@ -63,7 +63,6 @@ public class ContactFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_contact, container, false);
         makeRecyclerView(rootView);
-
         return rootView;
     }
 

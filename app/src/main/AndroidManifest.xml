@@ -30,8 +30,8 @@
         </activity>
         <activity
             android:name=".Conversation.ConversationActivity"
-            android:parentActivityName=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -55,8 +55,8 @@
         <activity
             android:name=".Contact.ContactActivity"
             android:label="@string/contacts"
-            android:parentActivityName=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -64,8 +64,8 @@
         <activity
             android:name=".Contact.NewContactActivity"
             android:label="@string/new_contact"
-            android:parentActivityName=".Contact.ContactActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName=".Contact.ContactActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Contact.ContactActivity" />
@@ -92,8 +92,8 @@
         <activity
             android:name=".Contact.EditContactActivity"
             android:label="@string/title_edit_contact_activity"
-            android:parentActivityName=".Contact.ContactActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName=".Contact.ContactActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Contact.ContactActivity" />
@@ -121,6 +121,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AttachmentActivity" />
+        </activity>
+        <activity
+            android:name=".Contact.InboxContactActivity"
+            android:label="@string/title_activity_inbox_contact"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Contact.ContactActivity" />
         </activity>
     </application>
 

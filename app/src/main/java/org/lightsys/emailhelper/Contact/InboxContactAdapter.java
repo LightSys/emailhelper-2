@@ -22,31 +22,34 @@ public class InboxContactAdapter extends RecyclerView.Adapter<InboxContactAdapte
     Context context;
 
     public InboxContactAdapter(ContactList contactList, boolean showDatabaseContacts){
-        if(showDatabaseContacts){
-            this.contactList = new ContactList();
-            for(int i = 0;i<contactList.size();i++){
-                ContactList.ContactListItem temp = contactList.get(i);
-                if(!temp.inContacts){
-                    this.contactList.add(temp.getContactEmail());
+        if( contactList != null){
+            if(showDatabaseContacts){
+                this.contactList = new ContactList();
+                for(int i = 0;i<contactList.size();i++){
+                    ContactList.ContactListItem temp = contactList.get(i);
+                    if(!temp.inContacts){
+                        this.contactList.add(temp.getContactEmail());
+                    }
+                }
+                for(int i = 0;i<contactList.size();i++){
+                    ContactList.ContactListItem temp = contactList.get(i);
+                    if(temp.inContacts){
+                        this.contactList.add(temp.getContactEmail(),true);
+                    }
+                }
+            }else{
+                this.contactList = new ContactList();
+                for(int i = 0;i<contactList.size();i++){
+                    ContactList.ContactListItem temp = contactList.get(i);
+                    if(!temp.inContacts){
+                        this.contactList.add(temp.getContactEmail());
+                    }
                 }
             }
-            for(int i = 0;i<contactList.size();i++){
-                ContactList.ContactListItem temp = contactList.get(i);
-                if(temp.inContacts){
-                    this.contactList.add(temp.getContactEmail(),true);
-                }
-            }
+            numItems = this.contactList.size();
         }else{
-            this.contactList = new ContactList();
-            for(int i = 0;i<contactList.size();i++){
-                ContactList.ContactListItem temp = contactList.get(i);
-                if(!temp.inContacts){
-                   this.contactList.add(temp.getContactEmail());
-                }
-            }
+            numItems = 0;
         }
-
-        numItems = this.contactList.size();
     }
 
     @NonNull

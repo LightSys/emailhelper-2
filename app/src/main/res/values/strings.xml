@@ -25,7 +25,7 @@
     <string name="refresh_finished" translatable="true">Refresh finished.</string>
     <string name="fragment_credentials_email" translatable="true">Email:</string>
     <string name="fragment_credentials_password" translatable="true">Password:</string>
-    <string name="inbox_checkbox_string" translatable="true">Show All Contacts from Inbox</string>
+    <string name="inbox_button_string" translatable="true">Show All Contacts from Inbox</string>
 
     <!-- Strings for credentials validation -->
     <string name="invalid_credentials" translatable="true">"Invalid credentials. Please reenter them.</string>
@@ -125,31 +125,32 @@
     <string name="title_activity_image">ImageActivity</string>
     <string name="title_activity_attachment">AttachmentActivity</string>
     <string name="attachment_message" translatable="true">"\nAttachment(s) were saved from this email.\n To view go to Contact Settings."</string>
-    <string name = "cannot_find_app_to_run" translatable="true">No apps found capable to open selected attachment.</string>
+    <string name="cannot_find_app_to_run" translatable="true">No apps found capable to open selected attachment.</string>
 
     <!-- Popup Strings -->
-    <string name = "delete_word" translatable="true">Delete</string>
+    <string name="delete_word" translatable="true">Delete</string>
 
-    <string name = "contact_delete_message_prestring" translatable="true">"Are you sure you want to delete "</string>
-    <string name = "contact_delete_message_poststring" translatable="true">" from Contacts?"</string>
-    <string name = "contact_deleted_prestring" translatable="true"></string>
-    <string name = "contact_deleted_poststring" translatable="true">" has been deleted from Contacts."</string>
-    <string name = "contact_not_deleted_prestring" translatable="true"></string>
-    <string name = "contact_not_deleted_poststring" translatable="true">" has not been deleted from Contacts."</string>
+    <string name="contact_delete_message_prestring" translatable="true">"Are you sure you want to delete "</string>
+    <string name="contact_delete_message_poststring" translatable="true">" from Contacts?"</string>
+    <string name="contact_deleted_prestring" translatable="true"></string>
+    <string name="contact_deleted_poststring" translatable="true">" has been deleted from Contacts."</string>
+    <string name="contact_not_deleted_prestring" translatable="true"></string>
+    <string name="contact_not_deleted_poststring" translatable="true">" has not been deleted from Contacts."</string>
 
-    <string name = "conversation_delete_message_prestring" translatable="true">"Are you sure you want to delete the conversation with "</string>
-    <string name = "conversation_delete_message_poststring" translatable="true">" ?"</string>
-    <string name = "conversation_deleted_prestring" translatable="true">"Conversation with "</string>
-    <string name = "conversation_deleted_poststring" translatable="true">" deleted."</string>
-    <string name = "conversation_not_deleted_prestring" translatable="true">"Conversation with "</string>
-    <string name = "conversation_not_deleted_poststring" translatable="true">" not deleted."</string>
+    <string name="conversation_delete_message_prestring" translatable="true">"Are you sure you want to delete the conversation with "</string>
+    <string name="conversation_delete_message_poststring" translatable="true">" ?"</string>
+    <string name="conversation_deleted_prestring" translatable="true">"Conversation with "</string>
+    <string name="conversation_deleted_poststring" translatable="true">" deleted."</string>
+    <string name="conversation_not_deleted_prestring" translatable="true">"Conversation with "</string>
+    <string name="conversation_not_deleted_poststring" translatable="true">" not deleted."</string>
 
-    <string name = "attachment_message_prestring" translatable="true">"Are you sure that you want to delete "</string>
-    <string name = "attachment_message_poststring" translatable="true">"?"</string>
-    <string name = "attachment_deleted_message" translatable="true">The attachment has been deleted.</string>
-    <string name = "attachment_not_deleted_message" translatable="true">The attachment has not been deleted.</string>
+    <string name="attachment_message_prestring" translatable="true">"Are you sure that you want to delete "</string>
+    <string name="attachment_message_poststring" translatable="true">"?"</string>
+    <string name="attachment_deleted_message" translatable="true">The attachment has been deleted.</string>
+    <string name="attachment_not_deleted_message" translatable="true">The attachment has not been deleted.</string>
 
-    <string name = "confirm_word" translatable="true">Confirm</string>
-    <string name = "QR_popup_message_prestring" translatable="true">"Would you like to add "</string>
-    <string name = "QR_popup_message_poststring" translatable="true">" to contacts?"</string>
+    <string name="confirm_word" translatable="true">Confirm</string>
+    <string name="QR_popup_message_prestring" translatable="true">"Would you like to add "</string>
+    <string name="QR_popup_message_poststring" translatable="true">" to contacts?"</string>
+    <string name="title_activity_inbox_contact">Inbox Addresses</string>
 </resources>
