@@ -24,9 +24,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
         public MyViewHolder(View view) {
             super(view);
-            email = (TextView) view.findViewById(R.id.email);
-            name = (TextView) view.findViewById(R.id.name);
-            time = (TextView) view.findViewById(R.id.time);
+            email = view.findViewById(R.id.email);
+            name = view.findViewById(R.id.name);
+            time = view.findViewById(R.id.time);
         }
     }
 

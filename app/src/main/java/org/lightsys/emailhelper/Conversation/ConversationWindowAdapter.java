@@ -64,7 +64,7 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
         }
         if(conversationWindow.hasAttachments()){
             holder.recyclerView.setHasFixedSize(false);
-            ConversationAttachmentAdapter caa = new ConversationAttachmentAdapter(conversationWindow.getEmail(),conversationWindow.getMessageId(),new DatabaseHelper(context));
+            ConversationAttachmentAdapter caa = new ConversationAttachmentAdapter(conversationWindow.getMessageId(),new DatabaseHelper(context));
             holder.recyclerView.setAdapter(caa);
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         }

@@ -1,11 +1,6 @@
 package org.lightsys.emailhelper.Conversation;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
@@ -27,34 +21,24 @@ import org.lightsys.emailhelper.GetMail;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 import org.lightsys.emailhelper.emailNotification;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class ConversationFragment extends android.app.Fragment{
 
     //These variables are used in the list view
     private List<Conversation> conversationList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private ConversationAdapter cAdapter;
     private SwipeRefreshLayout swipeContainer;
     View rootView;
-    SharedPreferences sp;
-    Resources r;
     DatabaseHelper db;
 
-    int deleteRow;
-
-    public ConversationFragment() {
-    }
+    public ConversationFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        r = getResources();
-        sp = getActivity().getApplication().getSharedPreferences(getString(R.string.preferences), 0);
         db = new DatabaseHelper(getActivity().getApplicationContext());
     }
 
@@ -75,17 +59,19 @@ public class ConversationFragment extends android.app.Fragment{
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
         makeRecyclerView(rootView);
-        // Lookup the swipe container view
-        swipeContainer = rootView.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
+        setUpSwipeContainer();
+        return rootView;
+    }
+
+    private void setUpSwipeContainer() {
+        swipeContainer = rootView.findViewById(R.id.swipeContainer);// Lookup the swipe container view
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh() {// Setup refresh listener which triggers new data loading
                 refresh myRefresher = new refresh();
                 myRefresher.execute();
             }
         });
-        return rootView;
     }
 
     /**********************************************************************************************
@@ -98,6 +84,7 @@ public class ConversationFragment extends android.app.Fragment{
          *  to be happy.
          *  -Nick
          */
+        int deleteRow;
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                               RecyclerView.ViewHolder target) {
@@ -128,26 +115,19 @@ public class ConversationFragment extends android.app.Fragment{
                 prepareConversationData();
             }
         };
+
     };
 
 
-    /**********************************************************************************************
-     *        Has all the steps needed to make the RecyclerView that holds the conversations.     *
-     **********************************************************************************************/
-
+    /**
+     * Sets up the RecyclerView that holds the conversations.
+     */
     public void makeRecyclerView(View view) {
-        db = new DatabaseHelper(getActivity().getApplicationContext());                             //Creates instance of database
-
-        recyclerView = view.findViewById(R.id.recycler_view);                        //Makes the RecyclerView
-
-        cAdapter = new ConversationAdapter(conversationList);//Adapter for the Conversations
-
+        recyclerView = view.findViewById(R.id.recycler_view);//Makes the RecyclerView
         LinearLayoutManager cLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(cLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(cAdapter);
-
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -159,13 +139,10 @@ public class ConversationFragment extends android.app.Fragment{
                 db.resetNewMailBoolean(conversation.getEmail());
                 startActivity(intent);
             }
-            @Override
-            public void onLongClick(View view, int position) {}
+            @Override public void onLongClick(View view, int position) {}
         }));
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-        prepareConversationData();
     }
 
     /**********************************************************************************************
@@ -173,21 +150,9 @@ public class ConversationFragment extends android.app.Fragment{
      **********************************************************************************************/
 
     public void prepareConversationData() {
-        int size = conversationList.size();
-        conversationList.clear();
-        cAdapter.notifyItemRangeRemoved(0,size);
-
-        Cursor res = db.getConversationData();
-        Stack<Conversation> temp = new Stack<>();
-        while (res.moveToNext()) {
-            Conversation conversation = new Conversation(res.getString(0), res.getString(1), res.getString(2),1==res.getInt(res.getColumnIndex(db.CONVO_COL_5)));
-            temp.push(conversation);
-            //conversationList.add(conversation);
-        }
-        while(!temp.isEmpty()){
-            conversationList.add(temp.pop());
-        }
-        cAdapter.notifyDataSetChanged();
+        conversationList = db.getConversations();
+        ConversationAdapter cAdapter = new ConversationAdapter(conversationList);
+        recyclerView.setAdapter(cAdapter);
     }
     private class refresh extends AsyncTask<URL, Integer, Long>{
         Handler handler;

@@ -23,12 +23,10 @@ import xdroid.toaster.Toaster;
 
 public class ConversationAttachmentAdapter extends RecyclerView.Adapter<ConversationAttachmentAdapter.ImageViewHolder> {
     private int numItems;
-    private DatabaseHelper db;
     List<String> attachments;
 
 
-    public ConversationAttachmentAdapter(String email,String messageID,DatabaseHelper db){
-        this.db = db;
+    public ConversationAttachmentAdapter(String messageID,DatabaseHelper db){
         attachments = new ArrayList<>();
         Cursor res = db.getAttachmentsforConvo(messageID);
         while(res.moveToNext()){
@@ -45,10 +43,8 @@ public class ConversationAttachmentAdapter extends RecyclerView.Adapter<Conversa
         Context context = parent.getContext();
         int layout = R.layout.attachment_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-
         View view = inflater.inflate(layout,parent,false);
-        ImageViewHolder viewHolder = new ImageViewHolder(view,context);
-        return viewHolder;
+        return new ImageViewHolder(view,context);
     }
 
     @Override
@@ -62,9 +58,7 @@ public class ConversationAttachmentAdapter extends RecyclerView.Adapter<Conversa
     }
     class ImageViewHolder extends RecyclerView.ViewHolder{
         ImageView attachmentImage;
-        TextView attachmentText;
         String filePath;
-        Context context;
 
         public ImageViewHolder(View itemView, final Context context) {
             super(itemView);

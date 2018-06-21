@@ -87,14 +87,11 @@ public class MainActivity extends AppCompatActivity{
         db.insertConversationData(send2.getEmail(),send2.getFirstName()+" "+send2.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
         //Hard code ^^^^^
         */
-
         //Gets Credentials if the app doesn't have them
         if (!HelperClass.savedCredentials) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
         }
-        GetMail temp = new GetMail(getApplicationContext());
-        temp.execute();
     }
     @Override
     public void onStart() {
@@ -104,10 +101,6 @@ public class MainActivity extends AppCompatActivity{
     public void onResume() {
         super.onResume();
         newConversationFragment.prepareConversationData();
-    }
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -149,15 +142,10 @@ public class MainActivity extends AppCompatActivity{
     public void gatherData(boolean launchScanner){
         //imported from LightSys Event App
         //modified for use in EmailHelper
-        /*for testing on device w/o camera
-        db.addGeneral("url","http://192.168.0.23:3000/db");
-        Log.d(TAG, "gatherData: http://192.168.0.23:3000/db");
-
-        new DataConnection(context, activity, "new", "http://192.168.0.23:3000/db", true).execute("");
-*/
         if (launchScanner) {
             if (ActivityCompat.checkSelfPermission(this, "android.permission.CAMERA") != PackageManager.PERMISSION_GRANTED) {
                 requestCameraPermission();
+                gatherData(true);
             } else {
                 Intent QR = new Intent(MainActivity.this, launchQRScanner.class);
                 startActivityForResult(QR, QR_RESULT);
