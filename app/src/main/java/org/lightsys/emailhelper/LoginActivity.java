@@ -142,12 +142,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         HelperClass.setEmail(email);
         HelperClass.Password = password;
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);// Create object of SharedPreferences
-        SharedPreferences.Editor editor = sharedPref.edit();// New get Editor
-        editor.putString(getResources().getString(R.string.key_email), email);// Put your values
-        editor.putString(getResources().getString(R.string.key_password), password);
-        editor.putBoolean(getResources().getString(R.string.key_valid_credentials), true);
-        editor.apply();// Apply your edits
+
 
         // Show a progress spinner, and kick off a background task to
         // perform the user login attempt.
@@ -292,6 +287,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             HelperClass.savedCredentials = success;
             if (success) {
+                updateSharedPreferences();
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -304,6 +300,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+    private void updateSharedPreferences(){
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);// Create object of SharedPreferences
+        SharedPreferences.Editor editor = sharedPref.edit();// New get Editor
+        editor.putString(getResources().getString(R.string.key_email), HelperClass.Email);// Put your values
+        editor.putString(getResources().getString(R.string.key_password), HelperClass.Password);
+        editor.putBoolean(getResources().getString(R.string.key_valid_credentials), HelperClass.savedCredentials);
+        editor.apply();// Apply your edits
     }
 }
 

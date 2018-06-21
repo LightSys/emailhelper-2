@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity{
 //        db.insertContactData(send2.getEmail(),send2.getFirstName(),send2.getLastName());
 //        db.insertConversationData(send2.getEmail(),send2.getFirstName()+" "+send2.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
         //Hard code ^^^^^
-        int temp = 0;
-
     }
     @Override
     public void onResume() {
