@@ -1,5 +1,6 @@
 package org.lightsys.emailhelper.Contact;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -26,13 +27,10 @@ import org.lightsys.emailhelper.RecyclerTouchListener;
 
 import java.net.URL;
 
-import xdroid.toaster.Toaster;
-
 public class InboxContactActivity extends AppCompatActivity {
     DatabaseHelper db;
-    private ContactList contactList;
+    private AddressList addressList;
     private RecyclerView recyclerView;
-    private InboxContactAdapter adapter;
     Context context;
     Resources resources;
     SharedPreferences sp;
@@ -146,28 +144,26 @@ public class InboxContactActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-    public void prepareContactData() {
+    public void prepareAddressData() {
         SharedPreferences sp = context.getSharedPreferences(getString(R.string.preferences),0);
-        boolean temp = sp.getBoolean(getString(R.string.key_show_database_contacts),context.getResources().getBoolean(R.bool.default_show_database_contacts));
-        adapter = new InboxContactAdapter(contactList,temp);
+        InboxContactAdapter adapter = new InboxContactAdapter(addressList, sp.getBoolean(getString(R.string.key_show_database_contacts), context.getResources().getBoolean(R.bool.default_show_database_contacts)));
         recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
     }
     //Async class for refresh stuff
+    @SuppressLint("StaticFieldLeak")
     class refresh extends AsyncTask<URL, Integer, Long> {
         Handler handler;
         @Override
         protected Long doInBackground(URL... urls) {
             handler = new Handler(Looper.getMainLooper());
             GetMail mailer = new GetMail(context);
-            contactList = mailer.getContactsFromInbox();
+            addressList = mailer.getContactsFromInbox();
             return null;
         }
         @Override
         protected void onPostExecute(Long result){
             swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
-            //Toaster.toast(R.string.refresh_finished);
-            prepareContactData();
+            prepareAddressData();
         }
     }
 }

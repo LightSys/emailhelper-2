@@ -1,44 +1,21 @@
 package org.lightsys.emailhelper.Contact;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
-public class ContactList {
-    private emailHelperList contactList;
-    public ContactList(){
-        contactList = new emailHelperList();
+public class AddressList {
+    private emailHelperList addressList;
+    public AddressList(){
+        addressList = new emailHelperList();
     }
     public void add(String email){
-       contactList.add(email,false);
+        addressList.add(email,false);
     }
     public void add(String email,boolean inContacts){
-        contactList.add(email,inContacts);
-    }
-
-    private ContactListItem find(String email){
-        for(int i = 0;i<contactList.size();i++){
-            ContactListItem temp = contactList.get(i);
-            if(temp != null){
-                return temp;
-            }
-        }
-        return null;
+        addressList.add(email,inContacts);
     }
     public int size(){
-        return contactList.size();
-    }
-
-    public boolean contains(String email) {
-        for(int i = 0;i<contactList.size();i++){
-            ContactListItem temp = contactList.get(i);
-            if(temp != null){
-                return true;
-            }
-        }
-        return false;
+        return addressList.size();
     }
     public ContactListItem get(int index){
-        return contactList.get(index);
+        return addressList.get(index);
     }
 
     public class ContactListItem{
@@ -74,16 +51,13 @@ public class ContactList {
             numOfReferences = 0;
         }
     }
-    public void clear(){
-        contactList.clear();
-    }
 
     private class emailHelperList{
         private int size;
         private int maxSize;
         ContactListItem[] array;
 
-        public emailHelperList(){
+        emailHelperList(){
             size = 0;
             maxSize = 10;
             array = new ContactListItem[maxSize];
@@ -99,12 +73,6 @@ public class ContactList {
             }
             array = tempArray;
         }
-        public void clear(){
-            array = new ContactListItem[10];
-            maxSize = 10;
-            size = 0;
-        }
-
         public void add(String email, boolean inContacts) {
             size++;
             if(size+1 >maxSize){

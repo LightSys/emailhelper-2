@@ -3,7 +3,6 @@
     <PreferenceCategory
         android:title="@string/title_notifications"
         android:key="@string/preferences">
-
         <CheckBoxPreference
             android:defaultValue="@bool/default_update_show_notifications"
             android:key="@string/key_update_show_notifications"

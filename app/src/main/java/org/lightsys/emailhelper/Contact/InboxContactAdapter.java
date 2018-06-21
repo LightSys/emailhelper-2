@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -20,27 +19,27 @@ import org.lightsys.emailhelper.R;
 
 public class InboxContactAdapter extends RecyclerView.Adapter<InboxContactAdapter.EmailContactItemViewHolder>{
     private int numItems;
-    private ContactList contactList;
+    private AddressList addressList;
     Context context;
 
-    public InboxContactAdapter(ContactList contactList, boolean showDatabaseContacts){
-        if( contactList != null){
+    public InboxContactAdapter(AddressList addressList, boolean showDatabaseContacts){
+        if( addressList != null){
             if(showDatabaseContacts){
-                this.contactList = contactList;
+                this.addressList = addressList;
             }else{
-                this.contactList = new ContactList();
-                for(int i = 0;i<contactList.size();i++){
-                    ContactList.ContactListItem temp = contactList.get(i);
+                this.addressList = new AddressList();
+                for(int i = 0; i< addressList.size(); i++){
+                    AddressList.ContactListItem temp = addressList.get(i);
                     if(temp != null){
                         if(!temp.inContacts){
-                            this.contactList.add(temp.getContactEmail());
+                            this.addressList.add(temp.getContactEmail());
                         }
                     }else{
                         break;
                     }
                 }
             }
-            numItems = this.contactList.size();
+            numItems = this.addressList.size();
         }else{
             numItems = 0;
         }
@@ -58,7 +57,7 @@ public class InboxContactAdapter extends RecyclerView.Adapter<InboxContactAdapte
 
     @Override
     public void onBindViewHolder(@NonNull EmailContactItemViewHolder holder, int position) {
-        ContactList.ContactListItem temp = contactList.get(position);
+        AddressList.ContactListItem temp = addressList.get(position);
         holder.bind(temp.getContactEmail(),temp.getNumOfReferences());
     }
 

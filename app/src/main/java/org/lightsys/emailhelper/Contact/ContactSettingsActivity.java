@@ -18,6 +18,7 @@ import org.lightsys.emailhelper.R;
 public class ContactSettingsActivity extends AppCompatActivity {
     String firstName;
     String lastName;
+    String fullName;
     String email;
     DatabaseHelper db;
 
@@ -28,9 +29,10 @@ public class ContactSettingsActivity extends AppCompatActivity {
         ActionBar actionBar = this.getSupportActionBar();
         firstName = getIntent().getStringExtra(getString(R.string.intent_first_name));
         lastName = getIntent().getStringExtra(getString(R.string.intent_last_name));
+        fullName = firstName + " " + lastName;
         email = getIntent().getStringExtra(getString(R.string.intent_email));
         TextView name = findViewById(R.id.name_textView);
-        name.setText(firstName +" "+lastName);
+        name.setText(fullName);
         TextView emailText = findViewById(R.id.email_textView);
         emailText.setText(email);
         db = new DatabaseHelper(getApplicationContext());
@@ -74,7 +76,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 DatabaseHelper db = new DatabaseHelper(getApplicationContext());
                 db.deleteConversationData(email);
-                db.insertConversationData(email,firstName+" "+lastName, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
+                db.insertConversationData(email,fullName, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
                 Intent upIntent = new Intent(getApplicationContext(),ContactActivity.class);
                 navigateUpTo(upIntent);
             }

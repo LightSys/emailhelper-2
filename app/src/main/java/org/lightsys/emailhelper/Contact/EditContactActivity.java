@@ -1,20 +1,11 @@
 package org.lightsys.emailhelper.Contact;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.lightsys.emailhelper.Contact.Contact;
-import org.lightsys.emailhelper.Contact.ContactActivity;
-import org.lightsys.emailhelper.Contact.NewContactActivity;
-import org.lightsys.emailhelper.Conversation.ConversationWindow;
-import org.lightsys.emailhelper.Conversation.ConversationWindowFragment;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
@@ -40,14 +31,14 @@ public class EditContactActivity extends AppCompatActivity {
         final TextView email = findViewById(R.id.editContactActivity_email_edit);
         originalEmail = getIntent().getStringExtra(getString(R.string.intent_email));
         email.setText(originalEmail);
-        Button saveContactButton = (Button) findViewById(R.id.saveContactButton);
+        Button saveContactButton = findViewById(R.id.saveContactButton);
         saveContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Contact editedContact = new Contact();
-                editedContact.setFirstName((String)firstname.getText().toString());
-                editedContact.setLastName((String)lastname.getText().toString());
-                editedContact.setEmail((String)email.getText().toString());
+                editedContact.setFirstName(firstname.getText().toString());
+                editedContact.setLastName(lastname.getText().toString());
+                editedContact.setEmail(email.getText().toString());
                 saveContact(editedContact);
                 finish();
             }
