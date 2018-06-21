@@ -27,6 +27,7 @@ public class ConversationActivity extends AppCompatActivity {
     ConversationWindowFragment chats = new ConversationWindowFragment();
     Intent intent;
     public String email;
+    DatabaseHelper db;
 
     public void setFragmentNoBackStack(Fragment frag){
         FragmentManager manager = getFragmentManager();
@@ -41,6 +42,8 @@ public class ConversationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_conversation);
         intent = getIntent();
         email = intent.getStringExtra(getString(R.string.intent_email));
+        db = new DatabaseHelper(getApplicationContext());
+        setTitle(db.getContactName(email));
         passToFragment();
         setFragmentNoBackStack(chats);
         ActionBar actionBar = this.getSupportActionBar();
