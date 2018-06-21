@@ -21,8 +21,6 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     List<String> attachments;
     int numItems;
 
-
-
     public AttachmentAdapter(String email, DatabaseHelper db){
         this.db = db;
         this.email = email;
@@ -47,7 +45,6 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         View view = inflater.inflate(R.layout.attachment_item,viewGroup,false);
         AttachmentViewHolder viewHolder = new AttachmentViewHolder(view);
         return viewHolder;
-
     }
 
     @Override
@@ -67,7 +64,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         TextView attachmentName;
         public AttachmentViewHolder(View itemView) {
             super(itemView);
-            attachmentName = (TextView) itemView.findViewById(R.id.attachment_title);
+            attachmentName = itemView.findViewById(R.id.attachment_title);
         }
     }
 }

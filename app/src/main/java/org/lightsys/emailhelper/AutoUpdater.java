@@ -23,8 +23,6 @@ import java.net.URL;
 import java.util.List;
 import xdroid.toaster.Toaster;
 import static java.lang.Math.pow;
-
-
 /**
  * @author Judah Sistrunk
  * created on 5/25/2016.
@@ -39,7 +37,6 @@ public class AutoUpdater extends Service {
 
     //time constants in milliseconds
     private static final int ONE_SECOND     = 1000;
-    private static final int ONE_MINUTE = 60*ONE_SECOND;
     private emailNotification gotMail;
 
     private SharedPreferences sp;
@@ -79,7 +76,6 @@ public class AutoUpdater extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         sp = getSharedPreferences(getString(R.string.preferences), 0);
         checkForUpdates();
-
         //keeps service running after app is shut down
         return START_STICKY;
     }
@@ -93,7 +89,6 @@ public class AutoUpdater extends Service {
         notifier.execute();
     }
     private class SendNotifications extends AsyncTask<URL, Integer, Long>{
-
         @Override
         protected Long doInBackground(URL... urls) {
             GetMail mailer = new GetMail(getApplicationContext());

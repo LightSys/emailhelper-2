@@ -17,9 +17,7 @@ public class CredentialsFragment extends android.app.Fragment {
     View rootView;
 
 
-    public CredentialsFragment() {
-        // Required empty public constructor
-    }
+    public CredentialsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,16 +60,12 @@ public class CredentialsFragment extends android.app.Fragment {
                     public void onClick(View v) {
                         HelperClass.Email = emailField.getText().toString();
                         HelperClass.Password = passwordField.getText().toString();
-
                         // Create object of SharedPreferences
                         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preferences), 0);
-                        // New get Editor
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        // Put your values
-                        editor.putString(getResources().getString(R.string.key_email), HelperClass.Email);
+                        SharedPreferences.Editor editor = sharedPref.edit();// New get Editor
+                        editor.putString(getResources().getString(R.string.key_email), HelperClass.Email);// Put your values
                         editor.putString(getResources().getString(R.string.key_password), HelperClass.Password);
-                        // Apply your edits
-                        editor.apply();
+                        editor.apply();// Apply your edits
                     }
                 }
         );

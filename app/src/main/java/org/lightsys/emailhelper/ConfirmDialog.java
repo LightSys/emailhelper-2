@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 /**
+ * @author SHADE
  * The goal of this class is to facilitate the creation of a popup.
  * The class takes in the parameters and then runs its given executables.
  */

@@ -33,14 +33,10 @@ public class SendMail extends AsyncTask<URL, Integer, Long> {
         persistantMessage = message;
         c = context;
     }
-    protected void onProgressUpdate() {
-    }
     @Override
     protected Long doInBackground(URL... params) {
         sendMailTLS();
         return null;
-    }
-    protected void onPostExecute(Long result) {
     }
 
 

@@ -1,50 +1,26 @@
 package org.lightsys.emailhelper;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.lightsys.emailhelper.Conversation.Conversation;
-import org.lightsys.emailhelper.Conversation.ConversationActivity;
-import org.lightsys.emailhelper.Conversation.ConversationAdapter;
-import org.lightsys.emailhelper.Conversation.ConversationFragment;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URLConnection;
 import java.util.List;
-import java.util.zip.Inflater;
-
-import javax.activation.MimeType;
-
 import xdroid.toaster.Toaster;
 
 public class AttachmentActivity extends AppCompatActivity {
@@ -52,32 +28,27 @@ public class AttachmentActivity extends AppCompatActivity {
     private AttachmentAdapter adapter;
     String email;
     SwipeRefreshLayout swipeContainer;
-
-    Context activityContext = this;
-    String attachmentFilePath;
-    int deleteRow;
-    File attachmentFile;
+    DatabaseHelper db;
+    Context activityContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attachment);
         ActionBar actionBar = this.getSupportActionBar();
-        email = getIntent().getStringExtra(getString(R.string.intent_email));
         actionBar.setTitle(getString(R.string.attachments));
 
-        attachments = (RecyclerView) findViewById(R.id.recycler_view_attachments);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        attachments.setLayoutManager(layoutManager);
+        activityContext = getApplicationContext();
+        db = new DatabaseHelper(getApplicationContext());
+        email = getIntent().getStringExtra(getString(R.string.intent_email));
+
+        makeRecyclerView();
+        makeSwipeContainer();
+    }
+    private void makeRecyclerView(){
+        attachments = findViewById(R.id.recycler_view_attachments);
+        attachments.setLayoutManager(new LinearLayoutManager(this));
         attachments.setHasFixedSize(false);
-        swipeContainer = findViewById(R.id.swipeDelete);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeContainer.setRefreshing(false);
-            }
-        });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(attachments);
         attachments.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), attachments, new RecyclerTouchListener.ClickListener() {
@@ -97,6 +68,16 @@ public class AttachmentActivity extends AppCompatActivity {
             public void onLongClick(View view, int position) {}
         }));
     }
+    private void makeSwipeContainer(){
+        swipeContainer = findViewById(R.id.swipeDelete);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {// Setup refresh listener which triggers new data loading
+                swipeContainer.setRefreshing(false);
+            }
+        });
+    }
+
     private void openFile(File file) throws IOException {
         String filePath = file.getAbsolutePath();
         Uri uri = Uri.parse(filePath);
@@ -141,7 +122,6 @@ public class AttachmentActivity extends AppCompatActivity {
             }
         }
     }
-
     private String getExtension(String filePath) {
         int temp = filePath.length()-1;
         for(int i = temp;i>0;i--){
@@ -156,13 +136,13 @@ public class AttachmentActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-        adapter = new AttachmentAdapter(email,db);
-        attachments.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        prepareAttachmentData();
         super.onResume();
     }
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        int deleteRow;
+        String attachmentFilePath;
+        File attachmentFile;
         /**
          * onMove probably doesn't need to be used by us, but you need it for the ItemTouchHelper
          * to be happy.
@@ -175,6 +155,7 @@ public class AttachmentActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
             deleteRow = viewHolder.getAdapterPosition();
             String attachmentName = adapter.attachments.get(deleteRow);
             //Need to delete it from DB before getting rid of it from the list
@@ -205,10 +186,7 @@ public class AttachmentActivity extends AppCompatActivity {
     };
 
     public void prepareAttachmentData(){
-        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         adapter = new AttachmentAdapter(email,db);
         attachments.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        int temp = 1;
     }
 }

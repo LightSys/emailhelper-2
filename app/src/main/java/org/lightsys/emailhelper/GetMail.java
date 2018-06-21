@@ -52,8 +52,8 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
     }
     @Override
     protected Long doInBackground(URL... params) {
-        //getContactsFromInbox();
-        //getMail();
+        //This does nothing currently
+        //may end up putting getMail or getContacts back in here
         return null;
     }
     protected void onPostExecute(Long result) {}
@@ -69,7 +69,6 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
             while (res.moveToNext()) {
                 String email = res.getString(0);
                 String name = db.getContactName(email);
-
                 SearchTerm searchTerm = getSearchTerm(email);
                 Message messages[] = inbox.search(searchTerm);
                 Stack<ConversationWindow> convos = new Stack<>();//The purpose of this stack is to organize more messages into time order.

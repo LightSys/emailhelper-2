@@ -22,7 +22,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         android.support.v7.preference.PreferenceScreen ps = getPreferenceScreen();
 
         int count = ps.getPreferenceCount();
-
         for (int i = 0;i<count;i++){
             Preference p = ps.getPreference(i);
             if(!(p instanceof android.support.v7.preference.CheckBoxPreference)){
@@ -40,9 +39,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 }
             }
         }
-
-
-
     }
     private void setSummary(Preference preference, String value){
         if(preference instanceof ListPreference){

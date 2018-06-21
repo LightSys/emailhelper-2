@@ -1,7 +1,5 @@
 package org.lightsys.emailhelper;
 
-import android.app.NotificationChannel;
-
 import java.util.Stack;
 
 public class emailNotification {
@@ -20,7 +18,6 @@ public class emailNotification {
     public int size(){
         return newEmails.size();
     }
-
     public void push(String title,String subject){
         newEmails.push(new NotificationBase(title,subject));
         if(newEmails.size()>0){
@@ -33,7 +30,6 @@ public class emailNotification {
         }
         return newEmails.pop();
     }
-
     public void setInvalid_Credentials() {
         this.invalid_credentials = true;
     }
