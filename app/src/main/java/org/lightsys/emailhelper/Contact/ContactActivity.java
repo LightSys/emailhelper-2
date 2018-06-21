@@ -30,13 +30,23 @@ public class ContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
-        setFragment(contactFragment);
         ActionBar actionBar = this.getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        setUpButton();
+        setUpFragment();
+    }
+
+    private void setUpFragment() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.contact_fragment, contactFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    private void setUpButton(){
         contactButton  = findViewById(R.id.inbox_button);
-        setFragment(contactFragment);
         contactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,6 +55,7 @@ public class ContactActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -65,12 +76,5 @@ public class ContactActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         contactFragment.prepareContactData();
-    }
-    public void setFragment(Fragment frag) {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.contact_fragment, frag);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 }

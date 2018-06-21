@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="org.lightsys.emailhelper.Contact.ContactActivity">
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/contact_fragment"
+        android:name="org.lightsys.emailhelper.Contact.ContactFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="463dp">
+
+    </fragment>
     <Button
         android:id = "@+id/inbox_button"
         android:layout_width="match_parent"

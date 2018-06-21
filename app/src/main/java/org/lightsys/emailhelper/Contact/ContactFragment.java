@@ -1,6 +1,7 @@
 package org.lightsys.emailhelper.Contact;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -36,16 +37,7 @@ public class ContactFragment extends android.app.Fragment {
     int deleteRow;
     String deleteName;
 
-
-    public ContactFragment() {
-
-    }// Required empty public constructor
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+    public ContactFragment() {}
     /**********************************************************************************************
      *  This stuff is put in the onCreateView because it's a fragment and it needs a view to      *
      *  declare the button and stuff, which you can't get in the onCreate function. In the others *
@@ -56,12 +48,13 @@ public class ContactFragment extends android.app.Fragment {
      *  entire list is being deleted and remade every time somebody loads the fragment. It works  *
      *  for now but will probably need to be changed in the future.                               *
      *  -Nick                                                                                     *
+     *  This should be changed due to the topdown action I added in the manifest                  *
+     *  -Shade                                                                                    *
      **********************************************************************************************/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_contact, container, false);
+        rootView = inflater.inflate(R.layout.fragment_contact, container, false);// Inflate the layout for this fragment
         makeRecyclerView(rootView);
         return rootView;
     }
@@ -109,32 +102,23 @@ public class ContactFragment extends android.app.Fragment {
         };
     };
 
-
     /**********************************************************************************************
      *          Has all the steps needed to make the RecyclerView that holds the contacts.        *
      **********************************************************************************************/
 
     public void makeRecyclerView(View view) {
-        db = new DatabaseHelper(getActivity().getApplicationContext());                             //Creates instance of database
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_contact_view);                //Makes the RecyclerView
-
+        //Creates instance of database
+        Context context = getActivity().getApplicationContext();
+        db = new DatabaseHelper(getActivity().getApplicationContext());
+        recyclerView = view.findViewById(R.id.recycler_contact_view);                //Makes the RecyclerView
         contactAdapter = new ContactAdapter(contactList);                                           //Adapter for the Contacts
-
         RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(cLayoutManager);
-        //This ItemDecoration was working at the start but I don't know I did to make it stop
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(contactAdapter);
-
-        /**
-         *  We can probably make tapping on a contact open the NewContactFragment to change the info
-         *  for it. Somehow we need the ability to edit the info.
-         */
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
-            public void onClick(View view, int position) {
+            public void onClick(View view, int position) {//To edit the contact settings
                 Contact contact = contactList.get(position);
                 Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContactDetails = new Intent(getActivity().getApplicationContext(),ContactSettingsActivity.class);
@@ -144,7 +128,7 @@ public class ContactFragment extends android.app.Fragment {
                 startActivity(editContactDetails);
             }
             @Override
-            public void onLongClick(View view, int position) {
+            public void onLongClick(View view, int position) {//To edit the contact
                 Contact contact = contactList.get(position);
                 Toast.makeText(getActivity().getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContact = new Intent(getActivity().getApplicationContext(),EditContactActivity.class);
@@ -154,27 +138,18 @@ public class ContactFragment extends android.app.Fragment {
                 startActivity(editContact);
             }
         }));
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-        prepareContactData();
     }
 
-
-    /**********************************************************************************************
-     *                      Clears contactList and inserts data from database                     *
-     **********************************************************************************************/
-
+    /**
+     * This function clears contactList and gets new data from the database.
+     */
     public void prepareContactData() {
-        int size = contactList.size();//I clear the list here so that we can update it after new contacts are added from the
-        contactList.clear();          //new contact fragment
-        contactAdapter.notifyItemRangeRemoved(0,size);
-
-        Cursor res = db.getContactData();
-        while (res.moveToNext()) {
-            Contact contact = new Contact(res.getString(0), res.getString(1), res.getString(2));
-            contactList.add(contact);
-        }
-        contactAdapter.notifyDataSetChanged();
+        contactList.clear();
+        contactList = db.getContacts();
+        contactAdapter = new ContactAdapter(contactList);
+        recyclerView.setAdapter(contactAdapter);
     }
+
 }

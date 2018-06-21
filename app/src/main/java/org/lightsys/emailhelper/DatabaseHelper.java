@@ -10,7 +10,9 @@ import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Conversation.Conversation;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**************************************************************************************************
  *                              Created by nicholasweg on 6/27/17.                                *
@@ -520,9 +522,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     }
 
     /**This function inserts an attachment with an email and the file path for the saved attachment
-     * @param email
-     * @param filePath
-     * @return
+     * @param email The email associated with the file
+     * @param filePath The filepath for the file
+     * @param messageID The message id of the messeage
+     * @return The number of files in the database
      */
     public boolean insertAttachment(String email, String filePath,String messageID){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -534,15 +537,29 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return ret != -1;
     }
 
-    /**This function deletes the attachment.
-     * @param email
-     * @param filePath
-     * @return
+    /**This function deletes the attachment from the database
+     * @param email The email associated with the attachment
+     * @param filePath The filepath stored in the database
+     * @return The number of files in the database
      */
     public boolean deleteAttachment(String email, String filePath){
         SQLiteDatabase db = this.getWritableDatabase();
         String where = "EMAIL = ? AND ATTACHMENT = ?";
         long ret = db.delete(ATTACHMENT_DATABASE,where,new String[]{email,filePath});
         return ret != -1;
+    }
+
+    /**
+     * @return The contacts from the database in a list
+     */
+    public List<Contact> getContacts() {
+        List<Contact> contactList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
+        while (res.moveToNext()) {
+            Contact contact = new Contact(res.getString(res.getColumnIndex(CONTACT_COL_1)), res.getString(res.getColumnIndex(CONTACT_COL_2)), res.getString(res.getColumnIndex(CONTACT_COL_3)));
+            contactList.add(contact);
+        }
+        return contactList;
     }
 }
