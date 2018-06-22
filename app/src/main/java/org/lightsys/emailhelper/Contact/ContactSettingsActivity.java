@@ -38,7 +38,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
         db = new DatabaseHelper(getApplicationContext());
 
 
-        final CheckBox sendNotifications = (CheckBox) findViewById(R.id.display_notifications);
+        final CheckBox sendNotifications = findViewById(R.id.display_notifications);
         sendNotifications.setChecked(db.getNotificationSettings(email));
         sendNotifications.setOnCheckedChangeListener( new CheckBox.OnCheckedChangeListener(){
             @Override
@@ -48,7 +48,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
         });
 
 
-        Button editContact = (Button) findViewById(R.id.edit_contact);
+        Button editContact = findViewById(R.id.edit_contact);
         editContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,7 +59,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 startActivity(editContact);
             }
         });
-        Button deleteConversation = (Button) findViewById(R.id.delete_converstation);
+        Button deleteConversation = findViewById(R.id.delete_converstation);
         deleteConversation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,7 +70,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
 
             }
         });
-        Button deleteAndStartNew = (Button) findViewById(R.id.delete_and_start_new_conversation);
+        Button deleteAndStartNew = findViewById(R.id.delete_and_start_new_conversation);
         deleteAndStartNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +81,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 navigateUpTo(upIntent);
             }
         });
-        Button showAttachments = (Button) findViewById(R.id.show_attachments);
+        Button showAttachments = findViewById(R.id.show_attachments);
         showAttachments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

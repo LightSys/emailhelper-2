@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.ImageActivity;
@@ -18,8 +17,6 @@ import org.lightsys.emailhelper.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import xdroid.toaster.Toaster;
 
 public class ConversationAttachmentAdapter extends RecyclerView.Adapter<ConversationAttachmentAdapter.ImageViewHolder> {
     private int numItems;
@@ -41,7 +38,7 @@ public class ConversationAttachmentAdapter extends RecyclerView.Adapter<Conversa
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        int layout = R.layout.attachment_list_item;
+        int layout = R.layout.item_attachment_list;
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(layout,parent,false);
         return new ImageViewHolder(view,context);

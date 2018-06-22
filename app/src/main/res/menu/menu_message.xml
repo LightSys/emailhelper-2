@@ -4,19 +4,6 @@
     android:layout_height="24dp"
     android:layout_width="wrap_content">
     <item
-        android:id="@+id/message_menu_contacts"
-        android:title="Contacts"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_contact"/>
-    <item
-        android:id="@+id/action_new_contact"
-        android:icon="@drawable/ic_person_add_white_24dp"
-        android:title="@string/action_new_contact"
-        android:layout_height="4dp"
-        android:layout_width="4dp"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/message_menu_QR_input"
         android:title="Gather QR"
         android:icon="@drawable/ic_camera_white"
@@ -26,6 +13,18 @@
         android:title="Show my QR code"
         android:icon="@drawable/ic_center_focus_24dp"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/message_menu_contacts"
+        android:title="Contacts"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_contact"/>
+    <item
+        android:id="@+id/action_new_contact"
+        android:icon="@drawable/ic_person_add_white_24dp"
+        android:title="@string/action_new_contact"
+        android:layout_height="4dp"
+        android:layout_width="4dp"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/message_menu_credentials"
         android:title="Update Credentials"

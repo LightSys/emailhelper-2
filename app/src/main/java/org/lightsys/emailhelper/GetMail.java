@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import com.sun.mail.imap.IMAPStore;
 
-import org.lightsys.emailhelper.Contact.AddressList;
+import org.lightsys.emailhelper.Contact.ContactList;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -191,8 +191,8 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return hasAttachments;
     }
-    public AddressList getContactsFromInbox(){
-        AddressList addressList = new AddressList();
+    public ContactList getContactsFromInbox(){
+        ContactList contactList = new ContactList();
         Properties props = System.getProperties();
         setProperties(props);
         try {
@@ -211,11 +211,11 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 Message message = messages[i];
                 Date sent = message.getSentDate();
                 if(sent.before(today)){
-                    return addressList;
+                    return contactList;
                 }
                 Address[] froms = message.getFrom();
                 String email = froms == null ? null : ((InternetAddress) froms[0]).getAddress();
-                addressList.add(email,db.containsContact(email));
+                contactList.add(email);
             }
         } catch(AuthenticationFailedException e){
             e.printStackTrace();
@@ -223,6 +223,6 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return addressList;
+        return contactList;
     }
 }

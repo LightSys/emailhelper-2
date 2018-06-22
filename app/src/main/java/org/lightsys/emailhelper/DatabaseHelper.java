@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
 import org.lightsys.emailhelper.Contact.Contact;
+import org.lightsys.emailhelper.Contact.ContactList;
 import org.lightsys.emailhelper.Conversation.Conversation;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 
@@ -414,6 +415,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public List<Contact> getContacts() {
         List<Contact> contactList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
+        while (res.moveToNext()) {
+            Contact contact = new Contact(res.getString(res.getColumnIndex(CONTACT_COL_1)), res.getString(res.getColumnIndex(CONTACT_COL_2)), res.getString(res.getColumnIndex(CONTACT_COL_3)));
+            contactList.add(contact);
+        }
+        res.close();
+        return contactList;
+    }
+    public ContactList getContactsInboxStyle(){
+        ContactList contactList = new ContactList();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
         while (res.moveToNext()) {
