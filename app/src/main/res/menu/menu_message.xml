@@ -5,33 +5,37 @@
     android:layout_width="wrap_content">
     <item
         android:id="@+id/message_menu_QR_input"
-        android:title="Gather QR"
+        android:title="@string/menu_get_QR"
         android:icon="@drawable/ic_camera_white"
         app:showAsAction="always"/>
     <item
         android:id="@+id/message_menu_QR_output"
-        android:title="Show my QR code"
+        android:title="@string/menu_show_QR"
         android:icon="@drawable/ic_center_focus_24dp"
         app:showAsAction="always"/>
     <item
         android:id="@+id/message_menu_contacts"
-        android:title="Contacts"
+        android:title="@string/menu_contacts"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_contact"/>
     <item
         android:id="@+id/action_new_contact"
         android:icon="@drawable/ic_person_add_white_24dp"
-        android:title="@string/action_new_contact"
+        android:title="@string/menu_add_new_contact"
         android:layout_height="4dp"
         android:layout_width="4dp"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/message_menu_credentials"
-        android:title="Update Credentials"
+        android:title="@string/menu_account_settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/message_menu_settings"
-        android:title="Settings"
+        android:title="@string/menu_settings"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/message_menu_about"
+        android:title="@string/menu_about"
         app:showAsAction="never"/>
 
 </menu>

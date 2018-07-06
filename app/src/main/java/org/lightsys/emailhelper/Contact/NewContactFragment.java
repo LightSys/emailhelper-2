@@ -1,5 +1,6 @@
 package org.lightsys.emailhelper.Contact;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +35,13 @@ public class NewContactFragment extends android.app.Fragment {
     }
 
     public void addItems() {
+        Intent passedData = getActivity().getIntent();
         firstNameField = rootView.findViewById(R.id.firstNameField);
+        firstNameField.setText(passedData.getStringExtra(getString(R.string.intent_first_name)));
         lastNameField = rootView.findViewById(R.id.lastNameField);
+        lastNameField.setText(passedData.getStringExtra(getString(R.string.intent_last_name)));
         emailField = rootView.findViewById(R.id.emailField);
+        emailField.setText(passedData.getStringExtra(getString(R.string.intent_email)));
         addContactButton = rootView.findViewById(R.id.addContactButton);
         addContactButton.setOnClickListener(
             new View.OnClickListener() {
@@ -57,7 +62,6 @@ public class NewContactFragment extends android.app.Fragment {
                     else {
                         Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_not_added_prestring)+newContact.getName()+getString(R.string.conversation_not_added_poststring), Toast.LENGTH_SHORT).show();
                     }
-
                     getActivity().finish();//ends the task and reverts to what was going on previously
                 }
             }

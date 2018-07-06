@@ -46,14 +46,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     final String mail = email.getText().toString();
                     if(isChecked){
-                        if(!db.containsContact(mail)){
+                        if(!db.containsContact(mail)) {
                             inDatabase.setChecked(true);
-                            Intent editContactDetails = new Intent(context, EditContactActivity.class);
-                            editContactDetails.putExtra(r.getString(R.string.intent_email), mail);
-                            editContactDetails.putExtra(r.getString(R.string.intent_first_name), "");
-                            editContactDetails.putExtra(r.getString(R.string.intent_last_name), "");
-                            context.startActivity(editContactDetails);
-                            db.insertConversationData(mail, "", CommonMethods.getCurrentTime(), CommonMethods.getCurrentDate());
+                            Intent addContactDetails = new Intent(context, NewContactActivity.class);
+                            addContactDetails.putExtra(r.getString(R.string.intent_email), mail);
+                            addContactDetails.putExtra(r.getString(R.string.intent_first_name), "");
+                            addContactDetails.putExtra(r.getString(R.string.intent_last_name), "");
+                            context.startActivity(addContactDetails);
                         }
 
                     }
@@ -70,6 +69,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
                                 db.deleteContactData(mail);
                                 db.deleteConversationData(mail);
                                 inDatabase.setChecked(false);
+                                name.setText("");
+
                             }
                         };
                         String message = r.getString(R.string.contact_delete_message_prestring)+" "+mail+" "+r.getString(R.string.contact_delete_message_poststring);

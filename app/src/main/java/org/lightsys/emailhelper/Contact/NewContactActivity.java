@@ -15,5 +15,6 @@ public class NewContactActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
     }
 }

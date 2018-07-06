@@ -116,6 +116,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * returns false if the email is not in the database
      */
     public boolean getNotificationSettings(String email) {
+        if(!containsContact(email)){
+            return false;
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from " + NOTIFICATION_SEND_LIST + " where EMAIL = ?";
         Cursor res = db.rawQuery(query, new String[]{email});
@@ -348,7 +351,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONTACT_COL_3, newContact.getLastName());
         long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
         insertNotifications(newContact.getEmail());
-        return result == -1;
+        return result != -1;
     }
 
     public boolean containsContact(String email) {

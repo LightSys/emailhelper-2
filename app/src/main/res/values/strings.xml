@@ -21,12 +21,20 @@
     <string name="messages" translatable="true">Messages</string>
     <string name="contacts" translatable="true">Contacts</string>
     <string name="new_contact" translatable="true">New Contact</string>
-    <string name="action_new_contact" translatable="true">Add New Contact</string>
+
     <string name="refresh_finished" translatable="true">Refresh finished.</string>
     <string name="fragment_credentials_email" translatable="true">Email:</string>
     <string name="fragment_credentials_password" translatable="true">Password:</string>
     <string name="inbox_button_string" translatable="true">Show All Addresses from Inbox</string>
 
+    <!-- Menu Strings -->
+    <string name="menu_add_new_contact" translatable="true">Add New Contact</string>
+    <string name="menu_get_QR" translatable="true">Scan QR Code</string>
+    <string name="menu_contacts" translatable="true">Contacts</string>
+    <string name="menu_show_QR" translatable="true">Show my QR Code</string>
+    <string name="menu_account_settings" translatable="true">Account Settings</string>
+    <string name="menu_settings" translatable="true">Settings</string>
+    <string name="menu_about" translatable="true">About</string>
     <!-- Strings for credentials validation -->
     <string name="invalid_credentials" translatable="true">"Invalid credentials. Please reenter them.</string>
     <string name="invalid_credentials_notification_title" translatable="true">Invalid Credentials</string>
@@ -138,7 +146,7 @@
     <string name="contact_not_deleted_poststring" translatable="true">" has not been deleted from Contacts."</string>
 
     <string name="conversation_delete_message_prestring" translatable="true">"Are you sure you want to delete the conversation with "</string>
-    <string name="conversation_delete_message_poststring" translatable="true">" ?"</string>
+    <string name="conversation_delete_message_poststring" translatable="true">"?"</string>
     <string name="conversation_deleted_prestring" translatable="true">"Conversation with "</string>
     <string name="conversation_deleted_poststring" translatable="true">" deleted."</string>
     <string name="conversation_not_deleted_prestring" translatable="true">"Conversation with "</string>
@@ -153,4 +161,5 @@
     <string name="QR_popup_message_prestring" translatable="true">"Would you like to add "</string>
     <string name="QR_popup_message_poststring" translatable="true">" to contacts?"</string>
     <string name="title_activity_inbox_contact">Inbox Addresses</string>
+    <string name="title_activity_about">About</string>
 </resources>

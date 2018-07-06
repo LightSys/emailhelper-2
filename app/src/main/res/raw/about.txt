@@ -1,0 +1,26 @@
+<Header>LightSys EmailHelper (Android App)
+Copyright © 2017-2018 LightSys Technology Services, Inc.
+This app was created for the use of formating emails in a messenger type style.
+
+Learn more about LightSys Technology Services at
+https://lightsys.org
+
+This app's source code is also available under the GPLv3 open-source license at:
+https://github.com/LightSys/eventApp
+
+<Header>Open Source
+This app includes the following open source libraries:
+
+<Header>Mobile Vision Barcode Scanner
+Copyright (c) 2016 Nosakhare Belvi
+License: MIT License
+Website: https://github.com/KingsMentor/MobileVisionBarcodeScanner
+
+<Header>Xdroid
+Copyright 2014 ShamanLand.Com
+License: Apache License 2.0
+Website: https://github.com/shamanland/xdroid
+
+<Header>QRGen
+License: Apache License 2.0
+Website: https://github.com/kenglxn/QRGen

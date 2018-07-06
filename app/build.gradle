@@ -34,11 +34,9 @@ dependencies {
     //These are included under Apache 2.0 licence
     //from https://github.com/shamanland/xdroid
     implementation 'com.shamanland:xdroid-toaster:0.3.0'
-
     //from https://github.com/zxing/zxing
-    implementation 'com.google.zxing:zxing-parent:3.3.3'
-    //from https://github.com/kenglxn/QRGen
     implementation 'com.github.kenglxn.qrgen:android:2.4.0'
+    //This is included under the MIT License
     //from https://github.com/KingsMentor/MobileVisionBarcodeScanner/blob/master/license
     implementation('com.github.KingsMentor:MobileVisionBarcodeScanner:v1.2') { transitive = true; }
     implementation 'com.android.support:appcompat-v7:27.1.1'

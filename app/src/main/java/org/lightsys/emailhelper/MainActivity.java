@@ -135,6 +135,10 @@ public class MainActivity extends AppCompatActivity{
             case R.id.message_menu_QR_input:
                 gatherData(true);
                 return true;
+            case R.id.message_menu_about:
+                Intent about = new Intent(getBaseContext(), About.class);
+                startActivity(about);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

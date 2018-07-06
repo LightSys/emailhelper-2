@@ -44,6 +44,7 @@ public class ContactActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
     DatabaseHelper db;
+    Context ActivityContext = this;
     SwipeRefreshLayout swipeContainer;
     //simpleItemTouchCallback is used to delete Contacts via swiping
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback;
@@ -96,6 +97,7 @@ public class ContactActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         prepareContactData();
+        contactsCheckBox.setChecked(false);
     }
 
     private void setUpContainer(){
@@ -111,7 +113,7 @@ public class ContactActivity extends AppCompatActivity {
             }
         });
         simpleItemTouchCallback  = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
-
+            Contact contact;
             /******************************************************************************************
              *  The onMove function has to be there for the ItemTouchHelper to be happy.              *
              *  There shouldn't be anything that we need to use it for.                               *
@@ -121,11 +123,38 @@ public class ContactActivity extends AppCompatActivity {
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
-
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
 
+                int deleteRow = viewHolder.getAdapterPosition();
+                contact = contactList.get(deleteRow);
+                String deletionMessage = getString(R.string.contact_delete_message_prestring)+contactList.get(deleteRow).getName()+getString(R.string.contact_delete_message_poststring);
+                new ConfirmDialog(deletionMessage,getString(R.string.delete_word),ActivityContext,deletionRunnable,cancelRunnable);
             }
+            Runnable cancelRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(contactsCheckBox.isChecked()){
+                        prepareContactDataWithInbox();
+                    }
+                    else{
+                        prepareContactData();
+                    }
+                }
+            };
+            Runnable deletionRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    db.deleteConversationData(contact.getEmail());
+                    db.deleteContactData(contact.getEmail());
+                    if(contactsCheckBox.isChecked()){
+                        prepareContactDataWithInbox();
+                    }
+                    else{
+                        prepareContactData();
+                    }
+                }
+            };
         };
         makeRecyclerView();
     }
@@ -140,6 +169,9 @@ public class ContactActivity extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {//To edit the contact settings
+                if(contactsCheckBox.isChecked()){
+                    return;
+                }
                 Contact contact = contactList.get(position);
                 Toast.makeText(getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContactDetails = new Intent(getApplicationContext(),ContactSettingsActivity.class);
@@ -150,6 +182,9 @@ public class ContactActivity extends AppCompatActivity {
             }
             @Override
             public void onLongClick(View view, int position) {//To edit the contact
+                if(contactsCheckBox.isChecked()){
+                    return;
+                }
                 Contact contact = contactList.get(position);
                 Toast.makeText(getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContact = new Intent(getApplicationContext(),EditContactActivity.class);
@@ -173,8 +208,7 @@ public class ContactActivity extends AppCompatActivity {
         recyclerView.setAdapter(contactAdapter);
     }
     /**
-     * This function clears contactList and gets new data from the database.
-     * Should be used just before the Data appears on the screen.
+     * This function clears adds contacts from the inbox to the existing list.
      */
     public void prepareContactDataWithInbox() {
         contactAdapter = new ContactAdapter(contactList,true);

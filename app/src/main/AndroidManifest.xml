@@ -122,6 +122,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AttachmentActivity" />
         </activity>
+        <activity
+            android:name=".About"
+            android:label="@string/title_activity_about"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
