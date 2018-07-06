@@ -406,28 +406,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * @return a cursor that points the the the contacts in the database
-     */
-    public Cursor getContactData() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
-    }
-
-    /**
      * @return The contacts from the database in a list
      */
-    public List<Contact> getContacts() {
-        List<Contact> contactList = new ArrayList<>();
+    public List<Contact> getListOfContacts() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
-        while (res.moveToNext()) {
-            Contact contact = new Contact(res.getString(res.getColumnIndex(CONTACT_COL_1)), res.getString(res.getColumnIndex(CONTACT_COL_2)), res.getString(res.getColumnIndex(CONTACT_COL_3)));
-            contactList.add(contact);
+        List<Contact> contactList = new ArrayList<>();
+        while(res.moveToNext()){
+            String email = res.getString(res.getColumnIndex(CONTACT_COL_1));
+            String first = res.getString(res.getColumnIndex(CONTACT_COL_2));
+            String last = res.getString(res.getColumnIndex(CONTACT_COL_3));
+            contactList.add(new Contact(email,first,last));
         }
         res.close();
         return contactList;
     }
-    public ContactList getContactsInboxStyle(){
+
+
+
+    public ContactList getContactList(){
         ContactList contactList = new ContactList();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
@@ -589,19 +586,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * This function gets the attachments for the email
      *
-     * @param email
-     * @return
+     * @param email the email with which the attachment it associated
+     * @return a list of attachment file paths.
      */
-    public Cursor getAttachments(String email) {
+    public List<String> getAttachments(String email) {
+        List<String> attachments = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select " + ATTACHMENT_NAME + " from " + ATTACHMENT_DATABASE + " where " + ATTACHMENT_EMAIL + " = ?";
-        return db.rawQuery(query, new String[]{email});
+
+        Cursor res = db.rawQuery(query, new String[]{email});
+        while(res.moveToNext()){
+            String temp = res.getString(0);
+            attachments.add(temp);
+        }
+        res.close();
+        return attachments;
     }
 
-    public Cursor getAttachmentsforConvo(String messageID) {
+    public List<String> getAttachmentsforConvo(String messageID) {
+        List<String> attachments = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select " + ATTACHMENT_NAME + " from " + ATTACHMENT_DATABASE + " where " + ATTACHMENT_ID + " = ?";
-        return db.rawQuery(query, new String[]{messageID});
+        Cursor res = db.rawQuery(query, new String[]{messageID});
+        while(res.moveToNext()){
+            String temp = res.getString(0);
+            attachments.add(temp);
+        }
+        res.close();
+        return attachments;
     }
 
     /**

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import com.sun.mail.imap.IMAPStore;
 
+import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Contact.ContactList;
 import org.lightsys.emailhelper.Conversation.ConversationWindow;
 import java.io.File;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
 
@@ -59,16 +61,17 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
     protected void onPostExecute(Long result) {}
     public emailNotification getMail() {
         emailNotification receivedNew = new emailNotification();
-        Cursor res = db.getContactData();
+        List<Contact> contactList = db.getListOfContacts();
         Properties props = System.getProperties();
         setProperties(props);
         try {
             Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
-            while (res.moveToNext()) {
-                String email = res.getString(0);
-                String name = db.getContactName(email);
+            for(int j = 0;j<contactList.size();j++){
+                Contact contact = contactList.get(j);
+                String email = contact.getEmail();
+                String name = contact.getName();
                 SearchTerm searchTerm = getSearchTerm(email);
                 Message messages[] = inbox.search(searchTerm);
                 Stack<ConversationWindow> convos = new Stack<>();//The purpose of this stack is to organize more messages into time order.

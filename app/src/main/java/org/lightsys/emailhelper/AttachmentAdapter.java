@@ -21,13 +21,12 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     public AttachmentAdapter(String email, DatabaseHelper db){
         this.db = db;
         this.email = email;
-        attachments = new ArrayList<>();
-        Cursor res = db.getAttachments(email);
-        while(res.moveToNext()){
-            String temp = res.getString(0);
+        attachments = db.getAttachments(email);
+        for(int i = 0;i<attachments.size();i++){
+            String temp = attachments.remove(i);
             temp = temp.substring(temp.indexOf(email));
             temp = temp.substring(temp.indexOf("/")+1);
-            attachments.add(temp);
+            attachments.add(i,temp);
         }
         numItems = attachments.size();
 

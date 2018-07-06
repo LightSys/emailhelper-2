@@ -12,6 +12,8 @@ import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
+import xdroid.toaster.Toaster;
+
 public class NewContactFragment extends android.app.Fragment {
 
     DatabaseHelper db;
@@ -51,17 +53,19 @@ public class NewContactFragment extends android.app.Fragment {
                     boolean isInserted = db.insertContactData(newContact);
                     boolean isConvo = db.insertConversationData(newContact, CommonMethods.getCurrentTime(), CommonMethods.getCurrentDate());
                     clearFields();
+                    String message = "";
                     if (isInserted) {
-                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.contact_added_prestring)+newContact.getName()+getString(R.string.contact_added_poststring), Toast.LENGTH_SHORT).show();
+                        message += getString(R.string.contact_added_prestring)+newContact.getName()+getString(R.string.contact_added_poststring);
                     }else{
-                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.contact_not_added_prestring)+newContact.getName()+getString(R.string.contact_not_added_poststring), Toast.LENGTH_SHORT).show();
+                        message += getString(R.string.contact_not_added_prestring)+newContact.getName()+getString(R.string.contact_not_added_poststring);
                     }
                     if(isConvo){
-                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_added_prestring)+newContact.getName()+getString(R.string.conversation_added_poststring), Toast.LENGTH_SHORT).show();
+                        message += "\n" + getString(R.string.conversation_added_prestring)+newContact.getName()+getString(R.string.conversation_added_poststring);
                     }
                     else {
-                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.conversation_not_added_prestring)+newContact.getName()+getString(R.string.conversation_not_added_poststring), Toast.LENGTH_SHORT).show();
+                        message += "\n" + getString(R.string.conversation_not_added_prestring)+newContact.getName()+getString(R.string.conversation_not_added_poststring);
                     }
+                    Toaster.toast(message);
                     getActivity().finish();//ends the task and reverts to what was going on previously
                 }
             }

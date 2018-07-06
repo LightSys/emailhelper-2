@@ -25,11 +25,11 @@ public class ConversationAttachmentAdapter extends RecyclerView.Adapter<Conversa
 
     public ConversationAttachmentAdapter(String messageID,DatabaseHelper db){
         attachments = new ArrayList<>();
-        Cursor res = db.getAttachmentsforConvo(messageID);
-        while(res.moveToNext()){
-            String temp = res.getString(0);
+        attachments = db.getAttachmentsforConvo(messageID);
+        for(int i = attachments.size()-1;i>=0;i--){
+            String temp = attachments.get(i);
             if(!temp.contains(".txt")){
-                attachments.add(temp);
+                attachments.remove(i);
             }
         }
         numItems = attachments.size();

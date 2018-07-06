@@ -203,7 +203,7 @@ public class ContactActivity extends AppCompatActivity {
      * Should be used just before the Data appears on the screen.
      */
     public void prepareContactData() {
-        contactList = db.getContactsInboxStyle();
+        contactList = db.getContactList();
         contactAdapter = new ContactAdapter(contactList,false);
         recyclerView.setAdapter(contactAdapter);
     }

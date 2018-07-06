@@ -80,7 +80,7 @@ public class AttachmentActivity extends AppCompatActivity {
 
     private void openFile(File file) throws IOException {
         String filePath = file.getAbsolutePath();
-        Uri uri = Uri.parse(filePath);
+        Uri uri;
         String ext = getExtension(filePath);
         String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
         Intent intent = new Intent();
