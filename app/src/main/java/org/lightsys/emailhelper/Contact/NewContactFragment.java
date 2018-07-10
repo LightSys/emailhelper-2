@@ -50,22 +50,9 @@ public class NewContactFragment extends android.app.Fragment {
                 @Override
                 public void onClick(View v) {
                     Contact newContact = getContactFromFields();
-                    boolean isInserted = db.insertContactData(newContact);
-                    boolean isConvo = db.insertConversationData(newContact, CommonMethods.getCurrentTime(), CommonMethods.getCurrentDate());
+                    db.insertContactData(newContact);
+                    db.insertConversationData(newContact, CommonMethods.getCurrentTime(), CommonMethods.getCurrentDate());
                     clearFields();
-                    String message = "";
-                    if (isInserted) {
-                        message += getString(R.string.contact_added_prestring)+newContact.getName()+getString(R.string.contact_added_poststring);
-                    }else{
-                        message += getString(R.string.contact_not_added_prestring)+newContact.getName()+getString(R.string.contact_not_added_poststring);
-                    }
-                    if(isConvo){
-                        message += "\n" + getString(R.string.conversation_added_prestring)+newContact.getName()+getString(R.string.conversation_added_poststring);
-                    }
-                    else {
-                        message += "\n" + getString(R.string.conversation_not_added_prestring)+newContact.getName()+getString(R.string.conversation_not_added_poststring);
-                    }
-                    Toaster.toast(message);
                     getActivity().finish();//ends the task and reverts to what was going on previously
                 }
             }

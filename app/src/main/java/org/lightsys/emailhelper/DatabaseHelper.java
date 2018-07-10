@@ -2,6 +2,7 @@ package org.lightsys.emailhelper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
+
+import xdroid.toaster.Toaster;
 
 /**************************************************************************************************
  *                              Created by nicholasweg on 6/27/17.                                *
@@ -61,9 +64,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static String ATTACHMENT_NAME = "ATTACHMENT";
     public static String ATTACHMENT_PRIMARY = "DATABASE_ID";
     public static String ATTACHMENT_ID = "MESSAGE_ID";
+    private Resources r;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
+        r = context.getResources();
     }
 
     @Override
@@ -144,7 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //</editor-fold>
 
     //<editor-fold>  Conversation Functions
-    public boolean insertConversationData(String email, String name, String time, String date) {
+    public void insertConversationData(String email, String name, String time, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, email);
@@ -153,7 +158,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_4, date);
         contentValues.put(CONVO_COL_5, false);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
-        return result != -1;
+        if( result != -1){
+            Toaster.toast(r.getString(R.string.conversation_added_prestring)+name+r.getString(R.string.conversation_added_poststring));
+        }
+        else{
+            Toaster.toast(r.getString(R.string.conversation_not_added_prestring)+name+r.getString(R.string.conversation_not_added_poststring));
+        }
     }
 
     /**
@@ -164,7 +174,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param newmail whether there is newMail from this email
      * @return returns if the conversation was inserted into the Database
      */
-    public boolean insertConversationData(String email, String name, String time, String date, boolean newmail) {
+    public void insertConversationData(String email, String name, String time, String date, boolean newmail) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, email);
@@ -173,7 +183,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_4, date);
         contentValues.put(CONVO_COL_5, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
-        return result != -1;
+        if( result != -1){
+            Toaster.toast(r.getString(R.string.conversation_added_prestring)+name+r.getString(R.string.conversation_added_poststring));
+        }
+        else{
+            Toaster.toast(r.getString(R.string.conversation_not_added_prestring)+name+r.getString(R.string.conversation_not_added_poststring));
+        }
     }
 
     /**
@@ -182,7 +197,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param date       created date of the new Conversation
      * @return returns if the conversation was inserted into the Database
      */
-    public boolean insertConversationData(Contact newContact, String time, String date) {
+    public void insertConversationData(Contact newContact, String time, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, newContact.getEmail());
@@ -191,10 +206,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_4, date);
         contentValues.put(CONVO_COL_5, false);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
-        return result != -1;
+        if( result != -1){
+            Toaster.toast(r.getString(R.string.conversation_added_prestring)+newContact.getName()+r.getString(R.string.conversation_added_poststring));
+        }
+        else{
+            Toaster.toast(r.getString(R.string.conversation_not_added_prestring)+newContact.getName()+r.getString(R.string.conversation_not_added_poststring));
+        }
     }
 
-    public boolean insertConversationData(Contact newContact, String time, String date, boolean newmail) {
+    public void insertConversationData(Contact newContact, String time, String date, boolean newmail) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, newContact.getEmail());
@@ -203,7 +223,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_4, date);
         contentValues.put(CONVO_COL_5, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
-        return result != -1;
+        if( result != -1){
+            Toaster.toast(r.getString(R.string.conversation_added_prestring)+newContact.getName()+r.getString(R.string.conversation_added_poststring));
+        }
+        else{
+            Toaster.toast(r.getString(R.string.conversation_not_added_prestring)+newContact.getName()+r.getString(R.string.conversation_not_added_poststring));
+        }
     }
 
     /**
@@ -356,7 +381,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param lastName
      * @return
      */
-    public boolean insertContactData(String email, String firstName, String lastName) {
+    public void insertContactData(String email, String firstName, String lastName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACT_COL_1, email);
@@ -364,7 +389,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONTACT_COL_3, lastName);
         insertNotifications(email);
         long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
-        return result != -1;
+        if (result != -1) {
+            Toaster.toast(r.getString(R.string.contact_added_prestring)+firstName+" "+lastName+r.getString(R.string.contact_added_poststring));
+        }else{
+            Toaster.toast(r.getString(R.string.contact_not_added_prestring)+firstName+" "+lastName+r.getString(R.string.contact_not_added_poststring));
+        }
     }
 
     /**
@@ -373,7 +402,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param newContact
      * @return
      */
-    public boolean insertContactData(Contact newContact) {
+    public void insertContactData(Contact newContact) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACT_COL_1, newContact.getEmail());
@@ -381,7 +410,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONTACT_COL_3, newContact.getLastName());
         long result = db.insert(CONTACT_TABLE_NAME, null, contentValues);
         insertNotifications(newContact.getEmail());
-        return result != -1;
+        if (result != -1) {
+            Toaster.toast(r.getString(R.string.contact_added_prestring)+newContact.getName()+r.getString(R.string.contact_added_poststring));
+        }else{
+            Toaster.toast(r.getString(R.string.contact_not_added_prestring)+newContact.getName()+r.getString(R.string.contact_not_added_poststring));
+        }
     }
 
     public boolean containsContact(String email) {

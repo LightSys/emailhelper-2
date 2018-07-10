@@ -41,11 +41,6 @@ public class EditContactActivity extends AppCompatActivity {
                 editedContact.setLastName(lastname.getText().toString());
                 editedContact.setEmail(email.getText().toString());
                 saveContact(editedContact);
-                Intent intent = new Intent(getApplicationContext(),ContactSettingsActivity.class);
-                intent.putExtra(getString(R.string.intent_first_name),editedContact.getFirstName());
-                intent.putExtra(getString(R.string.intent_last_name),editedContact.getLastName());
-                intent.putExtra(getString(R.string.intent_email),editedContact.getEmail());
-                startActivity(intent);
                 finish();
             }
         });
