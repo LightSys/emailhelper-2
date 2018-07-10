@@ -51,6 +51,9 @@ public class ContactSettingsActivity extends AppCompatActivity {
             }
         });
         setUpButtons();
+        setButtons();
+    }
+    private void setButtons() {
         if(db.hasConversationWith(email)){
             hasConvo();
         }
@@ -123,5 +126,10 @@ public class ContactSettingsActivity extends AppCompatActivity {
         deleteConversation.setClickable(false);
         LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         startConversation.setLayoutParams(size);
+    }
+    @Override
+    public void onResume() {
+        setButtons();
+        super.onResume();
     }
 }
