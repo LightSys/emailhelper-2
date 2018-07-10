@@ -5,6 +5,11 @@ public class ContactList {
     public ContactList(){
         addressList = new emailHelperList();
     }
+
+    public ContactList(ContactList contactList) {
+        addressList = new emailHelperList(contactList.addressList);
+    }
+
     public void add(String email){
         addressList.add(email);
     }
@@ -35,6 +40,14 @@ public class ContactList {
             size = 0;
             maxSize = 10;
             array = new Contact[maxSize];
+        }
+        emailHelperList(emailHelperList e){
+            size = e.size;
+            maxSize = e.maxSize;
+            array = new Contact[maxSize];
+            for(int i = 0;i<size;i++){
+                array[i] = e.array[i];
+            }
         }
         public int size(){
             return size;

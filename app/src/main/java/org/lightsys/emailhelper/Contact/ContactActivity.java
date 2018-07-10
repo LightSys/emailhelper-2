@@ -1,13 +1,9 @@
 package org.lightsys.emailhelper.Contact;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +11,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -33,14 +26,13 @@ import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import xdroid.toaster.Toaster;
 
 public class ContactActivity extends AppCompatActivity {
     CheckBox contactsCheckBox;
-    private ContactList contactList = new ContactList();
+    private ContactList activeList;
+    private ContactList databaseContacts;
+    private ContactList inboxContacts;
+    boolean gatheringData = false;
     private RecyclerView recyclerView;
     private ContactAdapter contactAdapter;
     DatabaseHelper db;
@@ -60,6 +52,7 @@ public class ContactActivity extends AppCompatActivity {
         setUpCheckBox();
         setUpContainer();
         db = new DatabaseHelper(getApplicationContext());
+        prepareContactData();
     }
 
     private void setUpCheckBox(){
@@ -68,10 +61,9 @@ public class ContactActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    swipeContainer.setRefreshing(true);
-                    new refresh().execute();
+                    setActiveList(inboxContacts,true);
                 }else{
-                    prepareContactData();
+                    setActiveList(databaseContacts,false);
                 }
             }
         });
@@ -82,7 +74,9 @@ public class ContactActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 if(contactsCheckBox.isChecked()){
+                    gatheringData = true;
                     new refresh().execute();
+                    setActiveList(inboxContacts,true);
                 }else{
                     swipeContainer.setRefreshing(false);
                 }
@@ -103,8 +97,8 @@ public class ContactActivity extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 if(!contactsCheckBox.isChecked()){
                     int deleteRow = viewHolder.getAdapterPosition();
-                    contact = contactList.get(deleteRow);
-                    String deletionMessage = getString(R.string.contact_delete_message_prestring)+contactList.get(deleteRow).getName()+getString(R.string.contact_delete_message_poststring);
+                    contact = activeList.get(deleteRow);
+                    String deletionMessage = getString(R.string.contact_delete_message_prestring)+activeList.get(deleteRow).getName()+getString(R.string.contact_delete_message_poststring);
                     new ConfirmDialog(deletionMessage,getString(R.string.delete_word),ActivityContext,deletionRunnable,cancelRunnable);
                 }
                 else{
@@ -122,18 +116,12 @@ public class ContactActivity extends AppCompatActivity {
                 public void run() {
                     db.deleteConversationData(contact.getEmail());
                     db.deleteContactData(contact.getEmail());
-                    if(contactsCheckBox.isChecked()){
-                        prepareContactDataWithInbox();
-                    }
-                    else{
-                        prepareContactData();
-                    }
+                    prepareContactData();
                 }
             };
         };
         makeRecyclerView();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -153,11 +141,9 @@ public class ContactActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        prepareContactData();
+        setActiveList(databaseContacts,false);
         contactsCheckBox.setChecked(false);
     }
-
-
     /**
      * Has all the steps needed to make the RecyclerView that holds the contacts.
      */
@@ -172,7 +158,7 @@ public class ContactActivity extends AppCompatActivity {
                 if(contactsCheckBox.isChecked()){
                     return;
                 }
-                Contact contact = contactList.get(position);
+                Contact contact = activeList.get(position);
                 Toast.makeText(getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContactDetails = new Intent(getApplicationContext(),ContactSettingsActivity.class);
                 editContactDetails.putExtra(getString(R.string.intent_email),contact.getEmail());
@@ -185,7 +171,7 @@ public class ContactActivity extends AppCompatActivity {
                 if(contactsCheckBox.isChecked()){
                     return;
                 }
-                Contact contact = contactList.get(position);
+                Contact contact = activeList.get(position);
                 Toast.makeText(getApplicationContext(), contact.getEmail() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent editContact = new Intent(getApplicationContext(),EditContactActivity.class);
                 editContact.putExtra(getString(R.string.intent_email),contact.getEmail());
@@ -202,32 +188,49 @@ public class ContactActivity extends AppCompatActivity {
      * This function clears contactList and gets new data from the database.
      * Should be used just before the Data appears on the screen.
      */
-    public void prepareContactData() {
-        contactList = db.getContactList();
-        contactAdapter = new ContactAdapter(contactList,false);
+    public void setActiveList(ContactList activeList, boolean showCheckBox){
+        if(gatheringData && contactsCheckBox.isChecked()){
+            swipeContainer.setRefreshing(true);
+            new waitForFinish().execute();
+            return;
+        }
+        this.activeList = activeList;
+        contactAdapter = new ContactAdapter(this.activeList,showCheckBox);
         recyclerView.setAdapter(contactAdapter);
+    }
+    public void prepareContactData() {
+        databaseContacts = db.getContactList();
+        inboxContacts = new ContactList(databaseContacts);
+        gatheringData = true;
+        new refresh().execute();
     }
     public void resetScreen(){
-        recyclerView.setAdapter(contactAdapter);
-    }
-    /**
-     * This function clears adds contacts from the inbox to the existing list.
-     */
-    public void prepareContactDataWithInbox() {
-        contactAdapter = new ContactAdapter(contactList,true);
         recyclerView.setAdapter(contactAdapter);
     }
     class refresh extends AsyncTask<URL, Integer, Long> {
         @Override
         protected Long doInBackground(URL... urls) {
             GetMail mailer = new GetMail(getApplicationContext());
-            contactList.add(mailer.getContactsFromInbox());
+            inboxContacts.add(mailer.getContactsFromInbox());
             return null;
         }
         @Override
         protected void onPostExecute(Long result){
+            gatheringData = false;
             swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
-            prepareContactDataWithInbox();
+        }
+    }
+    class waitForFinish extends AsyncTask<URL, Integer, Long> {
+        @Override
+        protected Long doInBackground(URL... urls) {
+            while(swipeContainer.isRefreshing()){
+                int x = 1;
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Long result){
+            setActiveList(inboxContacts,true);
         }
     }
 
