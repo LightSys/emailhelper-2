@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Contact.ContactSettingsActivity;
 import org.lightsys.emailhelper.Contact.EditContactActivity;
@@ -23,6 +24,7 @@ import org.lightsys.emailhelper.R;
  **************************************************************************************************/
 
 public class ConversationActivity extends AppCompatActivity {
+
 
     ConversationWindowFragment chats = new ConversationWindowFragment();
     Intent intent;
@@ -85,7 +87,7 @@ public class ConversationActivity extends AppCompatActivity {
                 editContactDetails.putExtra(getString(R.string.intent_email),contact.getEmail());
                 editContactDetails.putExtra(getString(R.string.intent_first_name),contact.getFirstName());
                 editContactDetails.putExtra(getString(R.string.intent_last_name),contact.getLastName());
-                startActivity(editContactDetails);
+                startActivityForResult(editContactDetails,CommonMethods.CHECK_FOR_DELETION);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -94,5 +96,13 @@ public class ConversationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         chats.prepareWindowRows();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == CommonMethods.CONVERSATION_DELETED && requestCode==CommonMethods.CHECK_FOR_DELETION){
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -5,13 +5,16 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.lightsys.emailhelper.AttachmentActivity;
 import org.lightsys.emailhelper.CommonMethods;
+import org.lightsys.emailhelper.Conversation.ConversationActivity;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
@@ -21,6 +24,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
     String fullName;
     String email;
     DatabaseHelper db;
+    Button editContact,deleteConversation,startConversation,showAttachments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +50,23 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 db.setNotificationSettings(email,sendNotifications.isChecked());
             }
         });
+        setUpButtons();
+        if(db.hasConversationWith(email)){
+            hasConvo();
+        }
+        else{
+            noConvo();
+        }
+        if(!db.hasAttachments(email)){
+            showAttachments.setVisibility(View.INVISIBLE);
+            showAttachments.setClickable(false);
+            LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
+            showAttachments.setLayoutParams(size);
+        }
+    }
 
-
-        Button editContact = findViewById(R.id.edit_contact);
+    private void setUpButtons() {
+        editContact = findViewById(R.id.edit_contact);
         editContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,29 +77,27 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 startActivity(editContact);
             }
         });
-        Button deleteConversation = findViewById(R.id.delete_converstation);
+        deleteConversation = findViewById(R.id.delete_converstation);
         deleteConversation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatabaseHelper db = new DatabaseHelper(getApplicationContext());
                 db.deleteConversationData(email);
-                Intent upIntent = new Intent(getApplicationContext(),ContactActivity.class);
-                navigateUpTo(upIntent);
+                setResult(CommonMethods.CONVERSATION_DELETED);
+                finish();
 
             }
         });
-        Button deleteAndStartNew = findViewById(R.id.delete_and_start_new_conversation);
-        deleteAndStartNew.setOnClickListener(new View.OnClickListener() {
+        startConversation = findViewById(R.id.start_conversation);
+        startConversation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.deleteConversationData(email);
                 db.insertConversationData(email,fullName, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
-                Intent upIntent = new Intent(getApplicationContext(),ContactActivity.class);
-                navigateUpTo(upIntent);
+                finish();
             }
         });
-        Button showAttachments = findViewById(R.id.show_attachments);
+        showAttachments = findViewById(R.id.show_attachments);
         showAttachments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +106,22 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 startActivity(attach);
             }
         });
+    }
 
+    public void hasConvo(){
+        startConversation.setVisibility(View.INVISIBLE);
+        startConversation.setClickable(false);
+        deleteConversation.setVisibility(View.VISIBLE);
+        deleteConversation.setClickable(true);
+        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
+        startConversation.setLayoutParams(size);
+    }
+    public void noConvo(){
+        startConversation.setVisibility(View.VISIBLE);
+        startConversation.setClickable(true);
+        deleteConversation.setVisibility(View.INVISIBLE);
+        deleteConversation.setClickable(false);
+        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        startConversation.setLayoutParams(size);
     }
 }

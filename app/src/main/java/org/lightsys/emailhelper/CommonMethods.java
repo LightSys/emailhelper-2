@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class CommonMethods {
+
     private static DateFormat dateFormat = new SimpleDateFormat("d MMM yyyy");
     private static DateFormat timeFormat = new SimpleDateFormat("K:mma");
 
@@ -24,5 +25,8 @@ public class CommonMethods {
         Date today = Calendar.getInstance().getTime();
         return dateFormat.format(today);
     }
+    public static final int CONVERSATION_DELETED = 65783;
+    public static final int CHECK_FOR_DELETION = 28694;
+
 
 }

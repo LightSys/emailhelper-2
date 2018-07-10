@@ -330,6 +330,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         res.close();
         return conversationList;
     }
+    public boolean hasConversationWith(String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from " + CONVERSATION_TABLE_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query, new String[]{email});
+        int temp = res.getCount();
+        res.close();
+        if(temp>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
     //</editor-fold>
 
     //<editor-fold>  Contact Functions
@@ -663,5 +677,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long ret = db.delete(ATTACHMENT_DATABASE, where, new String[]{email, filePath});
         return ret != -1;
     }
+
+    public boolean hasAttachments(String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select " + ATTACHMENT_NAME + " from " + ATTACHMENT_DATABASE + " where " + ATTACHMENT_EMAIL + " = ?";
+        Cursor res = db.rawQuery(query, new String[]{email});
+        if(res.getCount()>0){
+            res.close();
+            return true;
+        }
+        res.close();
+        return false;
+    }
+
+
     //</editor-fold
 }
