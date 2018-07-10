@@ -76,30 +76,6 @@ public class ContactActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_contact,menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if(id == R.id.action_new_contact){
-            Intent startNewContact = new Intent(this, NewContactActivity.class);
-            startActivity(startNewContact);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    protected void onResume(){
-        super.onResume();
-        prepareContactData();
-        contactsCheckBox.setChecked(false);
-    }
-
     private void setUpContainer(){
         swipeContainer = findViewById(R.id.contact_refresh_layout);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -125,21 +101,20 @@ public class ContactActivity extends AppCompatActivity {
             }
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-
-                int deleteRow = viewHolder.getAdapterPosition();
-                contact = contactList.get(deleteRow);
-                String deletionMessage = getString(R.string.contact_delete_message_prestring)+contactList.get(deleteRow).getName()+getString(R.string.contact_delete_message_poststring);
-                new ConfirmDialog(deletionMessage,getString(R.string.delete_word),ActivityContext,deletionRunnable,cancelRunnable);
+                if(!contactsCheckBox.isChecked()){
+                    int deleteRow = viewHolder.getAdapterPosition();
+                    contact = contactList.get(deleteRow);
+                    String deletionMessage = getString(R.string.contact_delete_message_prestring)+contactList.get(deleteRow).getName()+getString(R.string.contact_delete_message_poststring);
+                    new ConfirmDialog(deletionMessage,getString(R.string.delete_word),ActivityContext,deletionRunnable,cancelRunnable);
+                }
+                else{
+                    resetScreen();
+                }
             }
             Runnable cancelRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    if(contactsCheckBox.isChecked()){
-                        prepareContactDataWithInbox();
-                    }
-                    else{
-                        prepareContactData();
-                    }
+                    resetScreen();
                 }
             };
             Runnable deletionRunnable = new Runnable() {
@@ -158,6 +133,31 @@ public class ContactActivity extends AppCompatActivity {
         };
         makeRecyclerView();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_contact,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.action_new_contact){
+            Intent startNewContact = new Intent(this, NewContactActivity.class);
+            startActivity(startNewContact);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        prepareContactData();
+        contactsCheckBox.setChecked(false);
+    }
+
+
     /**
      * Has all the steps needed to make the RecyclerView that holds the contacts.
      */
@@ -205,6 +205,9 @@ public class ContactActivity extends AppCompatActivity {
     public void prepareContactData() {
         contactList = db.getContactList();
         contactAdapter = new ContactAdapter(contactList,false);
+        recyclerView.setAdapter(contactAdapter);
+    }
+    public void resetScreen(){
         recyclerView.setAdapter(contactAdapter);
     }
     /**

@@ -90,5 +90,6 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 startActivity(attach);
             }
         });
+
     }
 }

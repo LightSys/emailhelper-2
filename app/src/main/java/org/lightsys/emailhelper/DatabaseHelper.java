@@ -258,6 +258,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(CONVERSATION_TABLE_NAME, null, contentValues);//This way the panels will reorder when a new time is given
         res.close();
     }
+    public void updateConversation(String email, String currentTime,boolean sent_by_me) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from " + CONVERSATION_TABLE_NAME + " where EMAIL = ?";
+        Cursor res = db.rawQuery(query, new String[]{email});
+        res.moveToNext();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
+        contentValues.put(CONVO_COL_2, res.getString(res.getColumnIndex(CONVO_COL_2)));
+        contentValues.put(CONVO_COL_3, currentTime);//Updates the time
+        contentValues.put(CONVO_COL_4, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
+        contentValues.put(CONVO_COL_5, !sent_by_me);
+        db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[]{email});//why not update?
+        db.insert(CONVERSATION_TABLE_NAME, null, contentValues);//This way the panels will reorder when a new time is given
+        res.close();
+    }
+
 
     /**
      * This function updates the conversation with new information

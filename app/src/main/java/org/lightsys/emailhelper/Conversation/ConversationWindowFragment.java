@@ -83,14 +83,14 @@ public class ConversationWindowFragment extends android.app.Fragment {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ConversationWindow conversationWindow = new ConversationWindow(HelperClass.Email, null, messageSend.getText().toString(), null, true,false);
+                    ConversationWindow conversationWindow = new ConversationWindow(passedEmail, null, messageSend.getText().toString(), null, true,false);
                     conversationWindowList.add(conversationWindow);
                     cAdapter.notifyDataSetChanged();
                     db.insertWindowData(conversationWindow);
 
                     SendMail sendInstance = new SendMail(passedEmail, messageSend.getText().toString(),getActivity().getApplicationContext());
                     sendInstance.execute();
-                    db.updateConversation(passedEmail, CommonMethods.getCurrentTime());
+                    db.updateConversation(conversationWindow.getEmail(), CommonMethods.getCurrentTime(),conversationWindow.getSent());
 
                     InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
