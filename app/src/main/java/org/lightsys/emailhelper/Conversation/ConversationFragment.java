@@ -25,6 +25,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import xdroid.toaster.Toaster;
+
 public class ConversationFragment extends android.app.Fragment{
 
     //These variables are used in the list view
@@ -139,7 +141,27 @@ public class ConversationFragment extends android.app.Fragment{
                 db.resetNewMailBoolean(conversation.getEmail());
                 startActivity(intent);
             }
-            @Override public void onLongClick(View view, int position) {}
+            @Override public void onLongClick(View view, final int position) {
+                String deletionMessage = getString(R.string.conversation_delete_message_prestring)+conversationList.get(position).getName()+getString(R.string.conversation_delete_message_poststring);
+                Runnable deletionRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (0 < db.deleteConversationData(conversationList.get(position).getEmail()))
+                            Toaster.toast(getString(R.string.conversation_deleted_prestring)+conversationList.get(position).getName()+getString(R.string.conversation_deleted_poststring), Toast.LENGTH_SHORT);
+                        conversationList.remove(position);
+                        prepareConversationData();
+                    }
+                };
+                Runnable cancelRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Toaster.toast(getString(R.string.conversation_not_deleted_prestring)+conversationList.get(position).getName()+getString(R.string.conversation_not_deleted_poststring));
+                        prepareConversationData();
+                    }
+                };
+                new ConfirmDialog(deletionMessage,getString(R.string.delete_word),getActivity(),deletionRunnable,cancelRunnable);
+            }
+
         }));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +55,30 @@ public class ConversationWindowFragment extends android.app.Fragment {
             sendMessageButton = rootView.findViewById(R.id.sendMessageButton);
             messageSend = rootView.findViewById(R.id.messageEditText);
             setUpSendMessageButton();
+            setUpTextBox();
         }
         db = new DatabaseHelper(getActivity().getApplicationContext());
         return rootView;
+    }
+    public void setUpTextBox(){
+        messageSend.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(messageSend.getText().toString().trim().equalsIgnoreCase("")){
+                    sendMessageButton.setClickable(false);
+                }else{
+                    sendMessageButton.setClickable(true);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     /**
@@ -99,7 +122,9 @@ public class ConversationWindowFragment extends android.app.Fragment {
                 }
             }
         );
+        sendMessageButton.setClickable(false);
     }
+
 
     public void prepareWindowRows() {
         conversationWindowList = db.getMessages(passedEmail);
