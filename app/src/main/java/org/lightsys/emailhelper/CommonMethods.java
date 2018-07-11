@@ -27,6 +27,6 @@ public class CommonMethods {
     }
     public static final int CONVERSATION_DELETED = 65783;
     public static final int CHECK_FOR_DELETION = 28694;
-
+    public static final int CAMERA_REQUEST_CODE = 453;
 
 }

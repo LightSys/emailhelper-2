@@ -93,7 +93,7 @@
             android:name=".Contact.EditContactActivity"
             android:label="@string/title_edit_contact_activity"
             android:launchMode="singleTop"
-            android:parentActivityName=".Contact.ContactActivity">
+            android:parentActivityName=".Contact.ContactSettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Contact.ContactActivity" />
@@ -125,7 +125,11 @@
         <activity
             android:name=".About"
             android:label="@string/title_activity_about"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

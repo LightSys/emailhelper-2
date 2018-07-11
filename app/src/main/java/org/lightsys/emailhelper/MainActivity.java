@@ -1,5 +1,6 @@
 package org.lightsys.emailhelper;
 
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -7,24 +8,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
-import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Contact.ContactActivity;
 import org.lightsys.emailhelper.Contact.NewContactActivity;
 import org.lightsys.emailhelper.Conversation.ConversationFragment;
 import org.lightsys.emailhelper.qr.QRActivity;
 import org.lightsys.emailhelper.qr.launchQRScanner;
 
-public class MainActivity extends AppCompatActivity{
+import xdroid.toaster.Toaster;
+
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     // TODO: Remove or figure out how to make the DividerItemDecoration work
     // TODO: Polling or push notifications
@@ -78,14 +77,6 @@ public class MainActivity extends AppCompatActivity{
         myEdit.putString(getString(R.string.key_email),password.User);
         myEdit.apply();
 
-        Contact send1 = password.sender2;
-        db.insertContactData(send1.getEmail(),send1.getFirstName(),send1.getLastName());
-        db.insertConversationData(send1.getEmail(),send1.getFirstName()+" "+send1.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
-
-        Contact send2 = password.sender1;
-        db.insertContactData(send2.getEmail(),send2.getFirstName(),send2.getLastName());
-        db.insertConversationData(send2.getEmail(),send2.getFirstName()+" "+send2.getLastName(),CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
-        //Hard code ^^^^^
     }
     @Override
     public void onStart(){
@@ -143,33 +134,51 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
     //launches QR scanner
+    /*
+    These next two functions were pulled from EventApp on 7/11/18
+    They were originally written by Otter57 and edited by Littlesnowman88.
+    They were changed for use in EmailHelper
+     */
     public void gatherData(boolean launchScanner){
-        //imported from LightSys Event App
-        //modified for use in EmailHelper
         if (launchScanner) {
             if (ActivityCompat.checkSelfPermission(this, "android.permission.CAMERA") != PackageManager.PERMISSION_GRANTED) {
                 requestCameraPermission();
-                gatherData(true);
             } else {
                 Intent QR = new Intent(MainActivity.this, launchQRScanner.class);
                 startActivityForResult(QR, QR_RESULT);
             }
         }
     }
+
+    //if app does not have camera permission, ask user for permission
     private void requestCameraPermission() {
-        //imported from LightSys Event App
         Log.w("Barcode-reader", "Camera permission is not granted. Requesting permission");
         final String[] permissions = new String[]{"android.permission.CAMERA"};
-        if(!ActivityCompat.shouldShowRequestPermissionRationale(this, "android.permission.CAMERA")) {
-            ActivityCompat.requestPermissions(this, permissions, 2);
-        } else {
-            new View.OnClickListener() {
-                public void onClick(View view) {
-                    ActivityCompat.requestPermissions(MainActivity.this, permissions, 2);
+        ActivityCompat.requestPermissions(this, permissions, CommonMethods.CAMERA_REQUEST_CODE);
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[],int[] grantResults){
+        switch(requestCode){
+            case CommonMethods.CAMERA_REQUEST_CODE:
+                for(int i = 0;i<permissions.length;i++){
+                    if(permissions[i].equalsIgnoreCase("android.permission.CAMERA")){
+                        if(grantResults[i] == PackageManager.PERMISSION_GRANTED){
+                            Intent QR = new Intent(MainActivity.this, launchQRScanner.class);
+                            startActivityForResult(QR, QR_RESULT);
+                        }else if(grantResults[i] == PackageManager.PERMISSION_DENIED){
+                            if(!ActivityCompat.shouldShowRequestPermissionRationale(this,"android.permission.CAMERA")){//If statement added by DSHADE
+                                Toaster.toastLong(R.string.cannot_request_camera_permission);
+                            }else{
+                                Toaster.toastLong(R.string.need_camera_permission);
+                            }
+                        }
+                        break;
+                    }
                 }
-            };
         }
     }
+
     //This may be good for something later like a start new conversation button
     /*
     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

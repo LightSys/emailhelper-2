@@ -50,12 +50,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
         if(preference instanceof EditTextPreference){
             EditTextPreference etp = (EditTextPreference) preference;
-            if(etp.getText().equals(getString(R.string.default_first_name))){
-                return;
-            }
-            if(etp.getText().equals(getString(R.string.default_last_name))){
-                return;
-            }
             etp.setSummary(value);
         }
     }

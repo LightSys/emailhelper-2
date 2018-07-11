@@ -66,6 +66,8 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
                 newContact.setLastName(name.substring(name.indexOf(" ")+1));
                 db = new DatabaseHelper(getApplicationContext());
                 dialog.dismiss();
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_OK, resultIntent);
                 String confirmMessage = getString(R.string.QR_popup_message_prestring)+newContact.getFirstName()+" "+newContact.getLastName()+getString(R.string.QR_popup_message_poststring);
                 new ConfirmDialog(confirmMessage,getString(R.string.confirm_word),activityContext,addContactRunnable,cancelRunnable);
             }
@@ -74,22 +76,17 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
                 public void run() {
                     db.insertContactData(newContact);
                     db.insertConversationData(newContact, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
-                    Intent resultIntent = new Intent();
-                    setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
             };
             Runnable cancelRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    Intent resultIntent = new Intent();
-                    setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
             };
         });
     }
-
 
     // for multiple callback
     @Override

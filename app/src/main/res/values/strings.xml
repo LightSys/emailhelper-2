@@ -12,9 +12,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">The Username or Password is incorrect.</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
 
     <!-- General Strings -->
     <string name="settings" translatable="true">EmailHelper Settings</string>
@@ -79,7 +77,7 @@
     <string name="title_activity_qr_output" translatable="true">My QR code</string>
     <string name="title_activity_qr_input" translatable="true">Scan QR Code</string>
     <string name="msg_default_status" translatable="true">Scan a QR code to import contact data.</string>
-    <string name="barcode_without_name" translatable="true">QR has been created without a name.\nTo change this enter one in settings.</string>
+    <string name="barcode_without_name" translatable="true">QR has been created without complete contact.\nTo change this, enter one in settings.</string>
 
     <string name="key_first_name" translatable="false">firstName</string>
     <string name="key_last_name" translatable="false">lastName</string>
@@ -160,6 +158,11 @@
     <string name="confirm_word" translatable="true">Confirm</string>
     <string name="QR_popup_message_prestring" translatable="true">"Would you like to add "</string>
     <string name="QR_popup_message_poststring" translatable="true">" to contacts?"</string>
-    <string name="title_activity_inbox_contact">Inbox Addresses</string>
-    <string name="title_activity_about">About</string>
+    <string name="title_activity_inbox_contact" translatable="true">Inbox Addresses</string>
+    <string name="title_activity_about" translatable="true">About</string>
+    <string name="qr_activity_display_title" translatable="true">Contact info in displayed QR</string>
+    <string name="cannot_request_camera_permission" translatable="true">"EmailHelper cannot request Camera permission. Please change this in system settings."</string>
+    <string name="qr_email" translatable="true">"Email: "</string>
+    <string name="qr_name" translatable="true">"Name: "</string>
+    <string name="need_camera_permission">EmailHelper needs access to the camera to use the QR scanning feature.</string>
 </resources>
