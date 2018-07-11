@@ -53,6 +53,7 @@ public class ContactActivity extends AppCompatActivity {
         setUpContainer();
         db = new DatabaseHelper(getApplicationContext());
         prepareContactData();
+        setActiveList(databaseContacts);
     }
 
     private void setUpCheckBox(){
@@ -61,10 +62,11 @@ public class ContactActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    setActiveList(inboxContacts,true);
+                    setActiveList(inboxContacts);
                 }else{
-                    setActiveList(databaseContacts,false);
+                    setActiveList(databaseContacts);
                 }
+                contactsCheckBox.setChecked(false);
             }
         });
     }
@@ -76,7 +78,7 @@ public class ContactActivity extends AppCompatActivity {
                 if(contactsCheckBox.isChecked()){
                     gatheringData = true;
                     new refresh().execute();
-                    setActiveList(inboxContacts,true);
+                    setActiveList(inboxContacts);
                 }else{
                     swipeContainer.setRefreshing(false);
                 }
@@ -116,7 +118,7 @@ public class ContactActivity extends AppCompatActivity {
                 public void run() {
                     db.deleteConversationData(contact.getEmail());
                     db.deleteContactData(contact.getEmail());
-                    prepareContactData();
+                    resetScreen();
                 }
             };
         };
@@ -141,8 +143,8 @@ public class ContactActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        setActiveList(databaseContacts,false);
-        contactsCheckBox.setChecked(false);
+        prepareContactData();
+        resetScreen();
     }
     /**
      * Has all the steps needed to make the RecyclerView that holds the contacts.
@@ -188,23 +190,32 @@ public class ContactActivity extends AppCompatActivity {
      * This function clears contactList and gets new data from the database.
      * Should be used just before the Data appears on the screen.
      */
-    public void setActiveList(ContactList activeList, boolean showCheckBox){
+    public void setActiveList(ContactList activeList){
         if(gatheringData && contactsCheckBox.isChecked()){
             swipeContainer.setRefreshing(true);
             new waitForFinish().execute();
             return;
         }
         this.activeList = activeList;
-        contactAdapter = new ContactAdapter(this.activeList,showCheckBox);
+        contactAdapter = new ContactAdapter(this.activeList,contactsCheckBox.isChecked());
         recyclerView.setAdapter(contactAdapter);
     }
-    public void prepareContactData() {
+    public void prepareContactData() {//refreshes the lists
+        boolean isActiveList = false;
+        if(activeList == databaseContacts){
+            isActiveList = true;
+        }
         databaseContacts = db.getContactList();
+        if(isActiveList){
+            activeList = databaseContacts;
+        }
         inboxContacts = new ContactList(databaseContacts);
         gatheringData = true;
         new refresh().execute();
     }
     public void resetScreen(){
+        prepareContactData();
+        contactAdapter = new ContactAdapter(activeList,contactsCheckBox.isChecked());
         recyclerView.setAdapter(contactAdapter);
     }
     class refresh extends AsyncTask<URL, Integer, Long> {
@@ -230,7 +241,7 @@ public class ContactActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(Long result){
-            setActiveList(inboxContacts,true);
+            setActiveList(inboxContacts);
         }
     }
 

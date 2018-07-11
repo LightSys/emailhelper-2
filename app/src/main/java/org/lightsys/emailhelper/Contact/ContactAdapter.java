@@ -41,11 +41,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             db = new DatabaseHelper(context);
             r = context.getResources();
             inDatabase = view.findViewById(R.id.contact_checkbox);
-            inDatabase.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            inDatabase.setOnClickListener(new View.OnClickListener(){
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                public void onClick(View v) {
                     final String mail = email.getText().toString();
-                    if(isChecked){
+                    if(inDatabase.isChecked()){
                         if(!db.containsContact(mail)) {
                             inDatabase.setChecked(true);
                             Intent addContactDetails = new Intent(context, NewContactActivity.class);
@@ -54,7 +54,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
                             addContactDetails.putExtra(r.getString(R.string.intent_last_name), "");
                             context.startActivity(addContactDetails);
                         }
-
                     }
                     else{
                         Runnable cancel = new Runnable() {
@@ -70,13 +69,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
                                 db.deleteConversationData(mail);
                                 inDatabase.setChecked(false);
                                 name.setText("");
-
                             }
                         };
                         String message = r.getString(R.string.contact_delete_message_prestring)+" "+mail+" "+r.getString(R.string.contact_delete_message_poststring);
                         new ConfirmDialog(message,r.getString(R.string.delete_word),context,delete,cancel);
                     }
                 }
+
             });
         }
     }

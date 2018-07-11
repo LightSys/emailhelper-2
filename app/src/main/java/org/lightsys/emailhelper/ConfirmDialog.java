@@ -10,19 +10,31 @@ import android.content.DialogInterface;
  * The class takes in the parameters and then runs its given executables.
  */
 public class ConfirmDialog  {
-    public ConfirmDialog(String message, String confirmationWord, Context activity, final Runnable confirm, final Runnable cancel){
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+    /**
+     * @param message The message to display in the dialog
+     * @param confirmationWord The word for the confirm button i.e. delete, confirm
+     * @param context The activity context for the popup
+     * @param confirm The runnable to be ran when confirm is selected. Can be left null for nothing to happen.
+     * @param cancel The runnable to be ran when the user cancels. Can be left null for nothing to happen.
+     */
+    public ConfirmDialog(String message, String confirmationWord, Context context, final Runnable confirm, final Runnable cancel){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message);
         builder.setPositiveButton(confirmationWord, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                confirm.run();
+                if(confirm != null){
+                    confirm.run();
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                cancel.run();
+                if(cancel != null){
+                    cancel.run();
+                }
             }
         });
         builder.create().show();

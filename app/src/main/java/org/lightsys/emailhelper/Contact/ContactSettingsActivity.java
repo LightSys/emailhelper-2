@@ -1,7 +1,9 @@
 package org.lightsys.emailhelper.Contact;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import org.lightsys.emailhelper.AttachmentActivity;
 import org.lightsys.emailhelper.CommonMethods;
+import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.Conversation.ConversationActivity;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
@@ -23,6 +26,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
     String lastName;
     String fullName;
     String email;
+    Context ActivityContext;
     DatabaseHelper db;
     Button editContact,deleteConversation,startConversation,showAttachments;
 
@@ -30,7 +34,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_settings);
-        ActionBar actionBar = this.getSupportActionBar();
+        ActivityContext = this;
         firstName = getIntent().getStringExtra(getString(R.string.intent_first_name));
         lastName = getIntent().getStringExtra(getString(R.string.intent_last_name));
         fullName = firstName + " " + lastName;
@@ -84,10 +88,17 @@ public class ContactSettingsActivity extends AppCompatActivity {
         deleteConversation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.deleteConversationData(email);
-                setResult(CommonMethods.CONVERSATION_DELETED);
-                finish();
+                final DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                Runnable deletionRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        db.deleteConversationData(email);
+                        setResult(CommonMethods.CONVERSATION_DELETED);
+                        finish();
+                    }
+                };
+                String deletionMessage = getString(R.string.conversation_delete_message_prestring)+fullName+getString(R.string.conversation_delete_message_poststring);
+                new ConfirmDialog(deletionMessage,getString(R.string.delete_word), ActivityContext,deletionRunnable,null);
 
             }
         });
