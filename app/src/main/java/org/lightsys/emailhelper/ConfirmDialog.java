@@ -19,6 +19,7 @@ public class ConfirmDialog  {
      * @param cancel The runnable to be ran when the user cancels. Can be left null for nothing to happen.
      */
     public ConfirmDialog(String message, String confirmationWord, Context context, final Runnable confirm, final Runnable cancel){
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message);
         builder.setPositiveButton(confirmationWord, new DialogInterface.OnClickListener() {

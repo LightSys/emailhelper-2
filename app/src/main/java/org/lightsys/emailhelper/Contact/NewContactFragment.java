@@ -15,6 +15,8 @@ import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.HelperClass;
 import org.lightsys.emailhelper.R;
 
+import java.util.Calendar;
+
 import xdroid.toaster.Toaster;
 
 public class NewContactFragment extends android.app.Fragment {
@@ -41,7 +43,7 @@ public class NewContactFragment extends android.app.Fragment {
     }
 
     public void addItems() {
-        Intent passedData = getActivity().getIntent();
+        final Intent passedData = getActivity().getIntent();
         firstNameField = rootView.findViewById(R.id.firstNameField);
         firstNameField.setText(passedData.getStringExtra(getString(R.string.intent_first_name)));
         lastNameField = rootView.findViewById(R.id.lastNameField);
@@ -58,13 +60,12 @@ public class NewContactFragment extends android.app.Fragment {
                         @Override
                         public void run() {
                             db.insertContactData(newContact);
-                            db.insertConversationData(newContact, CommonMethods.getCurrentTime(), CommonMethods.getCurrentDate());
+                            db.insertConversationData(newContact, CommonMethods.getCurrentTime(), CommonMethods.getDate(Calendar.getInstance().getTime()));
                             clearFields();
                             getActivity().finish();//ends the task and reverts to what was going on previously
                         }
                     };
-
-                    if(!CommonMethods.checkEmail(newContact.getEmail()) ){
+                    if(!CommonMethods.checkEmail(newContact.getEmail()) && passedData.getStringExtra(getString(R.string.intent_email)).equalsIgnoreCase("") ){
                         String message = "EmailHelper does not recognize "+newContact.getEmail()+" as an email. Are you sure you want to add this email?";
                         new ConfirmDialog(message,getString(R.string.confirm_word),getActivity(),confirmationRunnable,null);
                     }else if(newContact.getEmail().equalsIgnoreCase(HelperClass.Email)){

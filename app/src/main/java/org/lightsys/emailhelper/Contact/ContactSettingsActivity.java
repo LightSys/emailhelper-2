@@ -21,6 +21,8 @@ import org.lightsys.emailhelper.Conversation.ConversationActivity;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
+import java.util.Calendar;
+
 public class ContactSettingsActivity extends AppCompatActivity {
     String firstName;
     String lastName;
@@ -107,7 +109,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.insertConversationData(email,fullName, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
+                db.insertConversationData(email,fullName, CommonMethods.getCurrentTime(),CommonMethods.getDate(Calendar.getInstance().getTime()));
                 finish();
             }
         });

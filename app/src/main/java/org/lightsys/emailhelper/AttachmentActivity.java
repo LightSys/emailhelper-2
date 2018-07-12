@@ -2,8 +2,10 @@ package org.lightsys.emailhelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +37,7 @@ public class AttachmentActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeContainer;
     DatabaseHelper db;
     Context activityContext;
+    private boolean longClickDisable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class AttachmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attachment);
         ActionBar actionBar = this.getSupportActionBar();
         actionBar.setTitle(getString(R.string.attachments));
-
+        longClickDisable = false;
         activityContext = this;
         db = new DatabaseHelper(getApplicationContext());
         email = getIntent().getStringExtra(getString(R.string.intent_email));
@@ -67,10 +70,40 @@ public class AttachmentActivity extends AppCompatActivity {
                 }catch(Exception e){
                     int temp = 0;
                 }
-
             }
             @Override
-            public void onLongClick(View view, int position) {}
+            public void onLongClick(View view, final int position) {
+                if(longClickDisable){//Why?
+                    longClickDisable = false;
+                    return;
+                    //This section is to prevent a long click action after swipe deletion when swipe
+                    //deletion is disabled. I'm not sure why long click is called then. It doesn't
+                    // happen in any other view.
+                }
+                File path = getDir(email,MODE_PRIVATE);
+                final File attachmentFile = new File(path,adapter.attachments.get(position));
+                String attachmentName = attachmentFile.getName();
+                Runnable deletionRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                        db.deleteAttachment(email, adapter.attachments.get(position));
+                        adapter.attachments.remove(position);
+                        attachmentFile.delete();
+                        prepareAttachmentData();
+                        Toaster.toast(R.string.attachment_deleted_message);
+                    }
+                };
+                Runnable cancelRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        prepareAttachmentData();
+                        Toaster.toast(R.string.attachment_not_deleted_message);
+                    }
+                };
+                String deletionMessage ="Long Click" + getString(R.string.attachment_message_prestring)+attachmentName+getString(R.string.attachment_message_poststring);
+                new ConfirmDialog(deletionMessage,getString(R.string.delete_word),activityContext,deletionRunnable,cancelRunnable);
+            }
         }));
     }
     private void makeSwipeContainer(){
@@ -160,34 +193,43 @@ public class AttachmentActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            SharedPreferences sp = getSharedPreferences(getString(R.string.preferences),CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
+            Resources r = getApplicationContext().getResources();
+            if(!sp.getBoolean(getString(R.string.key_swipe_deletion),getApplicationContext().getResources().getBoolean(R.bool.default_enable_swipe_deletion))){
+                Toaster.toast(R.string.swipe_deletion_disabled);
+                prepareAttachmentData();
+                longClickDisable = true;
+            }else{
+                deleteRow = viewHolder.getAdapterPosition();
+                String attachmentName = adapter.attachments.get(deleteRow);
+                //Need to delete it from DB before getting rid of it from the list
+                File path = getDir(email,MODE_PRIVATE);
+                attachmentFile = new File(path,attachmentName);
+                attachmentFilePath = attachmentFile.getAbsolutePath();
+                String deletionMessage =getString(R.string.attachment_message_prestring)+attachmentName+getString(R.string.attachment_message_poststring);
+                Runnable deletionRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                        db.deleteAttachment(email, attachmentFilePath);
+                        adapter.attachments.remove(deleteRow);
+                        attachmentFile.delete();
+                        prepareAttachmentData();
+                        Toaster.toast(R.string.attachment_deleted_message);
+                    }
+                };
+                Runnable cancelRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        prepareAttachmentData();
+                        Toaster.toast(R.string.attachment_not_deleted_message);
+                    }
+                };
+                new ConfirmDialog(deletionMessage,getString(R.string.delete_word),activityContext,deletionRunnable,cancelRunnable);
+            }
 
-            deleteRow = viewHolder.getAdapterPosition();
-            String attachmentName = adapter.attachments.get(deleteRow);
-            //Need to delete it from DB before getting rid of it from the list
-            File path = getDir(email,MODE_PRIVATE);
-            attachmentFile = new File(path,attachmentName);
-            attachmentFilePath = attachmentFile.getAbsolutePath();
-            String deletionMessage =getString(R.string.attachment_message_prestring)+attachmentName+getString(R.string.attachment_message_poststring);
-            new ConfirmDialog(deletionMessage,getString(R.string.delete_word),activityContext,deletionRunnable,cancelRunnable);
         }
-        Runnable deletionRunnable = new Runnable() {
-            @Override
-            public void run() {
-                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.deleteAttachment(email, attachmentFilePath);
-                adapter.attachments.remove(deleteRow);
-                attachmentFile.delete();
-                prepareAttachmentData();
-                Toaster.toast(R.string.attachment_deleted_message);
-            }
-        };
-        Runnable cancelRunnable = new Runnable() {
-            @Override
-            public void run() {
-                prepareAttachmentData();
-                Toaster.toast(R.string.attachment_not_deleted_message);
-            }
-        };
+
     };
 
     public void prepareAttachmentData(){

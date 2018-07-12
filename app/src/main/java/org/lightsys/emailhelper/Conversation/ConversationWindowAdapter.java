@@ -63,11 +63,12 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
         }
 
         if (conversationWindow.getSent()) {//This line analyzes sent
-            holder.parent_layout.setGravity(Gravity.START);
+            holder.parent_layout.setGravity(Gravity.END);
+            holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
 
         }
         else {
-            holder.parent_layout.setGravity(Gravity.END);
+            holder.parent_layout.setGravity(Gravity.START);
             holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
         }
         if(conversationWindow.hasAttachments()){

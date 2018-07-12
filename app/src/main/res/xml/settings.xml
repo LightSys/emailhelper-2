@@ -33,6 +33,24 @@
             android:key="@string/key_update_frequency"
             android:title="@string/title_update_frequency"/>
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/title_general_settings"
+        android:key="@string/preferences">
+        <CheckBoxPreference
+            android:defaultValue="@bool/default_link_messages"
+            android:key="@string/key_link_messages"
+            android:summaryOn="@string/summary_clickable_links_on"
+            android:summaryOff="@string/summary_clickable_links_off"
+            android:title="@string/title_link_messages"/>
+        <CheckBoxPreference
+            android:defaultValue="@bool/default_enable_swipe_deletion"
+            android:key="@string/key_swipe_deletion"
+            android:summaryOn="@string/summary_enabled"
+            android:summaryOff="@string/summary_disabled"
+            android:title="@string/title_enable_swipe_deletions"/>
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/title_user_settings"
         android:key="@string/preferences">

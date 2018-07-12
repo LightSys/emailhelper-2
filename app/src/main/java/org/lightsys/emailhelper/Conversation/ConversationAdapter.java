@@ -10,6 +10,7 @@ import android.widget.TextView;
 import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.R;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -49,7 +50,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
         holder.email.setText(conversation.getEmail());
         holder.name.setText(conversation.getName());
-        if(!conversation.getLastDate().equalsIgnoreCase(CommonMethods.getCurrentDate())){
+        String temp = conversation.getLastDate();
+        String temp2 = CommonMethods.getDate(Calendar.getInstance().getTime());
+        if(!temp.equalsIgnoreCase(temp2)){
             String message = conversation.getLastDate() + " "+ conversation.getTime();
             holder.time.setText(message);
         }else{

@@ -157,7 +157,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, name);
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_5,CommonMethods.getCurrentDate());
         contentValues.put(CONVO_COL_6, false);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
@@ -183,7 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, name);
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_5,CommonMethods.getCurrentDate());
         contentValues.put(CONVO_COL_6, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
@@ -207,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, newContact.getFirstName() + " " + newContact.getLastName());
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_5,CommonMethods.getCurrentDate());
         contentValues.put(CONVO_COL_6, false);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
@@ -225,7 +225,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, newContact.getFirstName() + " " + newContact.getLastName());
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_5,CommonMethods.getCurrentDate());
         contentValues.put(CONVO_COL_6, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
@@ -284,7 +284,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, res.getString(res.getColumnIndex(CONVO_COL_2)));
         contentValues.put(CONVO_COL_3, time);//Updates the time
         contentValues.put(CONVO_COL_4,date);
-        contentValues.put(CONVO_COL_5, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
+        contentValues.put(CONVO_COL_5, res.getString(res.getColumnIndex(CONVO_COL_5)));//Leaves the created date
         contentValues.put(CONVO_COL_6, true);
         db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[]{email});//why not update?
         db.insert(CONVERSATION_TABLE_NAME, null, contentValues);//This way the panels will reorder when a new time is given
@@ -518,7 +518,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "select * from " + CONVERSATION_TABLE_NAME + " where EMAIL = ?";
         Cursor res = db.rawQuery(query, new String[]{email});
         res.moveToNext();
-        String Date = res.getString(res.getColumnIndex(CONVO_COL_4));
+        String Date = res.getString(res.getColumnIndex(CONVO_COL_5));
         res.close();
         String day = Date.substring(0, Date.indexOf(" "));
         if (day.length() == 1) {

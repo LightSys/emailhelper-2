@@ -2,6 +2,8 @@ package org.lightsys.emailhelper.Contact;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.GetMail;
@@ -26,6 +29,8 @@ import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
 
 import java.net.URL;
+
+import xdroid.toaster.Toaster;
 
 public class ContactActivity extends AppCompatActivity {
     CheckBox contactsCheckBox;
@@ -66,6 +71,7 @@ public class ContactActivity extends AppCompatActivity {
                     setActiveList(inboxContacts);
                 }else{
                     setActiveList(databaseContacts);
+                    waitingForList =false;
                 }
             }
         });
@@ -97,6 +103,13 @@ public class ContactActivity extends AppCompatActivity {
             }
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                SharedPreferences sp = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
+                Resources r = getApplicationContext().getResources();
+                if(!sp.getBoolean(getString(R.string.key_swipe_deletion),getApplicationContext().getResources().getBoolean(R.bool.default_enable_swipe_deletion))){
+                    Toaster.toast(R.string.swipe_deletion_disabled);
+                    prepareContactData();
+                    return;
+                }
                 if(!contactsCheckBox.isChecked()){
                     int deleteRow = viewHolder.getAdapterPosition();
                     contact = activeList.get(deleteRow);

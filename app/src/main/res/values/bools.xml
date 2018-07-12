@@ -5,4 +5,5 @@
     <bool name = "default_valid_credentials">false</bool>
     <bool name = "default_show_database_contacts">true</bool>
     <bool name="default_link_messages">true</bool>
+    <bool name="default_enable_swipe_deletion">true</bool>
 </resources>

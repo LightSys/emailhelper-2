@@ -171,4 +171,10 @@
     <string name="need_camera_permission">EmailHelper needs access to the camera to use the QR scanning feature.</string>
     <string name="no_contacts">You have no contacts in the database. To get started, click the add new contact button or add contacts from your inbox using the checkbox below.</string>
     <string name="no_add_self_to_contacts">EmailHelper does not allow you to add the logged-in email to contacts.</string>
+    <string name="title_general_settings">General Settings</string>
+    <string name="key_swipe_deletion">swipe_deletion</string>
+    <string name="summary_enabled">Enabled</string>
+    <string name="summary_disabled">Disabled</string>
+    <string name="title_enable_swipe_deletions">Enable Swipe Deletion</string>
+    <string name="swipe_deletion_disabled">Swipe deletion is disabled.</string>
 </resources>

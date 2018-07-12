@@ -1,6 +1,8 @@
 package org.lightsys.emailhelper.Conversation;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
@@ -96,6 +100,13 @@ public class ConversationFragment extends android.app.Fragment{
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            Resources r = getActivity().getApplicationContext().getResources();
+            SharedPreferences sp = getActivity().getApplicationContext().getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
+            if(!sp.getBoolean(getString(R.string.key_swipe_deletion),getActivity().getApplicationContext().getResources().getBoolean(R.bool.default_enable_swipe_deletion))){
+                Toaster.toast(R.string.swipe_deletion_disabled);
+                prepareConversationData();
+                return;
+            }
             deleteRow = viewHolder.getAdapterPosition();
             String deletionMessage = getString(R.string.conversation_delete_message_prestring)+conversationList.get(deleteRow).getName()+getString(R.string.conversation_delete_message_poststring);
             new ConfirmDialog(deletionMessage,getString(R.string.delete_word),getActivity(),deletionRunnable,cancelRunnable);
