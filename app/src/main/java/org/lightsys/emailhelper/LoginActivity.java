@@ -87,7 +87,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
     private boolean mayRequestContacts() {
@@ -245,7 +244,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
+        private final int unknownError = -1;
+        private final int success = 0;
+        private final int emailInvalid = 1;
+        private final int credentialsInvalid = 2;
 
         private final String mEmail;
         private final String mPassword;
@@ -256,7 +259,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
+            if(!CommonMethods.checkEmail(mEmail)){
+                return emailInvalid;
+            }
             try{
                 Properties props = System.getProperties();
                 //props.setProperty("mail.store.protocol", "imaps");
@@ -271,27 +277,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 UIDFolder uf = (UIDFolder) inbox;
                 inbox.open(Folder.READ_WRITE);
             }catch(AuthenticationFailedException e){
-                return false;
+                return credentialsInvalid;
 
             }catch(MessagingException e){
-                return false;
+                return unknownError;
             }
             Toaster.toastLong(R.string.valid_credentials);
-            return true;
+            return success;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final Integer result) {
             mAuthTask = null;
             showProgress(false);
 
-            HelperClass.savedCredentials = success;
-            if (success) {
-                updateSharedPreferences();
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+            HelperClass.savedCredentials = result == success;
+            switch(result) {
+                case emailInvalid:
+                    mEmailView.setError(getString(R.string.error_invalid_email));
+                    mEmailView.requestFocus();
+                    break;
+                case credentialsInvalid:
+                case unknownError:
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                    break;
+                case success:
+                    updateSharedPreferences();
+                    finish();
+                    break;
             }
         }
 

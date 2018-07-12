@@ -113,7 +113,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
 
                     SendMail sendInstance = new SendMail(passedEmail, messageSend.getText().toString(),getActivity().getApplicationContext());
                     sendInstance.execute();
-                    db.updateConversation(conversationWindow.getEmail(), CommonMethods.getCurrentTime(),conversationWindow.getSent());
+                    db.updateConversation(conversationWindow.getEmail(),conversationWindow.getSent());
 
                     InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

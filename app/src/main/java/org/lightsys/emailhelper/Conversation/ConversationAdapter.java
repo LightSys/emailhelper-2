@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.R;
 
 import java.util.List;
@@ -48,7 +49,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
         holder.email.setText(conversation.getEmail());
         holder.name.setText(conversation.getName());
-        holder.time.setText(conversation.getTime());
+        if(!conversation.getLastDate().equalsIgnoreCase(CommonMethods.getCurrentDate())){
+            String message = conversation.getLastDate() + " "+ conversation.getTime();
+            holder.time.setText(message);
+        }else{
+            holder.time.setText(conversation.getTime());
+        }
     }
 
     @Override

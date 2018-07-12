@@ -37,9 +37,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CONVERSATION_TABLE_NAME = "active_messages";
     public static String CONVO_COL_1 = "EMAIL";
     public static String CONVO_COL_2 = "NAME";
-    public static String CONVO_COL_3 = "TIME";
-    public static String CONVO_COL_4 = "CREATED_DATE";
-    public static String CONVO_COL_5 = "NEW_MAIL";
+    public static String CONVO_COL_3 = "LAST_TIME";
+    public static String CONVO_COL_4 = "LAST_DATE";
+    public static String CONVO_COL_5 = "CREATED_DATE";
+    public static String CONVO_COL_6 = "NEW_MAIL";
     // Contact variables
     public static final String CONTACT_TABLE_NAME = "saved_contacts";
     public static String CONTACT_COL_1 = "EMAIL";
@@ -74,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //This function only runs the first time the app is run. See comment above.
-        String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT, %s BOOL)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3, CONVO_COL_4, CONVO_COL_5);
+        String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s BOOL)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3, CONVO_COL_4, CONVO_COL_5, CONVO_COL_6);
         String contactQuery = String.format("create table " + CONTACT_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT)", CONTACT_COL_1, CONTACT_COL_2, CONTACT_COL_3);
         String windowQuery = String.format("create table " + CONVERSATION_WINDOW_NAME + " ( %s TEXT, %s TEXT, %s TEXT,%s BOOLEAN, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", WINDOW_COL_1, WINDOW_COL_2, WINDOW_COL_3, WINDOW_COL_4, WINDOW_COL_5, WINDOW_COL_6, WINDOW_COL_7);
         String notiQuery = String.format("create table " + NOTIFICATION_SEND_LIST + " ( %s TEXT PRIMARY KEY, %s BOOLEAN)", NOTIFICATION_COL_PRIMARY, NOTIFICATION_COL_BOOL);
@@ -156,7 +157,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, name);
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5, false);
+        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_6, false);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
             Toaster.toast(r.getString(R.string.conversation_added_prestring)+name+r.getString(R.string.conversation_added_poststring));
@@ -181,7 +183,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, name);
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5, newmail);
+        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_6, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
             Toaster.toast(r.getString(R.string.conversation_added_prestring)+name+r.getString(R.string.conversation_added_poststring));
@@ -204,7 +207,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, newContact.getFirstName() + " " + newContact.getLastName());
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5, false);
+        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_6, false);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
             Toaster.toast(r.getString(R.string.conversation_added_prestring)+newContact.getName()+r.getString(R.string.conversation_added_poststring));
@@ -221,7 +225,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_2, newContact.getFirstName() + " " + newContact.getLastName());
         contentValues.put(CONVO_COL_3, time);
         contentValues.put(CONVO_COL_4, date);
-        contentValues.put(CONVO_COL_5, newmail);
+        contentValues.put(CONVO_COL_5,date);
+        contentValues.put(CONVO_COL_6, newmail);
         long result = db.insert(CONVERSATION_TABLE_NAME, null, contentValues);
         if( result != -1){
             Toaster.toast(r.getString(R.string.conversation_added_prestring)+newContact.getName()+r.getString(R.string.conversation_added_poststring));
@@ -243,8 +248,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
         contentValues.put(CONVO_COL_2, res.getString(res.getColumnIndex(CONVO_COL_2)));
         contentValues.put(CONVO_COL_3, res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
-        contentValues.put(CONVO_COL_4, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
-        contentValues.put(CONVO_COL_5, false);
+        contentValues.put(CONVO_COL_4, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the date
+        contentValues.put(CONVO_COL_5, res.getString(res.getColumnIndex(CONVO_COL_5)));//And created date
+        contentValues.put(CONVO_COL_6, false);
         db.update(CONVERSATION_TABLE_NAME, contentValues, "EMAIL = ?", new String[]{email});
         res.close();
 
@@ -263,12 +269,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This function updates the conversation withh the new time and puts the conversation at the top of the database
+     * This function updates the conversation with the new time and date and puts the conversation at the top of the database
      *
      * @param email
-     * @param currentTime
+     *
      */
-    public void updateConversation(String email, String currentTime) {
+    public void updateConversation(String email, String time, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from " + CONVERSATION_TABLE_NAME + " where EMAIL = ?";
         Cursor res = db.rawQuery(query, new String[]{email});
@@ -276,14 +282,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
         contentValues.put(CONVO_COL_2, res.getString(res.getColumnIndex(CONVO_COL_2)));
-        contentValues.put(CONVO_COL_3, currentTime);//Updates the time
-        contentValues.put(CONVO_COL_4, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
-        contentValues.put(CONVO_COL_5, true);
+        contentValues.put(CONVO_COL_3, time);//Updates the time
+        contentValues.put(CONVO_COL_4,date);
+        contentValues.put(CONVO_COL_5, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
+        contentValues.put(CONVO_COL_6, true);
         db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[]{email});//why not update?
         db.insert(CONVERSATION_TABLE_NAME, null, contentValues);//This way the panels will reorder when a new time is given
         res.close();
     }
-    public void updateConversation(String email, String currentTime,boolean sent_by_me) {
+    public void updateConversation(String email,boolean sent_by_me) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from " + CONVERSATION_TABLE_NAME + " where EMAIL = ?";
         Cursor res = db.rawQuery(query, new String[]{email});
@@ -291,9 +298,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
         contentValues.put(CONVO_COL_2, res.getString(res.getColumnIndex(CONVO_COL_2)));
-        contentValues.put(CONVO_COL_3, currentTime);//Updates the time
-        contentValues.put(CONVO_COL_4, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
-        contentValues.put(CONVO_COL_5, !sent_by_me);
+        contentValues.put(CONVO_COL_3, CommonMethods.getCurrentTime());//Updates the time
+        contentValues.put(CONVO_COL_4,CommonMethods.getCurrentDate());
+        contentValues.put(CONVO_COL_5, res.getString(res.getColumnIndex(CONVO_COL_5)));//Leaves the created date
+        contentValues.put(CONVO_COL_6, !sent_by_me);
         db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[]{email});//why not update?
         db.insert(CONVERSATION_TABLE_NAME, null, contentValues);//This way the panels will reorder when a new time is given
         res.close();
@@ -317,6 +325,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONVO_COL_3, res.getString(res.getColumnIndex(CONVO_COL_3)));//Updates the time
         contentValues.put(CONVO_COL_4, res.getString(res.getColumnIndex(CONVO_COL_4)));//Leaves the created date
         contentValues.put(CONVO_COL_5, res.getString(res.getColumnIndex(CONVO_COL_5)));
+        contentValues.put(CONVO_COL_6, res.getString(res.getColumnIndex(CONVO_COL_6)));
         db.update(CONVERSATION_TABLE_NAME, contentValues, "EMAIL = ?", new String[]{email});
         res.close();
     }
@@ -345,7 +354,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from " + CONVERSATION_TABLE_NAME, null);
         Stack<Conversation> temp = new Stack<>();
         while (res.moveToNext()) {
-            Conversation conversation = new Conversation(res.getString(res.getColumnIndex(CONVO_COL_1)), res.getString(res.getColumnIndex(CONVO_COL_2)), res.getString(res.getColumnIndex(CONVO_COL_3)), 1 == res.getInt(res.getColumnIndex(CONVO_COL_5)));
+            Conversation conversation = new Conversation(res.getString(res.getColumnIndex(CONVO_COL_1)), res.getString(res.getColumnIndex(CONVO_COL_2)), res.getString(res.getColumnIndex(CONVO_COL_3)),res.getString(res.getColumnIndex(CONVO_COL_4)),1 == res.getInt(res.getColumnIndex(CONVO_COL_6)));
             temp.push(conversation);
         }
         List conversationList = new ArrayList<>();

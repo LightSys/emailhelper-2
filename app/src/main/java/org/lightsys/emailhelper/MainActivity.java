@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         db = new DatabaseHelper(getBaseContext());
 
         //Gathering Credentials
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
 //        HelperClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
 //        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
 //        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));

@@ -40,6 +40,7 @@ public class ContactActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeContainer;
     //simpleItemTouchCallback is used to delete Contacts via swiping
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback;
+    private boolean waitingForList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class ContactActivity extends AppCompatActivity {
                 }else{
                     setActiveList(databaseContacts);
                 }
-                contactsCheckBox.setChecked(false);
             }
         });
     }
@@ -104,13 +104,13 @@ public class ContactActivity extends AppCompatActivity {
                     new ConfirmDialog(deletionMessage,getString(R.string.delete_word),ActivityContext,deletionRunnable,cancelRunnable);
                 }
                 else{
-                    resetScreen();
+                   prepareContactData();
                 }
             }
             Runnable cancelRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    resetScreen();
+                    prepareContactData();
                 }
             };
             Runnable deletionRunnable = new Runnable() {
@@ -118,7 +118,7 @@ public class ContactActivity extends AppCompatActivity {
                 public void run() {
                     db.deleteConversationData(contact.getEmail());
                     db.deleteContactData(contact.getEmail());
-                    resetScreen();
+                    prepareContactData();
                 }
             };
         };
@@ -144,7 +144,6 @@ public class ContactActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         prepareContactData();
-        resetScreen();
     }
     /**
      * Has all the steps needed to make the RecyclerView that holds the contacts.
@@ -193,7 +192,7 @@ public class ContactActivity extends AppCompatActivity {
     public void setActiveList(ContactList activeList){
         if(gatheringData && contactsCheckBox.isChecked()){
             swipeContainer.setRefreshing(true);
-            new waitForFinish().execute();
+            waitingForList = true;
             return;
         }
         this.activeList = activeList;
@@ -206,17 +205,21 @@ public class ContactActivity extends AppCompatActivity {
             isActiveList = true;
         }
         databaseContacts = db.getContactList();
-        if(isActiveList){
-            activeList = databaseContacts;
+
+        if(!gatheringData){
+            gatheringData = true;
+            new refresh().execute();
+            inboxContacts = new ContactList(databaseContacts);
         }
-        inboxContacts = new ContactList(databaseContacts);
-        gatheringData = true;
-        new refresh().execute();
-    }
-    public void resetScreen(){
-        prepareContactData();
-        contactAdapter = new ContactAdapter(activeList,contactsCheckBox.isChecked());
-        recyclerView.setAdapter(contactAdapter);
+        if(databaseContacts.size()==0){
+            databaseContacts.add(getString(R.string.no_contacts));
+        }
+        if(isActiveList){
+            setActiveList(databaseContacts);
+        }
+        else{
+            setActiveList(inboxContacts);
+        }
     }
     class refresh extends AsyncTask<URL, Integer, Long> {
         @Override
@@ -229,19 +232,10 @@ public class ContactActivity extends AppCompatActivity {
         protected void onPostExecute(Long result){
             gatheringData = false;
             swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
-        }
-    }
-    class waitForFinish extends AsyncTask<URL, Integer, Long> {
-        @Override
-        protected Long doInBackground(URL... urls) {
-            while(swipeContainer.isRefreshing()){
-                int x = 1;
+            if(waitingForList){
+                setActiveList(inboxContacts);
+                waitingForList = false;
             }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Long result){
-            setActiveList(inboxContacts);
         }
     }
 

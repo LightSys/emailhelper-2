@@ -8,7 +8,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_email">This email addres is not compatible with Email Helper.</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">The Username or Password is incorrect.</string>
     <string name="error_field_required">This field is required</string>
@@ -53,6 +53,7 @@
     <string name="key_password" translatable="false">password</string>
     <string name="key_valid_credentials" translatable="false">checkCredentials</string>
     <string name="key_show_database_contacts" translatable="false">showDatabaseContacts</string>
+    <string name="key_link_messages">linking_messages</string>
     <!-- Values -->
     <string name="value_time_period_minutes" translatable="false">1</string>
     <string name="value_time_period_hours" translatable="false">2</string>
@@ -70,9 +71,12 @@
     <string name="title_update_show_messages" translatable="true">Show Messages</string>
     <string name="title_user_settings" translatable="true">User Settings</string>
     <string name="title_edit_contact_activity" translatable="true">Edit Contact</string>
+    <string name="title_link_messages">Display Links in Messages</string>
     <!-- Summaries -->
     <string name="summary_basic_on" translatable="true">On</string>
     <string name="summary_basic_off" translatable="true">Off</string>
+    <string name="summary_clickable_links_on">Displaying Links</string>
+    <string name="summary_clickable_links_off">Not Displaying Links</string>
     <!-- QR Code Strings -->
     <string name="title_activity_qr_output" translatable="true">My QR code</string>
     <string name="title_activity_qr_input" translatable="true">Scan QR Code</string>
@@ -165,4 +169,6 @@
     <string name="qr_email" translatable="true">"Email: "</string>
     <string name="qr_name" translatable="true">"Name: "</string>
     <string name="need_camera_permission">EmailHelper needs access to the camera to use the QR scanning feature.</string>
+    <string name="no_contacts">You have no contacts in the database. To get started, click the add new contact button or add contacts from your inbox using the checkbox below.</string>
+    <string name="no_add_self_to_contacts">EmailHelper does not allow you to add the logged-in email to contacts.</string>
 </resources>

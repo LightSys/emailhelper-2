@@ -77,6 +77,10 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 Stack<ConversationWindow> convos = new Stack<>();//The purpose of this stack is to organize more messages into time order.
                 for (int i = messages.length - 1; i >= 0; i--) {
                     Message message = messages[i];
+                    Date recieved = message.getReceivedDate();
+                    String time = CommonMethods.getTime(recieved);
+                    String date = CommonMethods.getDate(recieved);
+                    db.updateConversation(email,time,date);
                     String messageID = Long.toString(uf.getUID(message));
                     if(!db.willInsertWindowData(messageID)){
                         break;
@@ -95,7 +99,6 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 while(!convos.isEmpty()){
                     ConversationWindow convo = convos.pop();
                     db.insertWindowData(convo);
-                    db.updateConversation(convo.getEmail(),CommonMethods.getCurrentTime());
                 }
             }
         } catch(AuthenticationFailedException e){
