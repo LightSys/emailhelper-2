@@ -385,10 +385,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Adds the Contact to Database
      *
-     * @param email
-     * @param firstName
-     * @param lastName
-     * @return
+     * @param email of the contact
+     * @param firstName of the contact
+     * @param lastName of the contact
      */
     public void insertContactData(String email, String firstName, String lastName) {
         SQLiteDatabase db = this.getWritableDatabase();

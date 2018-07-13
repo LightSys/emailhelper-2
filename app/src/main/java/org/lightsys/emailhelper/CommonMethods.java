@@ -12,7 +12,7 @@ import java.util.Date;
 public class CommonMethods {
 
     private static DateFormat dateFormat = new SimpleDateFormat("d MMM yyyy");
-    private static DateFormat displayDate = new SimpleDateFormat("MMM d");
+    private static DateFormat displayDate = new SimpleDateFormat("MMM d yyyy");
     private static DateFormat timeFormat = new SimpleDateFormat("K:mma");
 
     public static String getCurrentTime() {return timeFormat.format(Calendar.getInstance().getTime());}

@@ -53,7 +53,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         String temp = conversation.getLastDate();
         String temp2 = CommonMethods.getDate(Calendar.getInstance().getTime());
         if(!temp.equalsIgnoreCase(temp2)){
-            String message = conversation.getLastDate() + " "+ conversation.getTime();
+            String date = conversation.getLastDate();
+            if(date.length() > 10){
+                date = date.substring(0,6);
+            }
+            else{
+                date = date.substring(0,5);
+            }
+            String message = date + " "+ conversation.getTime();
             holder.time.setText(message);
         }else{
             holder.time.setText(conversation.getTime());
