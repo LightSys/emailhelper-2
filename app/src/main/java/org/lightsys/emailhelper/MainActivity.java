@@ -115,9 +115,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Intent startNewContact = new Intent(this, NewContactActivity.class);
                 startActivity(startNewContact);
                 return true;
-            case R.id.message_menu_credentials:
-                Intent startCredentials = new Intent(getBaseContext(), LoginActivity.class);
-                startActivity(startCredentials);
+            case R.id.message_menu_user_settings:
+                Intent userSettings = new Intent(getBaseContext(), UserSettingsActivity.class);
+                startActivity(userSettings);
                 return true;
             case R.id.message_menu_QR_output:
                 Intent QR = new Intent(getBaseContext(), QRActivity.class);

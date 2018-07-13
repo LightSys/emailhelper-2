@@ -69,7 +69,7 @@
     <string name="entry_time_period_hours" translatable="true">Hours</string>
     <string name="title_update_show_notifications" translatable="true">Show Notifications</string>
     <string name="title_update_show_messages" translatable="true">Show Messages</string>
-    <string name="title_user_settings" translatable="true">User Settings</string>
+    <string name="title_user_settings" translatable="true">User Settings (For QR)</string>
     <string name="title_edit_contact_activity" translatable="true">Edit Contact</string>
     <string name="title_link_messages">Display Links in Messages</string>
     <!-- Summaries -->
@@ -81,7 +81,7 @@
     <string name="title_activity_qr_output" translatable="true">My QR code</string>
     <string name="title_activity_qr_input" translatable="true">Scan QR Code</string>
     <string name="msg_default_status" translatable="true">Scan a QR code to import contact data.</string>
-    <string name="barcode_without_name" translatable="true">QR has been created without complete contact.\nTo change this, enter one in settings.</string>
+    <string name="barcode_without_name" translatable="true">QR has been created without complete contact.\nTo change this, enter one in User Settings.</string>
 
     <string name="key_first_name" translatable="false">firstName</string>
     <string name="key_last_name" translatable="false">lastName</string>
@@ -177,4 +177,21 @@
     <string name="summary_disabled">Disabled</string>
     <string name="title_enable_swipe_deletions">Enable Swipe Deletion</string>
     <string name="swipe_deletion_disabled">Swipe deletion is disabled.</string>
+    <string name="title_activity_user_settings">User Settings</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="change_credentials">Change Credentials</string>
+    <string name="menu_user_settings">User Settings</string>
+    <string name="user_settings_credential_settings">Credential Settings</string>
+    <string name="default_phone_number" />
+    <string name="key_phone_number">phone_number</string>
+    <string name="title_phone_number">Phone Number</string>
+    <string name="title_company">Company</string>
+    <string name="key_company">company</string>
+    <string name="key_address">address</string>
+    <string name="title_address">Address</string>
+    <string name="key_website">website</string>
+    <string name="title_website">Website</string>
+    <string name="key_note">note</string>
+    <string name="title_note">Note</string>
 </resources>

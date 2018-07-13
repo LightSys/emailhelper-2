@@ -26,8 +26,8 @@
         android:layout_width="4dp"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/message_menu_credentials"
-        android:title="@string/menu_account_settings"
+        android:id="@+id/message_menu_user_settings"
+        android:title="@string/menu_user_settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/message_menu_settings"
