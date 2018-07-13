@@ -137,30 +137,6 @@ public class ContactActivity extends AppCompatActivity {
         };
         makeRecyclerView();
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_contact,menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if(id == R.id.action_new_contact){
-            Intent startNewContact = new Intent(this, NewContactActivity.class);
-            startActivity(startNewContact);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    protected void onResume(){
-        super.onResume();
-        prepareContactData();
-    }
-    /**
-     * Has all the steps needed to make the RecyclerView that holds the contacts.
-     */
     public void makeRecyclerView() {
         recyclerView = findViewById(R.id.recycler_contact_view);//Makes the RecyclerView
         RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -197,6 +173,27 @@ public class ContactActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_contact,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.action_new_contact){
+            Intent startNewContact = new Intent(this, NewContactActivity.class);
+            startActivity(startNewContact);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        prepareContactData();
+    }
 
     /**
      * This function clears contactList and gets new data from the database.
@@ -212,7 +209,12 @@ public class ContactActivity extends AppCompatActivity {
         contactAdapter = new ContactAdapter(this.activeList,contactsCheckBox.isChecked());
         recyclerView.setAdapter(contactAdapter);
     }
-    public void prepareContactData() {//refreshes the lists
+
+    /**
+     * This functions goal is to refresh the lists.
+     * It figures out who is the active list so it can be set to the new data.
+     */
+    public void prepareContactData() {
         boolean isActiveList = false;
         if(activeList == databaseContacts){
             isActiveList = true;
@@ -234,6 +236,11 @@ public class ContactActivity extends AppCompatActivity {
             setActiveList(inboxContacts);
         }
     }
+
+    /**
+     * This class allows the the mailer work in a Async class
+     * The goal is to add the extra contacts onto the list and prep the list to display
+     */
     class refresh extends AsyncTask<URL, Integer, Long> {
         @Override
         protected Long doInBackground(URL... urls) {
@@ -248,6 +255,8 @@ public class ContactActivity extends AppCompatActivity {
             if(waitingForList){
                 setActiveList(inboxContacts);
                 waitingForList = false;
+                //Why this section?
+                //This section will automatically display the list once it is done gathering data.
             }
         }
     }

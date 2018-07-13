@@ -28,7 +28,7 @@ public class ConversationAttachmentAdapter extends RecyclerView.Adapter<Conversa
         attachments = db.getAttachmentsforConvo(messageID);
         for(int i = attachments.size()-1;i>=0;i--){
             String temp = attachments.get(i);
-            if(!temp.contains(".txt")){
+            if(temp.contains(".txt")){
                 attachments.remove(i);
             }
         }

@@ -65,14 +65,14 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
         if (conversationWindow.getSent()) {//This line analyzes sent
             holder.parent_layout.setGravity(Gravity.END);
             holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
-
         }
         else {
             holder.parent_layout.setGravity(Gravity.START);
             holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
+            holder.recyclerView.setBackground(context.getResources().getDrawable(R.drawable.border2));
         }
         if(conversationWindow.hasAttachments()){
-            holder.recyclerView.setHasFixedSize(false);
+            holder.recyclerView.setHasFixedSize(true);
             ConversationAttachmentAdapter caa = new ConversationAttachmentAdapter(conversationWindow.getMessageId(),new DatabaseHelper(context));
             holder.recyclerView.setAdapter(caa);
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp"><!-- this line is the spacing between the text and the edge of screen-->
+    android:padding="5dp"><!-- this line is the spacing between the bubbles and the edge of screen-->
 
     <LinearLayout
         android:id="@+id/bubble_layout"
@@ -25,7 +25,8 @@
             android:id="@+id/attachment_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start" />
+            android:layout_gravity="start"
+            android:padding="7dp"/>
     </LinearLayout>
 
 </LinearLayout>
