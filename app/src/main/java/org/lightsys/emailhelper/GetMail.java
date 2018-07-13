@@ -39,7 +39,7 @@ import javax.mail.search.FromTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
-public class GetMail extends AsyncTask<URL, Integer, Long> {
+public class GetMail {
     private DatabaseHelper db;
     SharedPreferences sp;
     Resources r;
@@ -52,13 +52,6 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         sp = c.getSharedPreferences(r.getString(R.string.preferences),0);
 
     }
-    @Override
-    protected Long doInBackground(URL... params) {
-        //This does nothing currently
-        //may end up putting getMail or getContacts back in here
-        return null;
-    }
-    protected void onPostExecute(Long result) {}
     public emailNotification getMail() {
         emailNotification receivedNew = new emailNotification();
         List<Contact> contactList = db.getListOfContacts();
@@ -77,10 +70,6 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 Stack<ConversationWindow> convos = new Stack<>();//The purpose of this stack is to organize more messages into time order.
                 for (int i = messages.length - 1; i >= 0; i--) {
                     Message message = messages[i];
-                    Date recieved = message.getReceivedDate();
-                    String time = CommonMethods.getTime(recieved);
-                    String date = CommonMethods.getDate(recieved);
-                    db.updateConversation(email,time,date);
                     String messageID = Long.toString(uf.getUID(message));
                     if(!db.willInsertWindowData(messageID)){
                         break;
@@ -95,6 +84,7 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                     if(db.getNotificationSettings(email)){
                         receivedNew.push(Title,NotificationMessage);
                     }
+                    updateCoversation(message);
                 }
                 while(!convos.isEmpty()){
                     ConversationWindow convo = convos.pop();
@@ -114,6 +104,16 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
         }
         return receivedNew;
     }
+
+    private void updateCoversation(Message message) throws MessagingException {
+        Date recieved = message.getReceivedDate();
+        String contact = message.getFrom()[0].toString();
+        String email = contact.substring(contact.indexOf("<")+1,contact.length()-1);
+        String time = CommonMethods.getTime(recieved);
+        String date = CommonMethods.getDate(recieved);
+        db.updateConversation(email,time,date);
+    }
+
     private String getMessageContent(Message message) throws MessagingException, IOException {
         String subject = message.getSubject();
         String body = getTextFromMessage(message);
@@ -219,9 +219,16 @@ public class GetMail extends AsyncTask<URL, Integer, Long> {
                 if(sent.before(today)){
                     return contactList;
                 }
-                Address[] froms = message.getFrom();
-                String email = froms == null ? null : ((InternetAddress) froms[0]).getAddress();
-                contactList.add(email);
+                String contact = message.getFrom()[0].toString();
+                if(contact.contains("<") && contact.contains(">")){
+                    String name = contact.substring(0,contact.indexOf("<")).trim();
+                    String email = contact.substring(contact.indexOf("<")+1,contact.length()-1);
+                    contactList.add(name,email);
+                }
+                else{
+                    contactList.add("",contact);
+                }
+
             }
         } catch(AuthenticationFailedException e){
             e.printStackTrace();

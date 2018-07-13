@@ -9,49 +9,42 @@
 
     <TextView
         android:id="@+id/name_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:textSize="30sp"
         android:textColor="@color/black"
         android:text="@string/contact_settings_name_text_title"/>
 
     <TextView
         android:id="@+id/email_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:textSize="20sp"
         android:textColor="@color/black"
         android:text="@string/contact_settings_email_text_title" />
 
     <CheckBox
         android:id="@+id/display_notifications"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:checked="true"
         android:text="@string/contact_settings_notifications_checkbox" />
 
     <Button
         android:id="@+id/edit_contact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:text="@string/contact_settings_edit_contact_button" />
     <Button
         android:id="@+id/show_attachments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:text="@string/contact_settings_show_attachments_button" />
 
 
     <Button
         android:id="@+id/start_conversation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:text="@string/contact_settings_start_button" />
 
     <Button
         android:id="@+id/delete_converstation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:text="@string/contact_settings_delete_button" />
 
 </LinearLayout>

@@ -9,63 +9,40 @@
 
     <TextView
         android:id="@+id/editContactActivity_first_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="First Name"
-        tools:layout_editor_absoluteX="32dp"
-        tools:layout_editor_absoluteY="16dp" />
+        style="@style/fillHorizontal"
+        android:text="@string/title_first_name"/>
 
     <EditText
         android:id="@+id/editContactActivity_first_name_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="35dp" />
+        android:inputType="textPersonName"/>
 
     <TextView
         android:id="@+id/editContactActivity_last_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Last Name"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="81dp" />
+        style="@style/fillHorizontal"
+        android:text="@string/title_last_name"/>
 
     <EditText
         android:id="@+id/editContactActivity_last_name_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="100dp" />
+        android:inputType="textPersonName"/>
 
     <TextView
         android:id="@+id/editContactActivity_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="146dp" />
+        style="@style/fillHorizontal"
+        android:text="@string/prompt_email"/>
 
     <EditText
         android:id="@+id/editContactActivity_email_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:ems="10"
-        android:inputType="textEmailAddress"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="165dp" />
+        android:inputType="textEmailAddress"/>
 
     <Button
         android:id="@+id/saveContactButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Contact"
-        tools:layout_editor_absoluteX="128dp"
-        tools:layout_editor_absoluteY="211dp" />
-
+        style="@style/fillHorizontal"
+        android:text="@string/save_contact_button"/>
 </LinearLayout>

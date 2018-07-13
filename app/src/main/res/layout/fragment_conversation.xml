@@ -7,8 +7,7 @@
     android:orientation="vertical"
     tools:context="org.lightsys.emailhelper.Conversation.ConversationFragment">
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        style="@style/fillHorizontal">
 
         <android.support.v4.widget.SwipeRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,8 +17,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/fillHorizontal"
                 android:scrollbars="vertical"
                 app2:layoutManager="android.support.v7.widget.LinearLayoutManager" />
         </android.support.v4.widget.SwipeRefreshLayout>

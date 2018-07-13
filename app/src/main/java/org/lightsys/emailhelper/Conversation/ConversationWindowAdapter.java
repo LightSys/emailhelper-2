@@ -77,6 +77,10 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
             holder.recyclerView.setAdapter(caa);
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
+        else{
+            LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
+            holder.recyclerView.setLayoutParams(size);
+        }
     }
 
     @Override

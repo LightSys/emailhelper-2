@@ -19,22 +19,17 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_contact"/>
     <item
-        android:id="@+id/action_new_contact"
-        android:icon="@drawable/ic_person_add_white_24dp"
-        android:title="@string/menu_add_new_contact"
-        android:layout_height="4dp"
-        android:layout_width="4dp"
-        app:showAsAction="ifRoom"/>
-    <item
         android:id="@+id/message_menu_user_settings"
         android:title="@string/menu_user_settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/message_menu_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
         android:title="@string/menu_settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/message_menu_about"
+        android:icon="@drawable/ic_info"
         android:title="@string/menu_about"
         app:showAsAction="never"/>
 

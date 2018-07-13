@@ -10,8 +10,8 @@ public class ContactList {
         addressList = new emailHelperList(contactList.addressList);
     }
 
-    public void add(String email){
-        addressList.add(email);
+    public void add(String name,String email){
+        addressList.add(name,email);
     }
 
 
@@ -80,14 +80,14 @@ public class ContactList {
                 }
             }
         }
-        public void add(String email) {
+        public void add(String name,String email) {
             size++;
             if(size+1 >maxSize){
                 resize();
             }
             for(int i = 0;i<size;i++){
                 if(array[i] == null){
-                    array[i] = new Contact(email,"","",1,false);
+                    array[i] = new Contact(email,name,"",1,false);
                     return;
                 }
                 if(array[i].getEmail().equalsIgnoreCase(email)){

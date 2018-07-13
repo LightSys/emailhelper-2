@@ -11,8 +11,7 @@
 
     <TextView
         android:id="@+id/overview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/fillHorizontal"
         android:textColor="@color/colorPrimary"
         android:textSize="25sp"
         android:text="@string/messages"/>

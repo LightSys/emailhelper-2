@@ -10,7 +10,7 @@ LightSys advises being careful when clicking links for websites you are not fami
 Due to the way EmailHelper handles emails, LightSys advises to be extra cautious when clicking links
 that look like this: <google.com>
 These kinds of links were embedded into the HTML email.
-//You can disable in-message linking from app settings.
+You can disable in-message linking from app settings.
 
 This app's source code is also available under the GPLv3 open-source license at:
 https://github.com/LightSys/eventApp

@@ -45,13 +45,28 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
                 @Override
                 public void onClick(View v) {
                     final String mail = email.getText().toString();
+                    final String fullName = name.getText().toString();
                     if(inDatabase.isChecked()){
                         if(!db.containsContact(mail)) {
                             inDatabase.setChecked(true);
                             Intent addContactDetails = new Intent(context, NewContactActivity.class);
                             addContactDetails.putExtra(r.getString(R.string.intent_email), mail);
-                            addContactDetails.putExtra(r.getString(R.string.intent_first_name), "");
-                            addContactDetails.putExtra(r.getString(R.string.intent_last_name), "");
+                            String first,last;
+                            if(fullName.contains(" ")){
+                                first = fullName.substring(0,fullName.indexOf(" "));
+                                last = fullName.substring(fullName.indexOf(" ")+1);
+                            }
+                            else{
+                                first = fullName;
+                                last = "";
+                            }
+                            if(fullName.contains("@")){//This indicates its probably not a name but an email.
+                                first = "";
+                                last = "";
+                            }
+
+                            addContactDetails.putExtra(r.getString(R.string.intent_first_name), first);
+                            addContactDetails.putExtra(r.getString(R.string.intent_last_name), last);
                             context.startActivity(addContactDetails);
                         }
                     }
