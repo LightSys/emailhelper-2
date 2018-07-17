@@ -227,7 +227,7 @@ public class ContactActivity extends AppCompatActivity {
             inboxContacts = new ContactList(databaseContacts);
         }
         if(databaseContacts.size()==0){
-            databaseContacts.add(getString(R.string.no_contacts));
+            databaseContacts.add("",getString(R.string.no_contacts));
         }
         if(isActiveList){
             setActiveList(databaseContacts);

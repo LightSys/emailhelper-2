@@ -282,7 +282,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVO_COL_1, email);//Use of email so there is not an extra function call
         contentValues.put(CONVO_COL_2, res.getString(res.getColumnIndex(CONVO_COL_2)));
-        contentValues.put(CONVO_COL_3, time);//Updates the time
+        //TODO add logic year to protect the latest date;
+        String oldDate = res.getString(res.getColumnIndex(CONVO_COL_3)) + " " + res.getString(res.getColumnIndex(CONVO_COL_4));
+        String newDate = time + " " + date;
+        if(CommonMethods.compareDates(newDate,oldDate)){
+            date = res.getString(res.getColumnIndex(CONVO_COL_4));
+            time = res.getString(res.getColumnIndex(CONVO_COL_3));
+        }
+        contentValues.put(CONVO_COL_3,time);
         contentValues.put(CONVO_COL_4,date);
         contentValues.put(CONVO_COL_5, res.getString(res.getColumnIndex(CONVO_COL_5)));//Leaves the created date
         contentValues.put(CONVO_COL_6, true);
@@ -697,6 +704,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean insertAttachment(String email, String filePath, String messageID) {
         SQLiteDatabase db = this.getWritableDatabase();
+        //Checks for it in the data base
+        String query = "select * from attachment_database where EMAIL = ? and ATTACHMENT = ? and MESSAGE_ID = ?";
+        String[] args = {email, filePath, messageID};
+        Cursor res = db.rawQuery(query,args);
+        if(res.getCount()>0){
+            res.close();
+            return false;
+        }
+        res.close();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ATTACHMENT_EMAIL, email);
         contentValues.put(ATTACHMENT_NAME, filePath);
@@ -729,6 +745,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         res.close();
         return false;
+    }
+
+    public boolean hasAttachment(String email, String filePath, String messageID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from attachment_database where EMAIL = ? and ATTACHMENT = ? and MESSAGE_ID = ?";
+        String[] args = {email, filePath, messageID};
+        Cursor res = db.rawQuery(query,args);
+        boolean temp = res.getCount()>0;
+        res.close();
+        return temp;
     }
 
 

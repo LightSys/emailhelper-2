@@ -6,11 +6,18 @@
     android:layout_height="match_parent"
     tools:context="org.lightsys.emailhelper.Contact.ContactActivity">
 
+    <CheckBox
+        android:id="@+id/inbox_check_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:text="@string/inbox_button_string"
+        android:textSize="18sp"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/contact_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="480dp"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inbox_check_box">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_contact_view"
             android:layout_width="match_parent"
@@ -26,13 +33,6 @@
             android:layout_marginLeft="0dp"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <CheckBox
-        android:id="@+id/inbox_check_box"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:text="@string/inbox_button_string"
-        android:textSize="18sp"/>
+
 
 </RelativeLayout>

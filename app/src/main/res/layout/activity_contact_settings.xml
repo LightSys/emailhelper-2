@@ -9,42 +9,40 @@
 
     <TextView
         android:id="@+id/name_textView"
-        style="@style/fillHorizontal"
+        style="@style/ContactSettings"
         android:textSize="30sp"
-        android:textColor="@color/black"
         android:text="@string/contact_settings_name_text_title"/>
 
     <TextView
         android:id="@+id/email_textView"
-        style="@style/fillHorizontal"
+        style="@style/ContactSettings"
         android:textSize="20sp"
-        android:textColor="@color/black"
         android:text="@string/contact_settings_email_text_title" />
 
     <CheckBox
         android:id="@+id/display_notifications"
-        style="@style/fillHorizontal"
+        style="@style/ContactSettings"
         android:checked="true"
         android:text="@string/contact_settings_notifications_checkbox" />
 
     <Button
         android:id="@+id/edit_contact"
-        style="@style/fillHorizontal"
+        style="@style/ContactSettings"
         android:text="@string/contact_settings_edit_contact_button" />
     <Button
         android:id="@+id/show_attachments"
-        style="@style/fillHorizontal"
+        style="@style/ContactSettings"
         android:text="@string/contact_settings_show_attachments_button" />
 
 
     <Button
         android:id="@+id/start_conversation"
-        style="@style/fillHorizontal"
+        style="@style/ContactSettings"
         android:text="@string/contact_settings_start_button" />
 
     <Button
         android:id="@+id/delete_converstation"
-        style="@style/fillHorizontal"
+        style="@style/ContactSettings"
         android:text="@string/contact_settings_delete_button" />
 
 </LinearLayout>

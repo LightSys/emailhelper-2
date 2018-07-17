@@ -179,17 +179,19 @@ public class GetMail {
                     if (temp.equalsIgnoreCase(Part.ATTACHMENT)) {//checks for an attachment
                         c.getDir(email, Context.MODE_PRIVATE);
                         File tempFile = new File(c.getDir(email, Context.MODE_PRIVATE), bodyPart.getFileName());
-                        FileOutputStream outputStream = new FileOutputStream(tempFile);
-                        InputStream inputStream = bodyPart.getInputStream();
-                        byte[] buffer = new byte[4096];
-                        int byteRead;
-                        while ((byteRead = inputStream.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, byteRead);
+                        if(!db.hasAttachment(email,tempFile.getAbsolutePath(),Long.toString(uf.getUID(message)))) {
+                            FileOutputStream outputStream = new FileOutputStream(tempFile);
+                            InputStream inputStream = bodyPart.getInputStream();
+                            byte[] buffer = new byte[4096];
+                            int byteRead;
+                            while ((byteRead = inputStream.read(buffer)) != -1) {
+                                outputStream.write(buffer, 0, byteRead);
+                            }
+                            outputStream.close();
+                            filePath = tempFile.getAbsolutePath();
+                            DatabaseHelper db = new DatabaseHelper(c);
+                            db.insertAttachment(email, filePath, Long.toString(uf.getUID(message)));
                         }
-                        outputStream.close();
-                        filePath = tempFile.getAbsolutePath();
-                        DatabaseHelper db = new DatabaseHelper(c);
-                        db.insertAttachment(email, filePath,Long.toString(uf.getUID(message)));
                         hasAttachments = true;
                     }
                 }

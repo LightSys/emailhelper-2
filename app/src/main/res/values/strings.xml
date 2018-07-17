@@ -169,7 +169,7 @@
     <string name="qr_email" translatable="true">"Email: "</string>
     <string name="qr_name" translatable="true">"Name: "</string>
     <string name="need_camera_permission">EmailHelper needs access to the camera to use the QR scanning feature.</string>
-    <string name="no_contacts">You have no contacts in the database. To get started, click the add new contact button or add contacts from your inbox using the checkbox below.</string>
+    <string name="no_contacts">You have no contacts in the database. To get started, click the add new contact button or add contacts from your inbox using the checkbox.</string>
     <string name="no_add_self_to_contacts">EmailHelper does not allow you to add the logged-in email to contacts.</string>
     <string name="title_general_settings">General Settings</string>
     <string name="key_swipe_deletion">swipe_deletion</string>
@@ -195,4 +195,5 @@
     <string name="key_note">note</string>
     <string name="title_note">Note</string>
     <string name="save_contact_button">Save Contact</string>
+    <string name="edit_contact_information">Edit Contact Information</string>
 </resources>

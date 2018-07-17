@@ -4,6 +4,11 @@ package org.lightsys.emailhelper;
  * Created by nicholasweg on 6/26/17.
  */
 
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,6 +24,17 @@ public class CommonMethods {
     public static String getCurrentDate() {return dateFormat.format(Calendar.getInstance().getTime());}
     public static String getTime(Date date){return timeFormat.format(date);}
     public static String getDate(Date date){return displayDate.format(date);}
+
+    public static void textViewMinimize(TextView textView){
+        textView.setVisibility(View.INVISIBLE);
+        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
+        textView.setLayoutParams(size);
+    }
+    public static void textViewExpand(TextView textView){
+        textView.setVisibility(View.VISIBLE);
+        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textView.setLayoutParams(size);
+    }
 
     public static boolean checkEmail(String email) {
         boolean valid = true;
@@ -58,10 +74,19 @@ public class CommonMethods {
         }
     }
 
+
+
+
     //Constants used in multiple different classes
     public static final int CONVERSATION_DELETED = 65783;
     public static final int CHECK_FOR_DELETION = 28694;
     public static final int CAMERA_REQUEST_CODE = 453;
     public static final int SHARED_PREFERENCES_DEFAULT_MODE = 0;
 
+    public static boolean compareDates(String date1, String date2) {
+        //Need something different to compare dates.
+        Date Date1 = new Date(date1);
+        Date Date2 = new Date(date2);
+        return 0 < Date1.compareTo(Date2);
+    }
 }

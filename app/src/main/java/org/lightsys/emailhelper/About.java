@@ -96,19 +96,26 @@ public class About extends AppCompatActivity {
                 aboutMessage = itemView.findViewById(R.id.aboutText);
             }
             public void bind(String message){
-                if(message.contains("<Header>")){
+                if(message.length() == 0){
+                    message = "  ";//Prevents erros when dealing with substring in if statement
+                }
+                if(message.substring(0,2).contains("//")){
+                    CommonMethods.textViewMinimize(aboutMessage);
+                }
+                else if(message.contains("<Header>")){
+                    CommonMethods.textViewExpand(aboutMessage);
                     aboutMessage.setText(message.substring(8));//removes <Header>
                     aboutMessage.setTextSize(20);
                     aboutMessage.setTypeface(Typeface.DEFAULT_BOLD);
                     aboutMessage.setTextColor(getResources().getColor(R.color.colorPrimary));
                 }
                 else{
+                    CommonMethods.textViewExpand(aboutMessage);
                     aboutMessage.setText(message);
                     aboutMessage.setTextSize(16);
                     aboutMessage.setTypeface(Typeface.DEFAULT);
-
+                    aboutMessage.setTextColor(getResources().getColor(R.color.black));
                 }
-
             }
         }
     }

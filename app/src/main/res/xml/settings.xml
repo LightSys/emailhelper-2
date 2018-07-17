@@ -50,17 +50,4 @@
             android:summaryOff="@string/summary_disabled"
             android:title="@string/title_enable_swipe_deletions"/>
     </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/title_user_settings"
-        android:key="@string/preferences">
-        <EditTextPreference
-            android:hint="@string/default_first_name"
-            android:key="@string/key_first_name"
-            android:title="@string/title_first_name"/>
-        <EditTextPreference
-            android:hint="@string/default_last_name"
-            android:key="@string/key_last_name"
-            android:title="@string/title_last_name"/>
-    </PreferenceCategory>
 </PreferenceScreen>

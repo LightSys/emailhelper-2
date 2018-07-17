@@ -1,5 +1,6 @@
 package org.lightsys.emailhelper.qr;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,7 +16,9 @@ import android.widget.TextView;
 import net.glxn.qrgen.android.QRCode;
 import net.glxn.qrgen.core.scheme.VCard;
 
+import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.R;
+import org.lightsys.emailhelper.UserSettingsActivity;
 
 import xdroid.toaster.Toaster;
 
@@ -35,6 +39,18 @@ public class QRActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        Button editContactInformation = findViewById(R.id.editUserSettings);
+        editContactInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editInfo = new Intent(getApplicationContext(), UserSettingsActivity.class);
+                startActivity(editInfo);
+            }
+        });
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
         String email = setUpTextView(emailField,R.id.email_qr_field,getString(R.string.key_email));
         String name = setUpNameTextView();
         String phone = setUpTextView(phoneNumberField,R.id.phone_qr_field,getString(R.string.key_phone_number));
@@ -71,7 +87,7 @@ public class QRActivity extends AppCompatActivity {
         }
         nameField = findViewById(R.id.name_qr_field);
         if(!hasCreated){
-            minimize(nameField);
+            CommonMethods.textViewMinimize(nameField);
             Toaster.toastLong(getString(R.string.barcode_without_name));
         }
         else{
@@ -88,7 +104,7 @@ public class QRActivity extends AppCompatActivity {
         String data = sp.getString(spKey,null);
         if(data == null){
             data = "";
-            minimize(textView);
+            CommonMethods.textViewMinimize(textView);
         }
         else{
             textView.setText(setText(data,spKey));
@@ -114,11 +130,4 @@ public class QRActivity extends AppCompatActivity {
                 return "";
         }
     }
-
-    private void minimize(TextView textView) {
-        textView.setVisibility(View.INVISIBLE);
-        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
-        textView.setLayoutParams(size);
-    }
-
 }
