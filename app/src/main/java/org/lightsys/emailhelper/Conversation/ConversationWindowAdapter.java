@@ -25,7 +25,7 @@ import java.util.List;
 
 public class ConversationWindowAdapter extends RecyclerView.Adapter<ConversationWindowAdapter.MyViewHolder> {
 
-    private List<ConversationWindow> conversationWindowList;
+    private List<Message> messageList;
     Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -41,8 +41,8 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
         }
     }
 
-    public ConversationWindowAdapter(List<ConversationWindow> conversationWindowList, Context c) {
-        this.conversationWindowList = conversationWindowList;
+    public ConversationWindowAdapter(List<Message> messageList, Context c) {
+        this.messageList = messageList;
         context = c;
     }
 
@@ -54,15 +54,15 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        ConversationWindow conversationWindow = conversationWindowList.get(position);
-        holder.message.setText(conversationWindow.getMessage());
+        Message message = messageList.get(position);
+        holder.message.setText(message.getMessage());
         Resources r = context.getResources();
         SharedPreferences sp = context.getSharedPreferences(r.getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
         if(sp.getBoolean(r.getString(R.string.key_link_messages),r.getBoolean(R.bool.default_link_messages))){
             Linkify.addLinks(holder.message,Linkify.ALL);
         }
 
-        if (conversationWindow.getSent()) {//This line analyzes sent
+        if (message.getSent()) {//This line analyzes sent
             holder.parent_layout.setGravity(Gravity.END);
             holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
         }
@@ -71,9 +71,9 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
             holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
             holder.recyclerView.setBackground(context.getResources().getDrawable(R.drawable.border2));
         }
-        if(conversationWindow.hasAttachments()){
+        if(message.hasAttachments()){
             holder.recyclerView.setHasFixedSize(true);
-            ConversationAttachmentAdapter caa = new ConversationAttachmentAdapter(conversationWindow.getMessageId(),new DatabaseHelper(context));
+            ConversationAttachmentAdapter caa = new ConversationAttachmentAdapter(message.getMessageId(),new DatabaseHelper(context));
             holder.recyclerView.setAdapter(caa);
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
@@ -84,6 +84,6 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
     }
 
     @Override
-    public int getItemCount() {return conversationWindowList.size();}
+    public int getItemCount() {return messageList.size();}
 
 }

@@ -36,23 +36,18 @@ public class EditContactActivity extends AppCompatActivity {
         saveContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Contact editedContact = new Contact();
-                editedContact.setFirstName(firstname.getText().toString());
-                editedContact.setLastName(lastname.getText().toString());
-                editedContact.setEmail(email.getText().toString());
-                saveContact(editedContact);
+                saveContact(email.getText().toString(),firstname.getText().toString(),lastname.getText().toString());
                 finish();
             }
         });
 
     }
-    public void saveContact(Contact editedContact){
+    public void saveContact(String email,String firstname,String lastname){
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-        db.deleteContactData(originalEmail);
-        db.insertContactData(editedContact);
-        if(!originalEmail.equals(editedContact.getEmail())){
-            db.updateConversationWindowWithDifferentEmail(originalEmail,editedContact);
-        }
-        db.updateConversation(originalEmail,editedContact);
+        Contact contact = db.getContact(originalEmail);
+        contact.setFirstName(firstname);
+        contact.setLastName(lastname);
+        contact.setEmail(email);
+        db.updateContact(originalEmail,contact);
     }
 }

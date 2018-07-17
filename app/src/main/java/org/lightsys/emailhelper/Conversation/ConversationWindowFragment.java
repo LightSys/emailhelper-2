@@ -1,7 +1,6 @@
 package org.lightsys.emailhelper.Conversation;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +14,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import org.lightsys.emailhelper.CommonMethods;
+import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
-import org.lightsys.emailhelper.HelperClass;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.SendMail;
 
@@ -27,7 +26,7 @@ import java.util.List;
 public class ConversationWindowFragment extends android.app.Fragment {
 
     DatabaseHelper db;
-    private List<ConversationWindow> conversationWindowList = new ArrayList<>();
+    private List<Message> messageList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ConversationWindowAdapter cAdapter;
     View rootView;
@@ -96,7 +95,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,int oldRight, int oldBottom)
             {
-                recyclerView.smoothScrollToPosition(conversationWindowList.size());
+                recyclerView.smoothScrollToPosition(messageList.size());
             }
         });
     }
@@ -106,14 +105,17 @@ public class ConversationWindowFragment extends android.app.Fragment {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ConversationWindow conversationWindow = new ConversationWindow(passedEmail, null, messageSend.getText().toString(), null, true,false);
-                    conversationWindowList.add(conversationWindow);
+                    Message message = new Message(passedEmail, null, messageSend.getText().toString(), null, true,false);
+                    messageList.add(message);
                     cAdapter.notifyDataSetChanged();
-                    db.insertWindowData(conversationWindow);
+                    db.insertMessage(message);
 
                     SendMail sendInstance = new SendMail(passedEmail, messageSend.getText().toString(),getActivity().getApplicationContext());
                     sendInstance.execute();
-                    db.updateConversation(conversationWindow.getEmail(),conversationWindow.getSent());
+                    //Update contact time
+                    Contact sent = db.getContact(passedEmail);
+                    sent.setUpdatedDate(CommonMethods.getCurrentTime());
+                    db.updateContact(passedEmail,sent);
 
                     InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -127,8 +129,8 @@ public class ConversationWindowFragment extends android.app.Fragment {
 
 
     public void prepareWindowRows() {
-        conversationWindowList = db.getMessages(passedEmail);
-        cAdapter = new ConversationWindowAdapter(conversationWindowList,getActivity().getApplicationContext());
+        messageList = db.getMessages(passedEmail);
+        cAdapter = new ConversationWindowAdapter(messageList,getActivity().getApplicationContext());
         recyclerView.setAdapter(cAdapter);
     }
 }

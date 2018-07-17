@@ -1,6 +1,5 @@
 package org.lightsys.emailhelper.Contact;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.HelperClass;
 import org.lightsys.emailhelper.R;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import xdroid.toaster.Toaster;
 
@@ -59,8 +58,8 @@ public class NewContactFragment extends android.app.Fragment {
                     Runnable confirmationRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            db.insertContactData(newContact);
-                            db.insertConversationData(newContact, CommonMethods.getCurrentTime(), CommonMethods.getDate(Calendar.getInstance().getTime()));
+                            db.insertContact(newContact);
+                            db.insertConversationData(newContact);
                             clearFields();
                             getActivity().finish();//ends the task and reverts to what was going on previously
                         }
@@ -91,6 +90,20 @@ public class NewContactFragment extends android.app.Fragment {
     }
 
     public Contact getContactFromFields() {
-        return new Contact(emailField.getText().toString(),firstNameField.getText().toString(),lastNameField.getText().toString());
+        //I spread it out for readability
+        Contact contact = new Contact();
+        contact.setEmail(emailField.getText().toString());
+        contact.setFirstName(firstNameField.getText().toString());
+        contact.setLastName(lastNameField.getText().toString());
+        Date createdDate = CommonMethods.getCurrentTime();
+        createdDate.setHours(0);
+        createdDate.setMinutes(0);
+        createdDate.setSeconds(0);
+        contact.setCreatedDate(createdDate);
+        contact.setUpdatedDate(CommonMethods.getCurrentTime());
+        contact.setSendNotifications(true);
+        contact.setInContacts(true);
+        contact.setNumOfReferences(0);
+        return contact;
     }
 }

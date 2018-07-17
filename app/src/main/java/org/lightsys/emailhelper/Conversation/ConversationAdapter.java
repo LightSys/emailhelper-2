@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.lightsys.emailhelper.CommonMethods;
+import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,9 +21,11 @@ import java.util.List;
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.MyViewHolder> {
 
     private List<Conversation> conversationList;
+    DatabaseHelper db;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView email, name, time;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -36,6 +39,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        db = new DatabaseHelper(parent.getContext());
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_conversation_row, parent, false);
 
         return new MyViewHolder(itemView);
@@ -50,20 +54,33 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
         holder.email.setText(conversation.getEmail());
         holder.name.setText(conversation.getName());
-        String temp = conversation.getLastDate();
-        String temp2 = CommonMethods.getDate(Calendar.getInstance().getTime());
-        if(!temp.equalsIgnoreCase(temp2)){
-            String date = conversation.getLastDate();
-            if(date.length() > 10){
-                date = date.substring(0,6);
-            }
-            else{
-                date = date.substring(0,5);
-            }
-            String message = date + " "+ conversation.getTime();
-            holder.time.setText(message);
-        }else{
-            holder.time.setText(conversation.getTime());
+        Date set = db.getContactUpdatedDate(conversation.getEmail());
+        Date today = CommonMethods.getCurrentTime();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        Date lastMonth = CommonMethods.getCurrentTime();
+        lastMonth.setDate(0);
+        lastMonth.setHours(0);
+        lastMonth.setMinutes(0);
+        lastMonth.setSeconds(0);
+        Date lastYear = CommonMethods.getCurrentTime();
+        lastYear.setMonth(0);
+        lastYear.setDate(0);
+        lastYear.setHours(0);
+        lastYear.setMinutes(0);
+        lastYear.setSeconds(0);
+        if(today.before(set)){
+            holder.time.setText(CommonMethods.getTime(set));
+        }
+        else if(today.after(set) && lastMonth.before(set)){
+            holder.time.setText(CommonMethods.getDateAndTime(set));
+        }
+        else if(lastMonth.after(set) && lastYear.before(set)){
+            holder.time.setText(CommonMethods.getDate(set));
+        }
+        else if(lastYear.after(set)){
+            holder.time.setText(CommonMethods.getMonthAndYear(set));
         }
     }
 

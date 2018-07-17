@@ -109,7 +109,7 @@ public class ContactSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.insertConversationData(email,fullName, CommonMethods.getCurrentTime(),CommonMethods.getDate(Calendar.getInstance().getTime()));
+                db.insertConversationData(email,fullName,false);
                 finish();
             }
         });

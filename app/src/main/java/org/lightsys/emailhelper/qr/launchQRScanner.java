@@ -74,8 +74,8 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
             Runnable addContactRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    db.insertContactData(newContact);
-                    db.insertConversationData(newContact, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
+                    db.insertContact(newContact);
+                    db.insertConversationData(newContact.getEmail(),newContact.getName());
                     finish();
                 }
             };

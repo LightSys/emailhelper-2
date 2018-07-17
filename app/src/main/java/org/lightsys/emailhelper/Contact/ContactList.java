@@ -62,6 +62,7 @@ public class ContactList {
         }
 
         public void add(Contact contact) {
+            //This function is for adding database contacts
             size++;
             if(size+1 >maxSize){
                 resize();
@@ -81,13 +82,14 @@ public class ContactList {
             }
         }
         public void add(String name,String email) {
+            //This function is for adding inbox contacts
             size++;
             if(size+1 >maxSize){
                 resize();
             }
             for(int i = 0;i<size;i++){
                 if(array[i] == null){
-                    array[i] = new Contact(email,name,"",1,false);
+                    array[i] = new Contact(email,name,"",null,null,false,false,1);
                     return;
                 }
                 if(array[i].getEmail().equalsIgnoreCase(email)){
@@ -101,7 +103,7 @@ public class ContactList {
 
         private void sort(int size){
             for(int i=size;i>0;i--){
-                if(array[i].numOfReferences>array[i-1].numOfReferences){
+                if(array[i].getNumOfReferences()>array[i-1].getNumOfReferences()){
                     Contact temp = array[i];
                     array[i]=array[i-1];
                     array[i-1]=temp;

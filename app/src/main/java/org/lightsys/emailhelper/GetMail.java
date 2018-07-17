@@ -3,28 +3,22 @@ package org.lightsys.emailhelper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.os.AsyncTask;
+
 import com.sun.mail.imap.IMAPStore;
 
 import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Contact.ContactList;
-import org.lightsys.emailhelper.Conversation.ConversationWindow;
+import org.lightsys.emailhelper.Conversation.Message;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
-import java.util.Stack;
 
-import javax.mail.Address;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Folder;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
@@ -54,7 +48,7 @@ public class GetMail {
     }
     public emailNotification getMail() {
         emailNotification receivedNew = new emailNotification();
-        List<Contact> contactList = db.getListOfContacts();
+        ContactList contactList = db.getContactList();
         Properties props = System.getProperties();
         setProperties(props);
         try {
@@ -63,32 +57,37 @@ public class GetMail {
             inbox.open(Folder.READ_WRITE);
             for(int j = 0;j<contactList.size();j++){
                 Contact contact = contactList.get(j);
-                String email = contact.getEmail();
-                String name = contact.getName();
-                SearchTerm searchTerm = getSearchTerm(email);
-                Message messages[] = inbox.search(searchTerm);
-                Stack<ConversationWindow> convos = new Stack<>();//The purpose of this stack is to organize more messages into time order.
-                for (int i = messages.length - 1; i >= 0; i--) {
-                    Message message = messages[i];
-                    String messageID = Long.toString(uf.getUID(message));
-                    if(!db.willInsertWindowData(messageID)){
-                        break;
+                SearchTerm searchTerm = getSearchTerm(contact.getEmail());
+                javax.mail.Message messages[] = inbox.search(searchTerm);
+                for (javax.mail.Message message : messages) {
+                    try{//This prevents one email from breaking the bunch.
+                        //Push conversation
+                        Message conversationWindow = new Message();
+                        conversationWindow.setEmail(contact.getEmail());
+                        conversationWindow.setName(contact.getName());
+                        conversationWindow.setMessage(getMessageContent(message));
+                        conversationWindow.setSent(false);
+                        conversationWindow.setHasAttachments(getAttachments(contact.getEmail(),message,uf));
+                        conversationWindow.setMessageId(Long.toString(uf.getUID(message)));
+                        boolean insertedMessage = db.insertMessage(conversationWindow);
+                        if(insertedMessage){//if it is inserted then
+                            //Add notification
+                            String title = getNotificationTitle(conversationWindow);
+                            String body  = getNotifcationBody(conversationWindow,message);
+                            if(db.getNotificationSettings(contact.getEmail())){
+                                receivedNew.push(title,body);
+                            }
+                            //Update contact
+                            contact.setUpdatedDate(message.getReceivedDate());
+                            db.updateContact(contact.getEmail(),contact);
+                            //Update Conversation
+                            db.setNewMailBoolean(contact.getEmail());
+                        }
                     }
-                    ConversationWindow convo = new ConversationWindow(email, name, getMessageContent(message), messageID, false,getAttachments(email,message,uf));
-                    convos.push(convo);
-                    String Title = r.getString(R.string.notification_title_prestring)+ name +r.getString(R.string.notification_title_poststring);
-                    String NotificationMessage = convo.getMessage();
-                    if(!sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages))){
-                        NotificationMessage = NotificationMessage.substring(0,message.getSubject().length());
+                    catch(Exception e){
+                        e.printStackTrace();
                     }
-                    if(db.getNotificationSettings(email)){
-                        receivedNew.push(Title,NotificationMessage);
-                    }
-                    updateCoversation(message);
-                }
-                while(!convos.isEmpty()){
-                    ConversationWindow convo = convos.pop();
-                    db.insertWindowData(convo);
+
                 }
             }
         } catch(AuthenticationFailedException e){
@@ -105,24 +104,31 @@ public class GetMail {
         return receivedNew;
     }
 
-    private void updateCoversation(Message message) throws MessagingException {
-        Date recieved = message.getReceivedDate();
-        String contact = message.getFrom()[0].toString();
-        String email = contact.substring(contact.indexOf("<")+1,contact.length()-1);
-        String time = CommonMethods.getTime(recieved);
-        String date = CommonMethods.getDate(recieved);
-        db.updateConversation(email,time,date);
+    private String getNotifcationBody(Message conversationWindow, javax.mail.Message email) throws MessagingException {
+        String message = conversationWindow.getMessage();
+        if(!sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages))){
+            message.substring(0,email.getSubject().length());
+        }
+        return message;
     }
 
-    private String getMessageContent(Message message) throws MessagingException, IOException {
+    private String getNotificationTitle(Message conversationWindow) {
+        String message = r.getString(R.string.notification_title_prestring);
+        message += conversationWindow.getName();
+        message += r.getString(R.string.notification_title_poststring);
+        return message;
+    }
+
+
+    private String getMessageContent(javax.mail.Message message) throws MessagingException, IOException {
         String subject = message.getSubject();
         String body = getTextFromMessage(message);
         return subject + "\n" + body;
     }
     private SearchTerm getSearchTerm(String email) throws AddressException {
         SearchTerm sender = new FromTerm(new InternetAddress(email));
-        Date createdDate = db.getContactDate(email);
-        SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,createdDate);
+        Date updatedDate = db.getContactUpdatedDate(email);
+        SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,updatedDate);
         return new AndTerm(sender, newerThan);
     }
     private Folder getInbox(Properties props) throws MessagingException {
@@ -137,7 +143,7 @@ public class GetMail {
         properties.put("mail.smtp.starttls.enable","true");
         properties.put("mail.imap.port","993");
     }
-    private String getTextFromMessage(Message message) throws MessagingException, IOException {
+    private String getTextFromMessage(javax.mail.Message message) throws MessagingException, IOException {
         String result = "";
         if (message.isMimeType("text/plain")) {
             result = message.getContent().toString();
@@ -166,7 +172,7 @@ public class GetMail {
         }
         return result.toString();
     }
-    private boolean getAttachments(String email, Message message,UIDFolder uf) throws MessagingException, IOException {
+    private boolean getAttachments(String email, javax.mail.Message message, UIDFolder uf) throws MessagingException, IOException {
         boolean hasAttachments = false;
         if(message.isMimeType("multipart/*")){
             Multipart mimeMultipart = (Multipart)message.getContent();
@@ -207,7 +213,7 @@ public class GetMail {
             Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
-            Message messages[] = inbox.getMessages();
+            javax.mail.Message messages[] = inbox.getMessages();
             Date today = new Date();
             if(today.getMonth() >= 2) {
                 today.setMonth(today.getMonth() - 3);
@@ -216,7 +222,7 @@ public class GetMail {
                 today.setMonth(today.getMonth()+9);
             }
             for (int i = messages.length - 1; i >= 0; i--) {
-                Message message = messages[i];
+                javax.mail.Message message = messages[i];
                 Date sent = message.getSentDate();
                 if(sent.before(today)){
                     return contactList;
