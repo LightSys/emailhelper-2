@@ -184,7 +184,7 @@ public class ConversationFragment extends android.app.Fragment{
 
     public void prepareConversationData() {
         conversationList = db.getConversations();
-        ConversationAdapter cAdapter = new ConversationAdapter(conversationList);
+        ConversationAdapter cAdapter = new ConversationAdapter(conversationList,getActivity().getApplicationContext());
         recyclerView.setAdapter(cAdapter);
     }
     private class refresh extends AsyncTask<URL, Integer, Long>{

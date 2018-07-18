@@ -393,6 +393,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONTACT_COL_2, contact.getFirstName());
         contentValues.put(CONTACT_COL_3, contact.getLastName());
         contentValues.put(CONTACT_COL_4, CommonMethods.dateToString(contact.getCreatedDate()));
+        Date oldUpdatedDate = CommonMethods.stringToDate(res.getString(res.getColumnIndex(CONTACT_COL_5)));
+        if(oldUpdatedDate.after(contact.getUpdatedDate())){//some protection so that it doesn't get in the wrong order.
+            contact.setUpdatedDate(oldUpdatedDate);
+        }
         contentValues.put(CONTACT_COL_5, CommonMethods.dateToString(contact.getUpdatedDate()));
         contentValues.put(CONTACT_COL_6, contact.getSendNotifications());
         db.update(CONTACT_TABLE_NAME,contentValues,"EMAIL = ?",new String[]{originalEmail});

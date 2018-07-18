@@ -55,39 +55,38 @@ public class GetMail {
             Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
-            for(int j = 0;j<contactList.size();j++){
-                Contact contact = contactList.get(j);
+            for(int i = 0;i<contactList.size();i++){
+                Contact contact = contactList.get(i);
                 SearchTerm searchTerm = getSearchTerm(contact.getEmail());
                 javax.mail.Message messages[] = inbox.search(searchTerm);
                 for (javax.mail.Message message : messages) {
-                    try{//This prevents one email from breaking the bunch.
+                    try {//This prevents one email from breaking the bunch.
                         //Push conversation
                         Message conversationWindow = new Message();
                         conversationWindow.setEmail(contact.getEmail());
                         conversationWindow.setName(contact.getName());
                         conversationWindow.setMessage(getMessageContent(message));
                         conversationWindow.setSent(false);
-                        conversationWindow.setHasAttachments(getAttachments(contact.getEmail(),message,uf));
+                        conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
                         conversationWindow.setMessageId(Long.toString(uf.getUID(message)));
                         boolean insertedMessage = db.insertMessage(conversationWindow);
-                        if(insertedMessage){//if it is inserted then
+                        if (insertedMessage) {//if it is inserted then
                             //Add notification
                             String title = getNotificationTitle(conversationWindow);
-                            String body  = getNotifcationBody(conversationWindow,message);
-                            if(db.getNotificationSettings(contact.getEmail())){
-                                receivedNew.push(title,body);
+                            String body = getNotifcationBody(conversationWindow, message);
+                            if (db.getNotificationSettings(contact.getEmail())) {
+                                receivedNew.push(title, body);
                             }
                             //Update contact
                             contact.setUpdatedDate(message.getReceivedDate());
-                            db.updateContact(contact.getEmail(),contact);
+                            db.updateContact(contact.getEmail(), contact);
+
                             //Update Conversation
                             db.setNewMailBoolean(contact.getEmail());
                         }
-                    }
-                    catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         } catch(AuthenticationFailedException e){
@@ -119,17 +118,16 @@ public class GetMail {
         return message;
     }
 
-
-    private String getMessageContent(javax.mail.Message message) throws MessagingException, IOException {
-        String subject = message.getSubject();
-        String body = getTextFromMessage(message);
-        return subject + "\n" + body;
-    }
     private SearchTerm getSearchTerm(String email) throws AddressException {
         SearchTerm sender = new FromTerm(new InternetAddress(email));
         Date updatedDate = db.getContactUpdatedDate(email);
         SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,updatedDate);
         return new AndTerm(sender, newerThan);
+    }
+    private String getMessageContent(javax.mail.Message message) throws MessagingException, IOException {
+        String subject = message.getSubject();
+        String body = getTextFromMessage(message);
+        return subject + "\n" + body;
     }
     private Folder getInbox(Properties props) throws MessagingException {
         Session session = Session.getDefaultInstance(props, null);

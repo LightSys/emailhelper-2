@@ -113,6 +113,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
                     SendMail sendInstance = new SendMail(passedEmail, messageSend.getText().toString(),getActivity().getApplicationContext());
                     sendInstance.execute();
                     //Update contact time
+                    //TODO analyze what happens when update time is updated and prevents an email from coming in.
                     Contact sent = db.getContact(passedEmail);
                     sent.setUpdatedDate(CommonMethods.getCurrentTime());
                     db.updateContact(passedEmail,sent);
