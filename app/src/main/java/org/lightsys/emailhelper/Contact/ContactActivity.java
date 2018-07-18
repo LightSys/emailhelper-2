@@ -46,6 +46,8 @@ public class ContactActivity extends AppCompatActivity {
     //simpleItemTouchCallback is used to delete Contacts via swiping
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback;
     private boolean waitingForList;
+    private int waitingList;
+    Thread ext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class ContactActivity extends AppCompatActivity {
         db = new DatabaseHelper(getApplicationContext());
         prepareContactData();
         setActiveList(databaseContacts);
+        waitingList = 0;
+        ext = new Thread(getInboxContacts);
     }
 
     private void setUpCheckBox(){
@@ -83,7 +87,8 @@ public class ContactActivity extends AppCompatActivity {
             public void onRefresh() {
                 if(contactsCheckBox.isChecked()){
                     gatheringData = true;
-                    new refresh().execute();
+                    waitingList++;
+                    new refresh(waitingList).execute();
                     setActiveList(inboxContacts);
                 }else{
                     swipeContainer.setRefreshing(false);
@@ -131,6 +136,8 @@ public class ContactActivity extends AppCompatActivity {
                 public void run() {
                     db.deleteConversationData(contact.getEmail());
                     db.deleteContactData(contact.getEmail());
+                    waitingList++;
+                    gatheringData = false;
                     prepareContactData();
                 }
             };
@@ -194,6 +201,13 @@ public class ContactActivity extends AppCompatActivity {
         super.onResume();
         prepareContactData();
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        waitingList++;
+        gatheringData = false;
+    }
+
 
     /**
      * This function clears contactList and gets new data from the database.
@@ -221,10 +235,14 @@ public class ContactActivity extends AppCompatActivity {
         }
         databaseContacts = db.getContactList();
 
+
+
         if(!gatheringData){
             gatheringData = true;
-            new refresh().execute();
+            new refresh(waitingList).execute();
             inboxContacts = new ContactList(databaseContacts);
+        }else{
+
         }
         if(databaseContacts.size()==0){
             databaseContacts.add("",getString(R.string.no_contacts));
@@ -242,14 +260,25 @@ public class ContactActivity extends AppCompatActivity {
      * The goal is to add the extra contacts onto the list and prep the list to display
      */
     class refresh extends AsyncTask<URL, Integer, Long> {
+        private int myNum;
+        public refresh(int listNum){
+            myNum = listNum;
+        }
         @Override
         protected Long doInBackground(URL... urls) {
-            GetMail mailer = new GetMail(getApplicationContext());
-            inboxContacts.add(mailer.getContactsFromInbox());
+
             return null;
         }
         @Override
         protected void onPostExecute(Long result){
+
+        }
+    }
+    Runnable getInboxContacts = new Runnable() {
+        @Override
+        public void run() {
+            GetMail mailer = new GetMail(getApplicationContext());
+            inboxContacts.add(mailer.getContactsFromInbox());
             gatheringData = false;
             swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
             if(waitingForList){
@@ -259,6 +288,6 @@ public class ContactActivity extends AppCompatActivity {
                 //This section will automatically display the list once it is done gathering data.
             }
         }
-    }
+    };
 
 }
