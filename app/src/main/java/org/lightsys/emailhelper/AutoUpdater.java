@@ -41,9 +41,6 @@ public class AutoUpdater extends Service {
 
     private SharedPreferences sp;
 
-    //TODO remove testing variable
-    private boolean testing = false;
-
     //custom timer that ticks every minute
     //used to constantly check to see if it's time to check for updates
     private final Handler timerHandler  = new Handler();
@@ -63,10 +60,6 @@ public class AutoUpdater extends Service {
                 int updateFrequency = Integer.valueOf(sp.getString(getResources().getString(R.string.key_update_frequency),getResources().getString(R.string.default_update_frequency)));
                 int updateTimePeriod = Integer.valueOf(sp.getString(getResources().getString(R.string.key_update_time_period),getResources().getString(R.string.value_time_period_minutes)));
                 long updateTime = (long) (updateFrequency * pow(60,updateTimePeriod) * ONE_SECOND);
-                if(testing){
-                    updateTime = 20 * ONE_SECOND;
-                }
-
                 timerHandler.postDelayed(this, updateTime);//continuously calls for updates
             }
         };

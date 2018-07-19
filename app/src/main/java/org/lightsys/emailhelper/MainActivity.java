@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -66,10 +68,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
 
-        boolean testingWithSignIn = true;
+        boolean testingWithSignIn = false;
         //TODO replace hard code
         if(testingWithSignIn){
-
             AuthenticationClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
             AuthenticationClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
             AuthenticationClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
@@ -82,11 +83,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             myEdit.putString(getString(R.string.key_email),password.User);
             myEdit.apply();
         }
-
-
-
-
     }
+
     @Override
     public void onStart(){
         super.onStart();
@@ -99,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void onResume() {
         super.onResume();
         //Gets Credentials if the app doesn't have them
-
         newConversationFragment.prepareConversationData();
     }
     @Override
@@ -187,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
         }
     }
+
+
+
 
     //This may be good for something later like a start new conversation button
     /*

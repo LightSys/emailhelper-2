@@ -1,6 +1,8 @@
 package org.lightsys.emailhelper;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -11,7 +13,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+import xdroid.toaster.Toaster;
+
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener,Preference.OnPreferenceChangeListener {
 
 
     @Override
@@ -35,10 +39,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     if(!(pref instanceof android.support.v7.preference.CheckBoxPreference)){
                         String value = sp.getString(pref.getKey(),"");
                         setSummary(pref,value);
+                        pref.setOnPreferenceChangeListener(this);
                     }
                 }
             }
         }
+
     }
     private void setSummary(Preference preference, String value){
         if(preference instanceof ListPreference){
@@ -63,6 +69,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 setSummary(p,value);
             }
         }
+        switch(key){
+            case "updateFrequency":
+            case "updateTimePeriod":
+                Context context = getActivity().getApplicationContext();
+                Intent updateService = new Intent(context, AutoUpdater.class);
+                context.stopService(updateService);
+                context.startService(updateService);
+                break;
+
+        }
     }
 
     @Override
@@ -75,6 +91,27 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onDestroy() {
         super.onDestroy();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        switch(preference.getKey()){
+            case "updateFrequency":
+                String stringSize = (String) newValue;
+                stringSize.trim();
+                try {
+                    int size = Integer.valueOf(stringSize);
+                    if (size > 60 || size <= 0) {
+                        Toaster.toast(R.string.invalid_update_frequency);
+                        return false;
+                    }
+                } catch (java.lang.NumberFormatException nfe) {
+                    Toaster.toast(R.string.invalid_update_frequency);
+                    return false;
+
+                }
+        }
+        return true;//for any other preferences
     }
 }
 

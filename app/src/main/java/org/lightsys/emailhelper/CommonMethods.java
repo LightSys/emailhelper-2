@@ -43,7 +43,7 @@ public class CommonMethods {
 
     public static void textViewMinimize(TextView textView){
         textView.setVisibility(View.INVISIBLE);
-        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
+        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(0,0);
         textView.setLayoutParams(size);
     }
     public static void textViewExpand(TextView textView){
