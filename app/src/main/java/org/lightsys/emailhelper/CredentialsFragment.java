@@ -29,13 +29,13 @@ public class CredentialsFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_settings, container, false);
         emailField = rootView.findViewById(R.id.emailField);
-        emailField.setHint(HelperClass.Email);//This one is so it shows up when the fragment is first opened
+        emailField.setHint(AuthenticationClass.Email);//This one is so it shows up when the fragment is first opened
         emailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                     emailField.setHint("");
                 else
-                    emailField.setHint(HelperClass.Email);
+                    emailField.setHint(AuthenticationClass.Email);
             }
         });
         passwordField = rootView.findViewById(R.id.passwordField);
@@ -58,13 +58,13 @@ public class CredentialsFragment extends android.app.Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HelperClass.Email = emailField.getText().toString();
-                        HelperClass.Password = passwordField.getText().toString();
+                        AuthenticationClass.Email = emailField.getText().toString();
+                        AuthenticationClass.Password = passwordField.getText().toString();
                         // Create object of SharedPreferences
                         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preferences), 0);
                         SharedPreferences.Editor editor = sharedPref.edit();// New get Editor
-                        editor.putString(getResources().getString(R.string.key_email), HelperClass.Email);// Put your values
-                        editor.putString(getResources().getString(R.string.key_password), HelperClass.Password);
+                        editor.putString(getResources().getString(R.string.key_email), AuthenticationClass.Email);// Put your values
+                        editor.putString(getResources().getString(R.string.key_password), AuthenticationClass.Password);
                         editor.apply();// Apply your edits
                     }
                 }

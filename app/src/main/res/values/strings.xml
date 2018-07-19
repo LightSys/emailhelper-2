@@ -196,4 +196,6 @@
     <string name="title_note">Note</string>
     <string name="save_contact_button">Save Contact</string>
     <string name="edit_contact_information">Edit Contact Information</string>
+    <string name="intent_message_id">message_id</string>
+    <string name="OAuthNonCompat">EmailHelper is not currently compatible with Gmail OAuth identification. This means that we cannot access gmail if your account it not set to use less secure apps. You can fix this in you google account settings.If you have this set, your Username or Password may be incorrect.</string>
 </resources>

@@ -10,14 +10,16 @@ package org.lightsys.emailhelper;
  *  -SHADE                                                                                        *
  **************************************************************************************************/
 
-public class HelperClass {
+public class AuthenticationClass {
     public static boolean savedCredentials = false;
     public static String Email    = "";
     public static String Password = "";
     public static String incoming  = "";
     public static String outgoing   = "";
+    //public static boolean usingOAuth = false;
+    //public static token AuthToken = something. Not sure how yet we would store it.
 
-    public HelperClass(String email, String password, boolean saved){
+    public AuthenticationClass(String email, String password, boolean saved){
         setEmail(email);
         Password = password;
         savedCredentials = saved;

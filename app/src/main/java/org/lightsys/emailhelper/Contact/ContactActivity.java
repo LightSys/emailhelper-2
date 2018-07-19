@@ -63,7 +63,6 @@ public class ContactActivity extends AppCompatActivity {
         prepareContactData();
         setActiveList(databaseContacts);
         waitingList = 0;
-        ext = new Thread(getInboxContacts);
     }
 
     private void setUpCheckBox(){
@@ -266,20 +265,13 @@ public class ContactActivity extends AppCompatActivity {
         }
         @Override
         protected Long doInBackground(URL... urls) {
-
+            GetMail mailer = new GetMail(getApplicationContext());
+            inboxContacts.add(mailer.getContactsFromInbox());
+            gatheringData = false;
             return null;
         }
         @Override
         protected void onPostExecute(Long result){
-
-        }
-    }
-    Runnable getInboxContacts = new Runnable() {
-        @Override
-        public void run() {
-            GetMail mailer = new GetMail(getApplicationContext());
-            inboxContacts.add(mailer.getContactsFromInbox());
-            gatheringData = false;
             swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
             if(waitingForList){
                 setActiveList(inboxContacts);
@@ -288,6 +280,5 @@ public class ContactActivity extends AppCompatActivity {
                 //This section will automatically display the list once it is done gathering data.
             }
         }
-    };
-
+    }
 }

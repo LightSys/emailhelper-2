@@ -11,7 +11,7 @@ import android.widget.EditText;
 import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
-import org.lightsys.emailhelper.HelperClass;
+import org.lightsys.emailhelper.AuthenticationClass;
 import org.lightsys.emailhelper.R;
 
 import java.util.Date;
@@ -67,7 +67,7 @@ public class NewContactFragment extends android.app.Fragment {
                     if(!CommonMethods.checkEmail(newContact.getEmail()) && passedData.getStringExtra(getString(R.string.intent_email)).equalsIgnoreCase("") ){
                         String message = "EmailHelper does not recognize "+newContact.getEmail()+" as an email. Are you sure you want to add this email?";
                         new ConfirmDialog(message,getString(R.string.confirm_word),getActivity(),confirmationRunnable,null);
-                    }else if(newContact.getEmail().equalsIgnoreCase(HelperClass.Email)){
+                    }else if(newContact.getEmail().equalsIgnoreCase(AuthenticationClass.Email)){
                         Toaster.toastLong(R.string.no_add_self_to_contacts);
                         emailField.getText().clear();
                     }

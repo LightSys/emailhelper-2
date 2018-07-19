@@ -1,6 +1,7 @@
 package org.lightsys.emailhelper.Conversation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,19 +55,30 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Message message = messageList.get(position);
-        holder.message.setText(message.getMessage());
+        final Message message = messageList.get(position);
+
+
+        holder.message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent messageActivity = new Intent(context,MessageActivity.class);
+                messageActivity.putExtra(context.getResources().getString(R.string.intent_message_id),message.getMessageId());
+                context.startActivity(messageActivity);
+            }
+        });
+
         Resources r = context.getResources();
-        SharedPreferences sp = context.getSharedPreferences(r.getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
-        if(sp.getBoolean(r.getString(R.string.key_link_messages),r.getBoolean(R.bool.default_link_messages))){
-            Linkify.addLinks(holder.message,Linkify.ALL);
-        }
 
         if (message.getSent()) {//This line analyzes sent
+            holder.message.setText(message.getMessage());
             holder.parent_layout.setGravity(Gravity.END);
             holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
+            holder.message.setClickable(false);
         }
         else {
+            String display = message.getSubject() + "\n"+ message.getMessage();
+            holder.message.setText(display);
+            holder.message.setClickable(true);
             holder.parent_layout.setGravity(Gravity.START);
             holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
             holder.recyclerView.setBackground(context.getResources().getDrawable(R.drawable.border2));

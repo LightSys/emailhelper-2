@@ -65,6 +65,7 @@ public class GetMail {
                         Message conversationWindow = new Message();
                         conversationWindow.setEmail(contact.getEmail());
                         conversationWindow.setName(contact.getName());
+                        conversationWindow.setSubject(message.getSubject());
                         conversationWindow.setMessage(getMessageContent(message));
                         conversationWindow.setSent(false);
                         conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
@@ -125,14 +126,12 @@ public class GetMail {
         return new AndTerm(sender, newerThan);
     }
     private String getMessageContent(javax.mail.Message message) throws MessagingException, IOException {
-        String subject = message.getSubject();
-        String body = getTextFromMessage(message);
-        return subject + "\n" + body;
+        return getTextFromMessage(message);
     }
     private Folder getInbox(Properties props) throws MessagingException {
         Session session = Session.getDefaultInstance(props, null);
         IMAPStore store = (IMAPStore) session.getStore("imaps");
-        store.connect(HelperClass.incoming, HelperClass.Email, HelperClass.Password);
+        store.connect(AuthenticationClass.incoming, AuthenticationClass.Email, AuthenticationClass.Password);
         return store.getFolder("Inbox");
     }
     private void setProperties(Properties properties){

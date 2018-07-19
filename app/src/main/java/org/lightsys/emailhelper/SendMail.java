@@ -7,12 +7,10 @@ import java.net.URL;
 import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -51,17 +49,17 @@ public class SendMail extends AsyncTask<URL, Integer, Long> {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", HelperClass.outgoing);
+        props.put("mail.smtp.host", AuthenticationClass.outgoing);
         props.put("mail.smtp.port", "587");
         Session session = Session.getInstance(props, new javax.mail.Authenticator(){
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(HelperClass.Email, HelperClass.Password);
+                return new PasswordAuthentication(AuthenticationClass.Email, AuthenticationClass.Password);
             }
         });
 
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(HelperClass.Email));
+            message.setFrom(new InternetAddress(AuthenticationClass.Email));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(passedEmail));
             message.setSubject(c.getResources().getString(R.string.getSubjectLine));
 

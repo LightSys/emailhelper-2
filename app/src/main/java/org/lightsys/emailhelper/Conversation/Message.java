@@ -5,15 +5,16 @@ package org.lightsys.emailhelper.Conversation;
  */
 
 public class Message {
-    private String email, name, messageId, text;
+    private String email, name, messageId,subject, text;
 
     private Boolean sent_by_me,hasAttachments;
 
     public Message() {}
 
-    public Message(String email, String name, String message, String messageId, Boolean sent_by_me, Boolean hasAttachments) {
+    public Message(String email, String name,String subject, String message, String messageId, Boolean sent_by_me, Boolean hasAttachments) {
         this.email = email;
         this.name = name;
+        this.subject = subject;
         this.text = message;
         this.messageId = messageId;
         this.sent_by_me = sent_by_me;
@@ -23,6 +24,7 @@ public class Message {
 
     public String getEmail() {return email;}
     public String getName() {return name;}
+    public String getSubject(){return subject;}
     public String getMessage() {return text;}
     public String getMessageId() {return messageId;}
     public Boolean getSent() {return sent_by_me;}
@@ -30,6 +32,7 @@ public class Message {
 
     public void setEmail(String email) {this.email = email;}
     public void setName(String name) {this.name = name;}
+    public void setSubject(String subject){this.subject = subject;}
     public void setMessage(String message) {this.text = message;}
     public void setHasAttachments(Boolean hasAttachments) {this.hasAttachments = hasAttachments;}
     public void setMessageId(String messageId) {this.messageId = messageId;}

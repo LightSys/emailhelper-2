@@ -17,15 +17,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import com.sun.mail.imap.IMAPStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,8 +136,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String password = mPasswordView.getText().toString();
 
         // Save the 'global' variables of HelperClass
-        HelperClass.setEmail(email);
-        HelperClass.Password = password;
+        AuthenticationClass.setEmail(email);
+        AuthenticationClass.Password = password;
 
 
 
@@ -254,8 +252,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mPassword;
 
         UserLoginTask() {
-            mEmail = HelperClass.Email;
-            mPassword = HelperClass.Password;
+            mEmail = AuthenticationClass.Email;
+            mPassword = AuthenticationClass.Password;
         }
 
         @Override
@@ -272,7 +270,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 props.put("mail.imap.port","993");
                 Session session = Session.getDefaultInstance(props, null);
                 IMAPStore store = (IMAPStore) session.getStore("imaps");
-                store.connect(HelperClass.incoming, mEmail, mPassword);
+                store.connect(AuthenticationClass.incoming, mEmail, mPassword);
                 Folder inbox = store.getFolder("Inbox");
                 UIDFolder uf = (UIDFolder) inbox;
                 inbox.open(Folder.READ_WRITE);
@@ -291,16 +289,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            HelperClass.savedCredentials = result == success;
+            AuthenticationClass.savedCredentials = result == success;
             switch(result) {
                 case emailInvalid:
                     mEmailView.setError(getString(R.string.error_invalid_email));
                     mEmailView.requestFocus();
                     break;
                 case credentialsInvalid:
+                    if (mEmail.contains("@gmail.com")) {
+                        mEmailView.setError(getString(R.string.OAuthNonCompat));
+                        mEmailView.requestFocus();
+                    }
                 case unknownError:
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
+                    if(!mEmail.contains("@gmail.com")){//This is basically and else for the above.
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                    }
                     break;
                 case success:
                     updateSharedPreferences();
@@ -318,9 +322,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void updateSharedPreferences(){
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);// Create object of SharedPreferences
         SharedPreferences.Editor editor = sharedPref.edit();// New get Editor
-        editor.putString(getResources().getString(R.string.key_email), HelperClass.Email);// Put your values
-        editor.putString(getResources().getString(R.string.key_password), HelperClass.Password);
-        editor.putBoolean(getResources().getString(R.string.key_valid_credentials), HelperClass.savedCredentials);
+        editor.putString(getResources().getString(R.string.key_email), AuthenticationClass.Email);// Put your values
+        editor.putString(getResources().getString(R.string.key_password), AuthenticationClass.Password);
+        editor.putBoolean(getResources().getString(R.string.key_valid_credentials), AuthenticationClass.savedCredentials);
         editor.apply();// Apply your edits
     }
 }

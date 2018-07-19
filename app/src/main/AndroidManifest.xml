@@ -138,6 +138,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".qr.QRActivity" />
         </activity>
+        <activity android:name=".Conversation.MessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Conversation.ConversationActivity" />
+        </activity>
     </application>
 
 </manifest>

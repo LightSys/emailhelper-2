@@ -65,23 +65,32 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
-//        HelperClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
-//        HelperClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
-//        HelperClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
-        //TODO replace hard code
 
-        HelperClass.setEmail(password.User);
-        HelperClass.Password = password.auth;
-        HelperClass.savedCredentials = true;
-        SharedPreferences.Editor myEdit = sharedPref.edit();
-        myEdit.putString(getString(R.string.key_email),password.User);
-        myEdit.apply();
+        boolean testingWithSignIn = true;
+        //TODO replace hard code
+        if(testingWithSignIn){
+
+            AuthenticationClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
+            AuthenticationClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
+            AuthenticationClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
+        }
+        else{
+            AuthenticationClass.setEmail(password.User);
+            AuthenticationClass.Password = password.auth;
+            AuthenticationClass.savedCredentials = true;
+            SharedPreferences.Editor myEdit = sharedPref.edit();
+            myEdit.putString(getString(R.string.key_email),password.User);
+            myEdit.apply();
+        }
+
+
+
 
     }
     @Override
     public void onStart(){
         super.onStart();
-        if (!HelperClass.savedCredentials) {
+        if (!AuthenticationClass.savedCredentials) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
         }
