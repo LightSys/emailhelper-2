@@ -4,13 +4,17 @@ package org.lightsys.emailhelper;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     DatabaseHelper db;
     ConversationFragment newConversationFragment = new ConversationFragment();
+    BroadcastReceiver reciever;
 
     public void setFragmentNoBackStack(Fragment frag){
         FragmentManager manager = getFragmentManager();
@@ -56,6 +61,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle(getString(R.string.app_name));
 
+        reciever = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch(intent.getStringExtra(getString(R.string.broadcast_msg))){
+                    case "update_UI":
+                        newConversationFragment.prepareConversationData();
+                        break;
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(getString(R.string.new_message));
+        registerReceiver(reciever,filter);
 
         //start Updater
         Intent updateIntent = new Intent(getBaseContext(), AutoUpdater.class);
@@ -99,6 +117,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //Gets Credentials if the app doesn't have them
         newConversationFragment.prepareConversationData();
     }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(reciever);
+        super.onStop();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();

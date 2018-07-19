@@ -199,4 +199,7 @@
     <string name="intent_message_id">message_id</string>
     <string name="OAuthNonCompat">EmailHelper is not currently compatible with Gmail OAuth identification. This means that we cannot access gmail if your account it not set to use less secure apps. You can fix this in you google account settings.If you have this set, your Username or Password may be incorrect.</string>
     <string name="invalid_update_frequency">Please enter a integer value between 1 and 60.</string>
+    <string name="broadcast_msg">broadcast_message</string>
+    <string name="updateUI">update_UI</string>
+    <string name="new_message">org.lightsys.emailHelper.NEW_MESSAGE</string>
 </resources>

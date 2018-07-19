@@ -110,6 +110,10 @@ public class AutoUpdater extends Service {
         }
         if(appIsRunning()){
             Toaster.toastLong(title+"\n"+subject);
+            Intent result = new Intent();
+            result.setAction(getString(R.string.new_message));
+            result.putExtra(getString(R.string.broadcast_msg),getString(R.string.updateUI));
+            sendBroadcast(result);
             return;
         }
 
