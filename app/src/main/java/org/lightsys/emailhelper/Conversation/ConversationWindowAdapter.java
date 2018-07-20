@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -68,20 +69,36 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
         });
 
         Resources r = context.getResources();
-
-        if (message.getSent()) {//This line analyzes sent
-            holder.message.setText(message.getMessage());
-            holder.parent_layout.setGravity(Gravity.END);
-            holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
-            holder.message.setClickable(false);
-        }
-        else {
-            String display = message.getSubject() + "\n"+ message.getMessage();
-            holder.message.setText(display);
-            holder.message.setClickable(true);
-            holder.parent_layout.setGravity(Gravity.START);
-            holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
-            holder.recyclerView.setBackground(context.getResources().getDrawable(R.drawable.border2));
+        String display;
+        ViewGroup.LayoutParams size;
+        switch(message.getSent()){
+            case Message.SENT_BY_ME:
+                holder.message.setText(message.getMessage());
+                holder.parent_layout.setGravity(Gravity.END);
+                holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
+                holder.message.setClickable(false);
+                size = new ViewGroup.LayoutParams(0,0);
+                holder.recyclerView.setLayoutParams(size);
+                break;
+            case Message.SENT_BY_OTHER:
+                display = message.getSubject() + "\n"+ message.getMessage();
+                holder.message.setText(display);
+                holder.message.setClickable(true);
+                holder.parent_layout.setGravity(Gravity.START);
+                holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
+                holder.recyclerView.setBackground(context.getResources().getDrawable(R.drawable.border2));
+                size = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                holder.recyclerView.setLayoutParams(size);
+                break;
+            case Message.TIME:
+                display = message.getSubject();
+                holder.message.setClickable(false);
+                holder.message.setText(display);
+                holder.parent_layout.setGravity(Gravity.CENTER);
+                holder.message.setBackground(context.getResources().getDrawable(R.drawable.border3));
+                size = new ViewGroup.LayoutParams(0,0);
+                holder.recyclerView.setLayoutParams(size);
+                break;
         }
         if(message.hasAttachments()){
             holder.recyclerView.setHasFixedSize(true);
@@ -90,7 +107,7 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
         else{
-            LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
+            size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
             holder.recyclerView.setLayoutParams(size);
         }
     }

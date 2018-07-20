@@ -71,9 +71,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
         };
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(getString(R.string.new_message));
-        registerReceiver(reciever,filter);
+
 
         //start Updater
         Intent updateIntent = new Intent(getBaseContext(), AutoUpdater.class);
@@ -110,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
         }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(getString(R.string.new_message));
+        registerReceiver(reciever,filter);
     }
     @Override
     public void onResume() {

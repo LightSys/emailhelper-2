@@ -172,8 +172,7 @@ public class AutoUpdater extends Service {
         }
 
         try {
-            //Random inc = new Random();
-            notificationManager.notify((int)(System.currentTimeMillis()%10000), n);// + inc.nextInt(100)
+            notificationManager.notify((int)(System.currentTimeMillis()%10000), n);
         } catch (Exception e) {
             // ignore
         }
@@ -182,7 +181,8 @@ public class AutoUpdater extends Service {
         }
     }
     public boolean appIsRunning(){
-        final ActivityManager manager = (ActivityManager) getBaseContext().getSystemService(getApplicationContext().ACTIVITY_SERVICE);
+        getApplicationContext();
+        final ActivityManager manager = (ActivityManager) getBaseContext().getSystemService(ACTIVITY_SERVICE);
         final List<ActivityManager.RunningAppProcessInfo> infos = manager.getRunningAppProcesses();
         if(infos != null){
             for(int i = 0; i < infos.size();i++){

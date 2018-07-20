@@ -61,15 +61,27 @@ public class GetMail {
                 javax.mail.Message messages[] = inbox.search(searchTerm);
                 for (javax.mail.Message message : messages) {
                     try {//This prevents one email from breaking the bunch.
+
                         //Push conversation
                         Message conversationWindow = new Message();
                         conversationWindow.setEmail(contact.getEmail());
                         conversationWindow.setName(contact.getName());
                         conversationWindow.setSubject(message.getSubject());
                         conversationWindow.setMessage(getMessageContent(message));
-                        conversationWindow.setSent(false);
+                        conversationWindow.setSent(Message.SENT_BY_OTHER);
                         conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
                         conversationWindow.setMessageId(Long.toString(uf.getUID(message)));
+                        if(db.willInsertMessage(conversationWindow.getEmail(),conversationWindow.getMessageId())){
+                            Message timeHolder = new Message();
+                            timeHolder.setEmail(contact.getEmail());
+                            timeHolder.setName("");
+                            timeHolder.setSubject(CommonMethods.dateToString(message.getReceivedDate()));
+                            timeHolder.setMessage("");
+                            timeHolder.setSent(Message.TIME);
+                            timeHolder.setHasAttachments(false);
+                            timeHolder.setMessageId("");
+                            db.insertMessage(timeHolder);
+                        }
                         boolean insertedMessage = db.insertMessage(conversationWindow);
                         if (insertedMessage) {//if it is inserted then
                             //Add notification

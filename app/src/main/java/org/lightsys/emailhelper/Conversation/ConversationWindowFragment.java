@@ -88,7 +88,6 @@ public class ConversationWindowFragment extends android.app.Fragment {
         LinearLayoutManager cLinearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         cLinearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(cLinearLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         // This makes the list scroll to the bottom when the keyboard is displayed
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -105,7 +104,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Message message = new Message(passedEmail, null,getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), null, true,false);
+                    Message message = new Message(passedEmail, null,getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), null, Message.SENT_BY_ME,false);
                     messageList.add(message);
                     cAdapter.notifyDataSetChanged();
                     db.insertMessage(message);

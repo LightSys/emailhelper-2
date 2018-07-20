@@ -24,11 +24,6 @@ public class Conversation {
         this.name = name;
         this.newMail = newmail;
     }
-    public Conversation(String email, String name, String time,String lastDate, boolean newmail){
-        this.email = email;
-        this.name = name;
-        this.newMail = newmail;
-    }
 
     public String getEmail() {return email;}
     public String getName() {return name;}
@@ -38,5 +33,6 @@ public class Conversation {
     public void setName(String name) {this.name = name;}
 
     public void setNewMail(){this.newMail =true;}
+    public void setNewMail(boolean newMail){this.newMail = newMail;}
     public void resetNewMail(){this.newMail = false;}
 }

@@ -62,14 +62,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static String ATTACHMENT_COL_4 = "MESSAGE_ID";
     private Resources r;
 
+    private static final int versionNumber = 1;
+
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, versionNumber);
         r = context.getResources();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         //This function only runs the first time the app is run. See comment above.
+        createTables(db);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        switch(oldVersion){
+            case 1:
+                upgradeFromVersion1();
+        }
+    }
+
+    private void createTables(SQLiteDatabase db){
         String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s BOOL)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3);
         String contactQuery = String.format("create table " + CONTACT_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT, %s TEXT,%s BOOL)", CONTACT_COL_1, CONTACT_COL_2, CONTACT_COL_3, CONTACT_COL_4,CONTACT_COL_5,CONTACT_COL_6);
         String windowQuery = String.format("create table " + MESSAGE_TABLE_NAME + " ( %s TEXT, %s TEXT, %s TEXT, %s TEXT,%s BOOLEAN, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", MESSAGE_COL_1, MESSAGE_COL_2, MESSAGE_COL_3, MESSAGE_COL_4, MESSAGE_COL_5, MESSAGE_COL_6, MESSAGE_COL_7, MESSAGE_COL_8);
@@ -79,14 +93,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(windowQuery);
         db.execSQL(attachmentQuery);
     }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + CONVERSATION_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CONTACT_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + MESSAGE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ATTACHMENT_DATABASE);
-        onCreate(db);
+    public void upgradeFromVersion1(){
+        //new code will go here for the upgrade
+        //Use the Alter Table table_name ADD new_column_name column_default_data
+        //find out more at https://www.techonthenet.com/sqlite/tables/alter_table.php
     }
 
     //<editor-fold>  Conversation Functions
@@ -187,8 +197,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from " + CONVERSATION_TABLE_NAME, null);
         Stack<Conversation> temp = new Stack<>();
         while (res.moveToNext()) {
-            Conversation conversation = new Conversation(res.getString(res.getColumnIndex(CONVO_COL_1)), res.getString(res.getColumnIndex(CONVO_COL_2)),1==res.getInt(res.getColumnIndex(CONVO_COL_3)));
-            temp.push(conversation);
+            Conversation conversation = new Conversation();
+            try{
+                conversation.setEmail(res.getString(res.getColumnIndex(CONVO_COL_1)));
+                conversation.setName(res.getString(res.getColumnIndex(CONVO_COL_2)));
+                conversation.setNewMail(1==res.getInt(res.getColumnIndex(CONVO_COL_3)));
+            }
+            catch (Exception e){
+
+            }
+            finally {
+                temp.push(conversation);
+            }
         }
         List conversationList = new ArrayList<>();
         while (!temp.isEmpty()) {
@@ -321,15 +341,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContactList contactList = new ContactList();
         while(res.moveToNext()){
             Contact contact = new Contact();
-            contact.setEmail(res.getString(res.getColumnIndex(CONTACT_COL_1)));
-            contact.setFirstName(res.getString(res.getColumnIndex(CONTACT_COL_2)));
-            contact.setLastName(res.getString(res.getColumnIndex(CONTACT_COL_3)));
-            contact.setCreatedDate(CommonMethods.stringToDate(res.getString(res.getColumnIndex(CONTACT_COL_4))));
-            contact.setUpdatedDate(CommonMethods.stringToDate(res.getString(res.getColumnIndex(CONTACT_COL_5))));
-            contact.setSendNotifications(1==res.getInt(res.getColumnIndex(CONTACT_COL_6)));
-            contact.setInContacts(true);
-            contact.setNumOfReferences(0);
-            contactList.add(contact);
+            try{
+                contact.setEmail(res.getString(res.getColumnIndex(CONTACT_COL_1)));
+                contact.setFirstName(res.getString(res.getColumnIndex(CONTACT_COL_2)));
+                contact.setLastName(res.getString(res.getColumnIndex(CONTACT_COL_3)));
+                contact.setCreatedDate(CommonMethods.stringToDate(res.getString(res.getColumnIndex(CONTACT_COL_4))));
+                contact.setUpdatedDate(CommonMethods.stringToDate(res.getString(res.getColumnIndex(CONTACT_COL_5))));
+                contact.setSendNotifications(1==res.getInt(res.getColumnIndex(CONTACT_COL_6)));
+                contact.setInContacts(true);
+                contact.setNumOfReferences(0);
+            }
+            finally{
+                contactList.add(contact);
+            }
         }
         res.close();
         return contactList;
@@ -350,7 +374,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean getNotificationSettings(String email) {
-        //TODO check the validity of this function
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select "+CONTACT_COL_6+" from "+CONTACT_TABLE_NAME+" where EMAIL = ?";
         Cursor res = db.rawQuery(query,new String[]{email});
@@ -388,8 +411,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             updateMessages(originalEmail,contact);
             updateConversation(originalEmail,contact);
         }
-
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACT_COL_1, contact.getEmail());//Use of email so there is not an extra function call
         contentValues.put(CONTACT_COL_2, contact.getFirstName());
@@ -425,11 +446,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean insertMessage(Message message) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "Select * from " + MESSAGE_TABLE_NAME + " where " + MESSAGE_COL_6 + " = " + message.getMessageId();
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.getCount() > 0) {
-            cursor.close();
-            return false;
+        if(!message.getMessageId().equalsIgnoreCase("")) {
+            String query = "Select * from " + MESSAGE_TABLE_NAME + " where " + MESSAGE_COL_6 + " = " + message.getMessageId();
+            Cursor cursor = db.rawQuery(query, null);
+            if (cursor.getCount() > 0) {
+                cursor.close();
+                return false;
+            }
         }
         ContentValues contentValues = new ContentValues();
         contentValues.put(MESSAGE_COL_1, message.getEmail());
@@ -453,9 +476,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String text = res.getString(res.getColumnIndex(MESSAGE_COL_4));
             boolean hasAttach = (1 == res.getInt(res.getColumnIndex(MESSAGE_COL_5)));
             String messageID = res.getString(res.getColumnIndex(MESSAGE_COL_6));
-            boolean sentValue = (1==res.getInt(res.getColumnIndex(MESSAGE_COL_7)));
+            int sentValue = res.getInt(res.getColumnIndex(MESSAGE_COL_7));
             Message message = new Message(email,name,subject,text,messageID,sentValue,hasAttach);
             messageList.add(message);
+        }
+        res.close();
+        return messageList;
+    }
+
+    public List<Message> getAllMessages(){
+        List messageList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from " + MESSAGE_TABLE_NAME, null);
+        while (res.moveToNext()) {
+            Message message = new Message();
+            try {
+                message.setEmail(res.getString(res.getColumnIndex(MESSAGE_COL_1)));
+                message.setName(res.getString(res.getColumnIndex(MESSAGE_COL_2)));
+                message.setSubject(res.getString(res.getColumnIndex(MESSAGE_COL_3)));
+                message.setMessage(res.getString(res.getColumnIndex(MESSAGE_COL_4)));
+                message.setHasAttachments(1 == res.getInt(res.getColumnIndex(MESSAGE_COL_5)));
+                message.setMessageId(res.getString(res.getColumnIndex(MESSAGE_COL_6)));
+                message.setSent(res.getInt(res.getColumnIndex(MESSAGE_COL_7)));
+            }
+            finally {
+                messageList.add(message);
+            }
+
         }
         res.close();
         return messageList;
@@ -491,11 +538,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String subject = res.getString(res.getColumnIndex(MESSAGE_COL_3));
         String text = res.getString(res.getColumnIndex(MESSAGE_COL_4));
         boolean hasAttach = (1 == res.getInt(res.getColumnIndex(MESSAGE_COL_5)));
-        boolean sentValue = (1==res.getInt(res.getColumnIndex(MESSAGE_COL_7)));
+        int sentValue = res.getInt(res.getColumnIndex(MESSAGE_COL_7));
         message = new Message(email,name,subject,text,messageID,sentValue,hasAttach);
 
         res.close();
         return message;
+    }
+    public boolean willInsertMessage(String email, String messageID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from " + MESSAGE_TABLE_NAME + " where "+MESSAGE_COL_6+" = ? and "+MESSAGE_COL_1+" = ?", new String[]{messageID,email}, null);
+        if(res.getCount()>0){
+            return false;
+        }
+        return true;
     }
     //</editor-fold>
 
@@ -516,6 +571,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while(res.moveToNext()){
             String temp = res.getString(0);
             attachments.add(temp);
+        }
+        res.close();
+        return attachments;
+    }
+    public List<String[]> getAllAttachments() {
+        List<String[]> attachments = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "select * from " + ATTACHMENT_DATABASE;
+
+        Cursor res = db.rawQuery(query,null);
+        while(res.moveToNext()){
+            String[] values = new String[3];
+            try{
+                values[0] = res.getString(res.getColumnIndex(ATTACHMENT_COL_2));
+                values[1] = res.getString(res.getColumnIndex(ATTACHMENT_COL_3));
+                values[2] = res.getString(res.getColumnIndex(ATTACHMENT_COL_4));
+            }
+            finally{
+                attachments.add(values);
+            }
         }
         res.close();
         return attachments;
