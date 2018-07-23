@@ -3,6 +3,7 @@ package org.lightsys.emailhelper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Environment;
 
 import com.sun.mail.imap.IMAPStore;
 
@@ -61,17 +62,8 @@ public class GetMail {
                 javax.mail.Message messages[] = inbox.search(searchTerm);
                 for (javax.mail.Message message : messages) {
                     try {//This prevents one email from breaking the bunch.
-
-                        //Push conversation
-                        Message conversationWindow = new Message();
-                        conversationWindow.setEmail(contact.getEmail());
-                        conversationWindow.setName(contact.getName());
-                        conversationWindow.setSubject(message.getSubject());
-                        conversationWindow.setMessage(getMessageContent(message));
-                        conversationWindow.setSent(Message.SENT_BY_OTHER);
-                        conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
-                        conversationWindow.setMessageId(Long.toString(uf.getUID(message)));
-                        if(db.willInsertMessage(conversationWindow.getEmail(),conversationWindow.getMessageId())){
+                        if(db.willInsertMessage(contact.getEmail(),Long.toString(uf.getUID(message)))){
+                            //Add new Time Message
                             Message timeHolder = new Message();
                             timeHolder.setEmail(contact.getEmail());
                             timeHolder.setName("");
@@ -80,22 +72,40 @@ public class GetMail {
                             timeHolder.setSent(Message.TIME);
                             timeHolder.setHasAttachments(false);
                             timeHolder.setMessageId("");
+
+
+                            //Push conversation
+                            Message conversationWindow = new Message();
+                            conversationWindow.setEmail(contact.getEmail());
+                            conversationWindow.setName(contact.getName());
+                            conversationWindow.setSubject(message.getSubject());
+                            conversationWindow.setMessage(getMessageContent(message));
+                            conversationWindow.setSent(Message.SENT_BY_OTHER);
+                            conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
+                            conversationWindow.setMessageId(Long.toString(uf.getUID(message)));
+
+                            //Insert the new messages
                             db.insertMessage(timeHolder);
-                        }
-                        boolean insertedMessage = db.insertMessage(conversationWindow);
-                        if (insertedMessage) {//if it is inserted then
+                            db.insertMessage(conversationWindow);
+                            //both are done at the same time just in case there was an error else where
+
                             //Add notification
                             String title = getNotificationTitle(conversationWindow);
                             String body = getNotifcationBody(conversationWindow, message);
                             if (db.getNotificationSettings(contact.getEmail())) {
                                 receivedNew.push(title, body);
                             }
+
                             //Update contact
                             contact.setUpdatedDate(message.getReceivedDate());
                             db.updateContact(contact.getEmail(), contact);
 
                             //Update Conversation
-                            db.setNewMailBoolean(contact.getEmail());
+                            if(db.hasConversationWith(contact.getEmail())){
+                                db.setNewMailBoolean(contact.getEmail());
+                            }else{
+                                db.insertConversationData(contact,true);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -192,8 +202,10 @@ public class GetMail {
                 String temp = bodyPart.getDisposition();
                 if (temp != null) {
                     if (temp.equalsIgnoreCase(Part.ATTACHMENT)) {//checks for an attachment
-                        c.getDir(email, Context.MODE_PRIVATE);
-                        File tempFile = new File(c.getDir(email, Context.MODE_PRIVATE), bodyPart.getFileName());
+                        File sharedFiles = new File(c.getFilesDir(),"sharedFiles");
+                        File subDirectory = new File(sharedFiles,email);
+                        subDirectory.mkdirs();
+                        File tempFile = new File(subDirectory, bodyPart.getFileName());
                         if(!db.hasAttachment(email,tempFile.getAbsolutePath(),Long.toString(uf.getUID(message)))) {
                             FileOutputStream outputStream = new FileOutputStream(tempFile);
                             InputStream inputStream = bodyPart.getInputStream();

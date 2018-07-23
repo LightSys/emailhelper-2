@@ -417,7 +417,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(CONTACT_COL_3, contact.getLastName());
         contentValues.put(CONTACT_COL_4, CommonMethods.dateToString(contact.getCreatedDate()));
         Date oldUpdatedDate = CommonMethods.stringToDate(res.getString(res.getColumnIndex(CONTACT_COL_5)));
-        if(oldUpdatedDate.after(contact.getUpdatedDate())||res.getString(res.getColumnIndex(CONTACT_COL_4)).equalsIgnoreCase(res.getString(res.getColumnIndex(CONTACT_COL_5)))){
+        if(oldUpdatedDate.after(contact.getUpdatedDate())&& !res.getString(res.getColumnIndex(CONTACT_COL_4)).equalsIgnoreCase(res.getString(res.getColumnIndex(CONTACT_COL_5)))){
+            //if old update is after and created date != updated
             //some protection so that it doesn't get in the wrong order.
             contact.setUpdatedDate(oldUpdatedDate);
         }

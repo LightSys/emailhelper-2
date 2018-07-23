@@ -8,7 +8,9 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -63,10 +65,13 @@ public class AttachmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 String attach = adapter.attachments.get(position);
-                File path = getDir(adapter.email, Context.MODE_PRIVATE);
+                File path = new File(activityContext.getFilesDir(),"sharedFiles");
+                path = new File(path,adapter.email);
                 File file = new File(path, attach);
                 try{
                     openFile(file);
+                }catch(SecurityException se){
+                    int temp = 0;
                 }catch(Exception e){
                     int temp = 0;
                 }
@@ -118,8 +123,9 @@ public class AttachmentActivity extends AppCompatActivity {
 
     private void openFile(File file) throws IOException {
         String filePath = file.getAbsolutePath();
-        Uri uri;
+        Uri fileUri;
         String ext = getExtension(filePath);
+        ext.toLowerCase();
         String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
         Intent intent = new Intent();
         if(mime.contains("image/")){
@@ -127,29 +133,9 @@ public class AttachmentActivity extends AppCompatActivity {
             intent.putExtra("file_path",filePath);
             startActivity(intent);
         }else{
-            File sdCardFile = new File("/data/data/org.lightsys.emailhelper/app_"+email+"/"+file.getName());
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try{
-                inputStream = new FileInputStream(file);
-                outputStream = new FileOutputStream(sdCardFile);
-                byte[] buffer = new byte[4096];
-                int read;
-                while((read = inputStream.read(buffer))>0){
-                    outputStream.write(buffer,0,read);
-                }
-            }finally{
-                inputStream.close();
-                outputStream.close();
-            }
-            uri = Uri.parse(sdCardFile.getAbsolutePath());
-            if(ext.equals("") && filePath.contains(".pdf")){
-                ext = "pdf";
-            }
-            if(ext != null){
-                mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
-            }
-            intent.setDataAndType(uri,mime);
+            fileUri = Uri.parse("content://org.lightsys.emailhelper/sharingFiles/"+email+"/"+file.getName());
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(fileUri,getContentResolver().getType(fileUri));
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             PackageManager manager = getPackageManager();
             List<ResolveInfo> capableApps = manager.queryIntentActivities(intent,0);

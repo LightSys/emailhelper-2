@@ -70,14 +70,14 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
 
         Resources r = context.getResources();
         String display;
-        ViewGroup.LayoutParams size;
+        LinearLayout.LayoutParams size;
         switch(message.getSent()){
             case Message.SENT_BY_ME:
                 holder.message.setText(message.getMessage());
                 holder.parent_layout.setGravity(Gravity.END);
                 holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
                 holder.message.setClickable(false);
-                size = new ViewGroup.LayoutParams(0,0);
+                size = new LinearLayout.LayoutParams(0,0);
                 holder.recyclerView.setLayoutParams(size);
                 break;
             case Message.SENT_BY_OTHER:
@@ -87,7 +87,7 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
                 holder.parent_layout.setGravity(Gravity.START);
                 holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
                 holder.recyclerView.setBackground(context.getResources().getDrawable(R.drawable.border2));
-                size = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                size = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 holder.recyclerView.setLayoutParams(size);
                 break;
             case Message.TIME:
@@ -96,7 +96,7 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
                 holder.message.setText(display);
                 holder.parent_layout.setGravity(Gravity.CENTER);
                 holder.message.setBackground(context.getResources().getDrawable(R.drawable.border3));
-                size = new ViewGroup.LayoutParams(0,0);
+                size = new LinearLayout.LayoutParams(0,0);
                 holder.recyclerView.setLayoutParams(size);
                 break;
         }

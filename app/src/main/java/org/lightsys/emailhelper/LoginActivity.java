@@ -51,7 +51,6 @@ import xdroid.toaster.Toaster;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * THIS DOESN'T DO ANYTHING RIGHT NOW. USE IT TO GET THE SIGN IN INFORMATION THE FIRST TIME THE USER SIGNS IN.
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {

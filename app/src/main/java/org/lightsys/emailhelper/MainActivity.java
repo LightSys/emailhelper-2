@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle(getString(R.string.app_name));
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
 
-        boolean testingWithSignIn = true;
+        boolean testingWithSignIn = false;
         //TODO replace hard code
         if(testingWithSignIn){
             AuthenticationClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             SharedPreferences.Editor myEdit = sharedPref.edit();
             myEdit.putString(getString(R.string.key_email),password.User);
             myEdit.apply();
+            db.insertContact(password.donaldrshade);
         }
     }
 
