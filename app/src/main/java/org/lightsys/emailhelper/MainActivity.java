@@ -84,11 +84,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
 
-        boolean testingWithSignIn = false;
+        boolean testingWithSignIn = true;
         //TODO replace hard code
         if(testingWithSignIn){
             AuthenticationClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
             AuthenticationClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
+            AuthenticationClass.incoming = sharedPref.getString(getString(R.string.key_imap),"");
+            AuthenticationClass.outgoing = sharedPref.getString(getString(R.string.key_smtp),"");
             AuthenticationClass.savedCredentials = sharedPref.getBoolean(getString(R.string.key_valid_credentials), getResources().getBoolean(R.bool.default_valid_credentials));
         }
         else{
@@ -108,15 +110,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
         }
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(getString(R.string.new_message));
-        registerReceiver(reciever,filter);
     }
     @Override
     public void onResume() {
         super.onResume();
         //Gets Credentials if the app doesn't have them
         newConversationFragment.prepareConversationData();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(getString(R.string.new_message));
+        registerReceiver(reciever,filter);
     }
 
     @Override

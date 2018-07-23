@@ -202,4 +202,13 @@
     <string name="broadcast_msg">broadcast_message</string>
     <string name="updateUI">update_UI</string>
     <string name="new_message">org.lightsys.emailHelper.NEW_MESSAGE</string>
+    <string name="prompt_smtp">SMTP Server</string>
+    <string name="promt_imap">IMAP Server</string>
+    <string name="enable_advanced_login">Enable Advanced Login</string>
+    <string name="error_check_stuff">Something went wrong. EmailHelper is not sure what. Please check the information you provided and try again.</string>
+    <string name="error_invalid_stmp">This STMP address is invalid.</string>
+    <string name="error_invalid_imap">Could not connect to the imap server. Please check the address and try again.</string>
+    <string name="key_imap">imap_key</string>
+    <string name="key_smtp">stmp_key</string>
+    <string name="invalid_smtp">There was an issue with your SMTP Server please re-enter to send messages.</string>
 </resources>

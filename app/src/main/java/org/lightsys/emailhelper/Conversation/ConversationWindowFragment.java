@@ -104,7 +104,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Message message = new Message(passedEmail, null,getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), null, Message.SENT_BY_ME,false);
+                    Message message = new Message(passedEmail, "",getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), "", Message.SENT_BY_ME,false);
                     messageList.add(message);
                     cAdapter.notifyDataSetChanged();
                     db.insertMessage(message);

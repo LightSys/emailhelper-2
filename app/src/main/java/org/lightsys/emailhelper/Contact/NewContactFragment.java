@@ -65,6 +65,9 @@ public class NewContactFragment extends android.app.Fragment {
                         }
                     };
                     String checker = passedData.getStringExtra(getString(R.string.intent_email));
+                    if(checker == null){
+                        checker = "";
+                    }
                     if(!CommonMethods.checkEmail(newContact.getEmail()) && checker.equalsIgnoreCase("") ){
                         String message = "EmailHelper does not recognize "+newContact.getEmail()+" as an email. Are you sure you want to add this email?";
                         new ConfirmDialog(message,getString(R.string.confirm_word),getActivity(),confirmationRunnable,null);

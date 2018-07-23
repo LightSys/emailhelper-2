@@ -3,15 +3,19 @@ package org.lightsys.emailhelper;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.sun.mail.util.MailConnectException;
+
 import java.net.URL;
 import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -71,6 +75,8 @@ public class SendMail extends AsyncTask<URL, Integer, Long> {
             e.printStackTrace();
             System.out.println("Messaging Exception.");
             Toaster.toastLong(R.string.invalid_credentials_message);
+        }catch(MailConnectException e){
+            Toaster.toastLong(R.string.invalid_smtp);
         }catch (MessagingException e) {
             e.printStackTrace();
         }

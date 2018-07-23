@@ -105,7 +105,7 @@ public class GetMail {
         } catch(AuthenticationFailedException e){
             e.printStackTrace();
             System.out.println("Messaging Exception.");
-            receivedNew.setInvalid_Credentials();
+//            receivedNew.setInvalid_Credentials();
         } catch (MessagingException e) {
             e.printStackTrace();
             System.out.println("Messaging Exception.");
