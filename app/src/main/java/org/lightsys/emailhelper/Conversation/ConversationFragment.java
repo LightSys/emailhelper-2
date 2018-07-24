@@ -48,18 +48,6 @@ public class ConversationFragment extends android.app.Fragment{
         db = new DatabaseHelper(getActivity().getApplicationContext());
     }
 
-    /**********************************************************************************************
-     *  Normally, you would put this stuff in the onCreate function, but because it is a fragment *
-     *  it needs to be in the onCreateView so you can reference the view that it inflates. That   *
-     *  view is put into an if statement to see if it has been created and only acts the first    *
-     *  time, otherwise it duplicates data in the RecyclerView list.                              *
-     *                                                                                            *
-     *  This may need to be changed to be like the ContactFragment if we want the conversation to *
-     *  be added as soon as there is a new contact added. Otherwise you need to restart the app   *
-     *  for it to take effect.                                                                    *
-     *  -Nick                                                                                     *
-     **********************************************************************************************/
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -139,6 +127,7 @@ public class ConversationFragment extends android.app.Fragment{
         recyclerView = view.findViewById(R.id.recycler_view);//Makes the RecyclerView
         LinearLayoutManager cLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(cLayoutManager);
+        //Next line in responsible for lines in between conversations
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {

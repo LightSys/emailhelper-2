@@ -4,7 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * The Conversation class is built with the Conversation adapter in mind. It contains two string
+ * variables, email and name, and one boolean variable newMail.
  * Created by nicholasweg on 6/28/17.
+ * Edited by DSHADE Summer 2018.
  */
 
 public class Conversation {

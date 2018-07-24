@@ -2,6 +2,7 @@ package org.lightsys.emailhelper.Conversation;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,26 +19,23 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * This class is the adapter between the Conversation fragment and the Conversations in the database.
  * Created by nicholasweg on 6/28/17.
+ * Edited by DSHADE 2018.
+ * This class could get put into the class that uses it but MainActivity is already cluttered.
  */
 
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.MyViewHolder> {
 
     private List<Conversation> conversationList;
-    DatabaseHelper db;
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView email, name, time;
+    private DatabaseHelper db;
+    private int size;
 
 
-        public MyViewHolder(View view) {
-            super(view);
-            email = view.findViewById(R.id.email);
-            name = view.findViewById(R.id.name);
-            time = view.findViewById(R.id.time);
-        }
-    }
-
+    /**
+     * This Constructor sets the conversation list and sorts it. It also uses the context to initialize
+     * a connection to the database.
+     */
     public ConversationAdapter(List<Conversation> conversationList,Context context) {
         this.conversationList = conversationList;
         db = new DatabaseHelper(context);
@@ -57,19 +55,22 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 }
             }
         });
+        size = conversationList.size();
     }
 
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_conversation_row, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
+    /**
+     * Connects the data to the views
+     */
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Conversation conversation = conversationList.get(position);
         holder.name.setTypeface(null, Typeface.NORMAL);
         if(conversation.getMailStatus()){
@@ -77,7 +78,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
         holder.email.setText(conversation.getEmail());
         holder.name.setText(conversation.getName());
-        Date set = db.getContactUpdatedDate(conversation.getEmail());
+        setTime(holder,conversation);
+    }
+
+    @Override
+    public int getItemCount() {return size;}
+
+    /**
+     * This function is a very nasty way of getting the time for the view.
+     * Will need refactored to get rid of depreceated functions.
+     */
+    private void setTime(MyViewHolder holder,Conversation convo) {
+        Date set = db.getContactUpdatedDate(convo.getEmail());
         Date today = CommonMethods.getCurrentTime();
         today.setHours(0);
         today.setMinutes(0);
@@ -107,6 +119,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
     }
 
-    @Override
-    public int getItemCount() {return conversationList.size();}
+
+    /**
+     * Inner class used for the adapter.
+     */
+    protected class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView email, name, time;
+        public MyViewHolder(View view) {
+            super(view);
+            email = view.findViewById(R.id.email);
+            name = view.findViewById(R.id.name);
+            time = view.findViewById(R.id.time);
+        }
+    }
 }

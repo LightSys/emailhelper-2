@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -124,7 +125,7 @@ public class AttachmentActivity extends AppCompatActivity {
     private void openFile(File file) throws IOException {
         String filePath = file.getAbsolutePath();
         Uri fileUri;
-        String ext = getExtension(filePath);
+        String ext = CommonMethods.getExtension(filePath);
         ext.toLowerCase();
         String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
         Intent intent = new Intent();
@@ -146,17 +147,7 @@ public class AttachmentActivity extends AppCompatActivity {
             }
         }
     }
-    private String getExtension(String filePath) {
-        int temp = filePath.length()-1;
-        for(int i = temp;i>0;i--){
-            if(filePath.charAt(i)=='.'){
-                temp = i;
-                i = 0;
-            }
-        }
-        filePath = filePath.substring(temp+1);
-        return filePath;
-    }
+
 
     @Override
     public void onResume() {
@@ -257,6 +248,7 @@ public class AttachmentActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull AttachmentViewHolder holder, int position) {
             String text = attachments.get(position);
             holder.attachmentName.setText(text);
+
         }
 
         @Override
@@ -273,5 +265,6 @@ public class AttachmentActivity extends AppCompatActivity {
                 attachmentName = itemView.findViewById(R.id.attachment_title);
             }
         }
+
     }
 }

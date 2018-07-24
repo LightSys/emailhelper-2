@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.lightsys.emailhelper.Contact.ContactActivity;
 import org.lightsys.emailhelper.Contact.NewContactActivity;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     DatabaseHelper db;
     ConversationFragment newConversationFragment = new ConversationFragment();
     BroadcastReceiver reciever;
+    FloatingActionButton fab;
 
     public void setFragmentNoBackStack(Fragment frag){
         FragmentManager manager = getFragmentManager();
@@ -72,6 +75,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
         };
+
+        fab = findViewById(R.id.mainFloatingButton);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newContact= new Intent(getBaseContext(), NewContactActivity.class);
+                startActivity(newContact);
+            }
+        });
 
 
         //start Updater
@@ -219,14 +232,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
     //This may be good for something later like a start new conversation button
-    /*
-    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
-    });
-    */
+
+
+
+
 }

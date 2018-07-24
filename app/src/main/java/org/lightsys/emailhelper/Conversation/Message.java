@@ -1,7 +1,9 @@
 package org.lightsys.emailhelper.Conversation;
 
 /**
+ * The Message class is built for holding the messages.
  * Created by nicholasweg on 7/7/17.
+ * Edited and Renamed from ConversationWindow by DSHADE Summer 2018.
  */
 
 public class Message {

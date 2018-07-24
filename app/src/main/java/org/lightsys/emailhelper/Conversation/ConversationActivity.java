@@ -18,19 +18,47 @@ import org.lightsys.emailhelper.Contact.EditContactActivity;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
-/**************************************************************************************************
- *  This is the activity where everything happens in the message window, outside of a             *
- *  BottomNavigationActivity.                                                                     *
- **************************************************************************************************/
+/**
+ * This activity is where the messages are displayed. It takes in an email from the intent and searches
+ * the database for all relevant messages.
+ */
 
 public class ConversationActivity extends AppCompatActivity {
-
-
+    //Class variables
     ConversationWindowFragment chats = new ConversationWindowFragment();
     Intent intent;
     public String email;
     DatabaseHelper db;
 
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_conversation);
+
+        db = new DatabaseHelper(getApplicationContext());//connect to database
+
+        intent = getIntent();
+        email = intent.getStringExtra(getString(R.string.intent_email));//get the email from the database
+        setTitle(db.getContactName(email));//sets the email in the Titlebar
+
+        passToFragment();//Screen set up. See below for more details.
+        setFragmentNoBackStack(chats);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chats.prepareWindowRows();
+        //This function is called as a last step before the activity is shown.
+        //This calls and gets the newest information from the database.
+    }
+
+    /**
+     * This function places the fragment onto the screen.
+     * @param frag the fragment to be displayed
+     */
     public void setFragmentNoBackStack(Fragment frag){
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -38,38 +66,29 @@ public class ConversationActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation);
-        intent = getIntent();
-        email = intent.getStringExtra(getString(R.string.intent_email));
-        db = new DatabaseHelper(getApplicationContext());
-        setTitle(db.getContactName(email));
-        passToFragment();
-        setFragmentNoBackStack(chats);
-        ActionBar actionBar = this.getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-    }
-
-    /**********************************************************************************************
-     *  The email that is passed was passed to this activity. This function passes it to the      *
-     *  fragment that exists inside of the activity.                                              *
-     **********************************************************************************************/
-
-    public void passToFragment() {
+    /**
+     * The email that is passed was passed to this activity. This function passes it to the
+     * fragment that exists inside of the activity.
+     */
+    private void passToFragment() {
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.intent_email), email);
         chats.setArguments(bundle);
     }
+
+    /**
+     * Sets Up the menu with the action buttons
+     */
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_conversation,menu);
         return true;
     }
+
+    /**
+     * This function handles when a button is pressed. If you add a button then you need to add a case
+     * statement here to handle when that button is pressed.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -92,15 +111,16 @@ public class ConversationActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        chats.prepareWindowRows();
-    }
 
+
+
+    /**
+     * This function is here to check if when one of the action buttons returns the conversation has
+     * been deleted which is why finished is called in this case.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == CommonMethods.CONVERSATION_DELETED && requestCode==CommonMethods.CHECK_FOR_DELETION){
+        if(requestCode==CommonMethods.CHECK_FOR_DELETION && resultCode == CommonMethods.CONVERSATION_DELETED){
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

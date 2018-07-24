@@ -90,6 +90,18 @@ public class CommonMethods {
         }
     }
 
+    public static String getExtension(String filePath) {
+        int temp = filePath.length()-1;
+        for(int i = temp;i>0;i--){
+            if(filePath.charAt(i)=='.'){
+                temp = i;
+                i = 0;
+            }
+        }
+        filePath = filePath.substring(temp+1);
+        return filePath;
+    }
+
 
 
 

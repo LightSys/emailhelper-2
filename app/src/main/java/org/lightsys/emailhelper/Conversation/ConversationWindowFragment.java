@@ -23,6 +23,9 @@ import org.lightsys.emailhelper.SendMail;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class ConversationWindowFragment extends android.app.Fragment {
 
     DatabaseHelper db;
@@ -34,15 +37,10 @@ public class ConversationWindowFragment extends android.app.Fragment {
 
 
     public ImageButton sendMessageButton;
-
     public EditText messageSend;
 
+    //Empty Constructor
     public ConversationWindowFragment() {}
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,19 +50,25 @@ public class ConversationWindowFragment extends android.app.Fragment {
             rootView = inflater.inflate(R.layout.fragment_conversation_window, container, false);
             makeRecyclerView(rootView);
             sendMessageButton = rootView.findViewById(R.id.sendMessageButton);
-            messageSend = rootView.findViewById(R.id.messageEditText);
             setUpSendMessageButton();
             setUpTextBox();
         }
+        //connect the database
         db = new DatabaseHelper(getActivity().getApplicationContext());
         return rootView;
     }
-    public void setUpTextBox(){
+
+    /**
+     * This function sets up the textbox.
+     */
+    private void setUpTextBox(){
+        messageSend = rootView.findViewById(R.id.messageEditText);
         messageSend.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+            //This function is critical to not allowing the user to send empty email as spam.
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(messageSend.getText().toString().trim().equalsIgnoreCase("")){
@@ -99,35 +103,45 @@ public class ConversationWindowFragment extends android.app.Fragment {
         });
     }
 
+    /**
+     * Sets up the sendButton.
+     */
     public void setUpSendMessageButton() {
         sendMessageButton.setOnClickListener(
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //Create New Message
                     Message message = new Message(passedEmail, "",getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), "", Message.SENT_BY_ME,false);
                     messageList.add(message);
                     cAdapter.notifyDataSetChanged();
+
+                    //add message to database
                     db.insertMessage(message);
 
+                    //Send the Message
                     SendMail sendInstance = new SendMail(passedEmail, messageSend.getText().toString(),getActivity().getApplicationContext());
                     sendInstance.execute();
+
                     //Update contact time
                     //TODO analyze what happens when update time is updated and prevents an email from coming in.
                     Contact sent = db.getContact(passedEmail);
                     sent.setUpdatedDate(CommonMethods.getCurrentTime());
                     db.updateContact(passedEmail,sent);
 
-                    InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
+                    //Remove the message
                     messageSend.getText().clear();
                 }
             }
         );
+        //This is important to make sure you cannot send empty spam messages.
         sendMessageButton.setClickable(false);
     }
 
 
+    /**
+     * This function gets the data from the database and displays the new information.
+     */
     public void prepareWindowRows() {
         messageList = db.getMessages(passedEmail);
         cAdapter = new ConversationWindowAdapter(messageList,getActivity().getApplicationContext());
