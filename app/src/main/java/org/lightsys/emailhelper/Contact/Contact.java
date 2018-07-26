@@ -1,5 +1,7 @@
 package org.lightsys.emailhelper.Contact;
 
+import android.content.Intent;
+
 import org.lightsys.emailhelper.CommonMethods;
 
 import java.util.Date;
@@ -69,4 +71,12 @@ public class Contact {
 
     public String getName() {return firstName + " " +lastName;}
     public void increaseReferences(int numOfReferences){this.numOfReferences += numOfReferences;}
+
+    public static Contact getContactFromIntent(Intent data) {
+        Contact contact = new Contact();
+        contact.setEmail(data.getStringExtra("email"));
+        contact.setFirstName(data.getStringExtra("first_name"));
+        contact.setLastName(data.getStringExtra("last_name"));
+        return contact;
+    }
 }

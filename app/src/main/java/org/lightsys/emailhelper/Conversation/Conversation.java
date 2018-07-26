@@ -1,8 +1,5 @@
 package org.lightsys.emailhelper.Conversation;
 
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * The Conversation class is built with the Conversation adapter in mind. It contains two string
  * variables, email and name, and one boolean variable newMail.

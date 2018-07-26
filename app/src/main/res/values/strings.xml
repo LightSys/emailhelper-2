@@ -16,7 +16,7 @@
 
     <!-- General Strings -->
     <string name="settings" translatable="true">EmailHelper Settings</string>
-    <string name="messages" translatable="true">Messages</string>
+    <string name="messages" translatable="true">Conversations</string>
     <string name="contacts" translatable="true">Contacts</string>
     <string name="new_contact" translatable="true">New Contact</string>
 
@@ -34,6 +34,7 @@
     <string name="menu_settings" translatable="true">Settings</string>
     <string name="menu_about" translatable="true">About</string>
     <!-- Strings for credentials validation -->
+
     <string name="invalid_credentials" translatable="true">"Invalid credentials. Please reenter them.</string>
     <string name="invalid_credentials_notification_title" translatable="true">Invalid Credentials</string>
     <string name="invalid_credentials_notification_subject" translatable="true">Please reenter them.</string>
@@ -211,4 +212,5 @@
     <string name="key_imap">imap_key</string>
     <string name="key_smtp">stmp_key</string>
     <string name="invalid_smtp">There was an issue with your SMTP Server please re-enter to send messages.</string>
+    <string name="intent_original_email">original_email</string>
 </resources>

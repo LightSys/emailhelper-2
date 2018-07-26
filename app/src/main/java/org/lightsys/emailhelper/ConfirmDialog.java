@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 /**
- * @author SHADE
  * The goal of this class is to facilitate the creation of a popup.
- * The class takes in the parameters and then runs its given executables.
+ * The class takes in the parameters and then runs its given executables after the alert dialog.
+ * The class does not extend AlertDialog but is a wrapper class.
+ * @author DSHADE
  */
 public class ConfirmDialog  {
 

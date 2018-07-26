@@ -30,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.AndTerm;
 import javax.mail.search.ComparisonTerm;
+import javax.mail.search.DateTerm;
 import javax.mail.search.FromTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
@@ -234,28 +235,25 @@ public class GetMail {
             Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
-            javax.mail.Message messages[] = inbox.getMessages();
-            Date today = new Date();
-            if(today.getMonth() >= 2) {
-                today.setMonth(today.getMonth() - 3);
+            Date lastDate = new Date();
+            if(lastDate.getMonth() >= 2) {
+                lastDate.setMonth(lastDate.getMonth() - 3);
             }else{
-                today.setYear(today.getYear()-1);
-                today.setMonth(today.getMonth()+9);
+                lastDate.setYear(lastDate.getYear()-1);
+                lastDate.setMonth(lastDate.getMonth()+9);
             }
+            SearchTerm after = new ReceivedDateTerm(ComparisonTerm.GE,lastDate);
+            javax.mail.Message messages[] = inbox.search(after);
             for (int i = messages.length - 1; i >= 0; i--) {
                 javax.mail.Message message = messages[i];
-                Date sent = message.getSentDate();
-                if(sent.before(today)){
-                    return contactList;
-                }
-                String contact = message.getFrom()[0].toString();
-                if(contact.contains("<") && contact.contains(">")){
-                    String name = contact.substring(0,contact.indexOf("<")).trim();
-                    String email = contact.substring(contact.indexOf("<")+1,contact.length()-1);
+                String fullAddress = message.getFrom()[0].toString();
+                if(fullAddress.contains("<") && fullAddress.contains(">")){
+                    String name = fullAddress.substring(0,fullAddress.indexOf("<")).trim();
+                    String email = fullAddress.substring(fullAddress.indexOf("<")+1,fullAddress.length()-1);
                     contactList.add(name,email);
                 }
                 else{
-                    contactList.add("",contact);
+                    contactList.add("",fullAddress);
                 }
 
             }

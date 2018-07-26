@@ -61,6 +61,11 @@ public class NewContactFragment extends android.app.Fragment {
                             db.insertContact(newContact);
                             db.insertConversationData(newContact);
                             clearFields();
+                            Intent passback = new Intent();
+                            passback.putExtra(getString(R.string.intent_email),newContact.getEmail());
+                            passback.putExtra(getString(R.string.intent_first_name),newContact.getFirstName());
+                            passback.putExtra(getString(R.string.intent_last_name),newContact.getLastName());
+                            getActivity().setResult(CommonMethods.NEW_CONTACT_ADDED,passback);
                             getActivity().finish();//ends the task and reverts to what was going on previously
                         }
                     };

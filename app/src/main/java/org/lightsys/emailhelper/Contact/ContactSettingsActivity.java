@@ -36,18 +36,21 @@ public class ContactSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_settings);
+        db = new DatabaseHelper(getApplicationContext());
         ActivityContext = this;
-        firstName = getIntent().getStringExtra(getString(R.string.intent_first_name));
-        lastName = getIntent().getStringExtra(getString(R.string.intent_last_name));
+        //Get info from intent
+        Intent intent = getIntent();
+        firstName = intent.getStringExtra(getString(R.string.intent_first_name));
+        lastName = intent.getStringExtra(getString(R.string.intent_last_name));
+        email = intent.getStringExtra(getString(R.string.intent_email));
         fullName = firstName + " " + lastName;
-        email = getIntent().getStringExtra(getString(R.string.intent_email));
+        //Set up textViews
         TextView name = findViewById(R.id.name_textView);
         name.setText(fullName);
         TextView emailText = findViewById(R.id.email_textView);
         emailText.setText(email);
-        db = new DatabaseHelper(getApplicationContext());
 
-
+        //setUpCheckBoc
         final CheckBox sendNotifications = findViewById(R.id.display_notifications);
         sendNotifications.setChecked(db.getNotificationSettings(email));
         sendNotifications.setOnCheckedChangeListener( new CheckBox.OnCheckedChangeListener(){
@@ -56,9 +59,19 @@ public class ContactSettingsActivity extends AppCompatActivity {
                 db.setNotificationSettings(email,sendNotifications.isChecked());
             }
         });
+        //Creates the buttons
         setUpButtons();
+        //Sets them appropriately
         setButtons();
     }
+
+    //These constants are for the views to use to make the buttons appear/disappear
+    LinearLayout.LayoutParams expanded = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+    LinearLayout.LayoutParams shrunk = new LinearLayout.LayoutParams(0,0);
+
+    /**
+     * Sets the buttons to their correct state
+     */
     private void setButtons() {
         if(db.hasConversationWith(email)){
             hasConvo();
@@ -69,11 +82,13 @@ public class ContactSettingsActivity extends AppCompatActivity {
         if(!db.hasAttachments(email)){
             showAttachments.setVisibility(View.INVISIBLE);
             showAttachments.setClickable(false);
-            LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
-            showAttachments.setLayoutParams(size);
+            showAttachments.setLayoutParams(shrunk);
         }
     }
 
+    /**
+     * Gets all buttons from layout
+     */
     private void setUpButtons() {
         editContact = findViewById(R.id.edit_contact);
         editContact.setOnClickListener(new View.OnClickListener() {
@@ -127,18 +142,20 @@ public class ContactSettingsActivity extends AppCompatActivity {
     public void hasConvo(){
         startConversation.setVisibility(View.INVISIBLE);
         startConversation.setClickable(false);
+        startConversation.setLayoutParams(shrunk);
         deleteConversation.setVisibility(View.VISIBLE);
         deleteConversation.setClickable(true);
-        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
-        startConversation.setLayoutParams(size);
+        deleteConversation.setLayoutParams(expanded);
+
     }
     public void noConvo(){
         startConversation.setVisibility(View.VISIBLE);
         startConversation.setClickable(true);
+        startConversation.setLayoutParams(expanded);
         deleteConversation.setVisibility(View.INVISIBLE);
         deleteConversation.setClickable(false);
-        LinearLayout.LayoutParams size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        startConversation.setLayoutParams(size);
+        deleteConversation.setLayoutParams(shrunk);
+
     }
     @Override
     public void onResume() {

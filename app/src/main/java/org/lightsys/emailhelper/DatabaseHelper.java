@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Contact.ContactList;
@@ -101,6 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //<editor-fold>  Conversation Functions
     public void insertConversationData(String email, String name) {
+
         insertConversationData(email,name,false);
     }
 
@@ -193,6 +195,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public List<Conversation> getConversations() {
+        Log.d("Database","Conversations Accessed");
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONVERSATION_TABLE_NAME, null);
         Stack<Conversation> temp = new Stack<>();
@@ -336,6 +339,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The contacts from the database in a list
      */
     public ContactList getContactList() {
+        Log.d("Database","Contacts Accessed");
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONTACT_TABLE_NAME, null);
         ContactList contactList = new ContactList();
@@ -468,6 +472,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Message> getMessages(String email) {
+        Log.d("Database","Messages Accessed");
         List messageList = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + MESSAGE_TABLE_NAME + " where EMAIL = ?", new String[]{email}, null);
@@ -485,31 +490,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return messageList;
     }
 
-    public List<Message> getAllMessages(){
-        List messageList = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from " + MESSAGE_TABLE_NAME, null);
-        while (res.moveToNext()) {
-            Message message = new Message();
-            try {
-                message.setEmail(res.getString(res.getColumnIndex(MESSAGE_COL_1)));
-                message.setName(res.getString(res.getColumnIndex(MESSAGE_COL_2)));
-                message.setSubject(res.getString(res.getColumnIndex(MESSAGE_COL_3)));
-                message.setMessage(res.getString(res.getColumnIndex(MESSAGE_COL_4)));
-                message.setHasAttachments(1 == res.getInt(res.getColumnIndex(MESSAGE_COL_5)));
-                message.setMessageId(res.getString(res.getColumnIndex(MESSAGE_COL_6)));
-                message.setSent(res.getInt(res.getColumnIndex(MESSAGE_COL_7)));
-            }
-            finally {
-                messageList.add(message);
-            }
-
-        }
-        res.close();
-        return messageList;
-    }
-
     private void updateMessages(String originalEmail, Contact contact) {
+        Log.d("Database","Messages Accessed");
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select * from "+MESSAGE_TABLE_NAME+" where EMAIL = ?";
         String[] args = {originalEmail};
@@ -564,6 +546,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return a list of attachment file paths.
      */
     public List<String> getAttachments(String email) {
+        Log.d("Database","Attachments Accessed");
         List<String> attachments = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "select " + ATTACHMENT_COL_3 + " from " + ATTACHMENT_DATABASE + " where " + ATTACHMENT_COL_2 + " = ?";
@@ -572,26 +555,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while(res.moveToNext()){
             String temp = res.getString(0);
             attachments.add(temp);
-        }
-        res.close();
-        return attachments;
-    }
-    public List<String[]> getAllAttachments() {
-        List<String[]> attachments = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "select * from " + ATTACHMENT_DATABASE;
-
-        Cursor res = db.rawQuery(query,null);
-        while(res.moveToNext()){
-            String[] values = new String[3];
-            try{
-                values[0] = res.getString(res.getColumnIndex(ATTACHMENT_COL_2));
-                values[1] = res.getString(res.getColumnIndex(ATTACHMENT_COL_3));
-                values[2] = res.getString(res.getColumnIndex(ATTACHMENT_COL_4));
-            }
-            finally{
-                attachments.add(values);
-            }
         }
         res.close();
         return attachments;
@@ -668,11 +631,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "select * from attachment_database where EMAIL = ? and ATTACHMENT = ? and MESSAGE_ID = ?";
         String[] args = {email, filePath, messageID};
         Cursor res = db.rawQuery(query,args);
-        boolean temp = res.getCount()>0;
+        boolean hasAttachment = res.getCount()>0;
         res.close();
-        return temp;
+        return hasAttachment;
+
     }
     private void updateAttachments(String originalEmail, String email) {
+        Log.d("Database","Messages Accessed");
         if(hasAttachments(originalEmail)){
             SQLiteDatabase db = this.getWritableDatabase();
             String query = "select * from attachment_database where EMAIL = ?";

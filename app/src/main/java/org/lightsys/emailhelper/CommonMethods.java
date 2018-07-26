@@ -17,6 +17,7 @@ import java.util.Date;
 
 public class CommonMethods {
 
+
     private static DateFormat dateFormat = new SimpleDateFormat("d MMM yyyy");
     private static DateFormat completeFormat = new SimpleDateFormat("K:mma d MMM yyyy");
 
@@ -106,9 +107,17 @@ public class CommonMethods {
 
 
     //Constants used in multiple different classes
-    public static final int CONVERSATION_DELETED = 65783;
+    public static final int CONVERSATION_DELETED = 65483;
     public static final int CHECK_FOR_DELETION = 28694;
     public static final int CAMERA_REQUEST_CODE = 453;
     public static final int SHARED_PREFERENCES_DEFAULT_MODE = 0;
+
+    public static final int CHECK_FOR_CONTACT_ADDITION = 8295;
+    public static final int NEW_CONTACT_ADDED = 6030;
+    public static final int DOES_CONTACT_CHANGE = 3030;
+    public static final int CONTACT_CHANGED = 28430;
+    public static final int CONTACT_NOT_CHANGED = 3036;
+
+
 
 }
