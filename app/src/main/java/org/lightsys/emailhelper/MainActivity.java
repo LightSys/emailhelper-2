@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onClick(View v) {
                 Intent newContact= new Intent(getBaseContext(), NewContactActivity.class);
+                newContact.putExtra(getString(R.string.intent_create_new_contact),true);
                 startActivity(newContact);
             }
         });
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
 
         boolean testingWithSignIn = false;
-        //TODO replace hard code
+        //TODO remove hard code
         if(testingWithSignIn){
             AuthenticationClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
             AuthenticationClass.Password = sharedPref.getString(getString(R.string.key_password), getString(R.string.default_password));
@@ -227,13 +228,4 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
         }
     }
-
-
-
-
-    //This may be good for something later like a start new conversation button
-
-
-
-
 }

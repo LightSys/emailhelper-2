@@ -190,6 +190,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Integer deleteConversationData(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(MESSAGE_TABLE_NAME, "EMAIL = ?", new String[]{email});
+        deleteMessages(email);//delete the messages in the Conversation from app
+        if(hasAttachments(email)){
+            deleteAttachments(email);
+        }
         return db.delete(CONVERSATION_TABLE_NAME, "EMAIL = ?", new String[]{email});
     }
 
@@ -333,6 +337,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteContactData(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(CONTACT_TABLE_NAME, "EMAIL = ?", new String[]{email});
+        if(hasConversationWith(email)){
+            deleteConversationData(email);
+            deleteMessages(email);//delete the messages in the Conversation from app
+        }
+        if(hasAttachments(email)){
+            deleteAttachments(email);
+        }
+
     }
 
     /**
@@ -535,6 +547,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return true;
     }
+    public void deleteMessages(String email){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(MESSAGE_TABLE_NAME,"EMAIL = ?",new String[]{email});
+
+    }
     //</editor-fold>
 
     //<editor-fold> Attachment functions
@@ -611,6 +628,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String where = "EMAIL = ? AND ATTACHMENT = ?";
         long ret = db.delete(ATTACHMENT_DATABASE, where, new String[]{email, filePath});
+        return ret != -1;
+    }
+    public boolean deleteAttachments(String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String where = "EMAIL = ?";
+        long ret = db.delete(ATTACHMENT_DATABASE, where, new String[]{email});
         return ret != -1;
     }
 

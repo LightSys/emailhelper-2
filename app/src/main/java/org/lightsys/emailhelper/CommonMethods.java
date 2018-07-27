@@ -19,12 +19,12 @@ public class CommonMethods {
 
 
     private static DateFormat dateFormat = new SimpleDateFormat("d MMM yyyy");
-    private static DateFormat completeFormat = new SimpleDateFormat("HH:mma d MMM yyyy");
+    private static DateFormat completeFormat = new SimpleDateFormat("h:mma d MMM yyyy");
 
     private static DateFormat visibleYear = new SimpleDateFormat("yyyy");
     private static DateFormat visibleMonth = new SimpleDateFormat("MMM");
     private static DateFormat visibleDate = new SimpleDateFormat("MMM d");
-    private static DateFormat visibleTime = new SimpleDateFormat("HH:mma");
+    private static DateFormat visibleTime = new SimpleDateFormat("h:mma");
 
     public static String getTime(Date date){return visibleTime.format(date);}
     public static String getDate(Date date){return visibleDate.format(date);}

@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
@@ -128,10 +129,24 @@ public class GetMail {
     }
 
     private String getNotifcationBody(Message conversationWindow, javax.mail.Message email) throws MessagingException {
-        String message = conversationWindow.getMessage();
-        if(!sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages))){
-            message.substring(0,email.getSubject().length());
+        String message = conversationWindow.getSubject()+"\n"+conversationWindow.getMessage();
+        boolean showMessages = sp.getBoolean(r.getString(R.string.key_update_show_messages),r.getBoolean(R.bool.default_update_show_messages));
+        if(!showMessages){
+            message = message.substring(0,conversationWindow.getSubject().length());
+        }else{
+            int lengthToSet = message.length();
+            int maxSize = 200;
+            if(lengthToSet>maxSize){
+                lengthToSet = maxSize;
+                for(int i = maxSize-1;i>50;i--){
+                    if(message.charAt(i)==' '){
+                        message = message.substring(0,i);
+                        i = 49;
+                    }
+                }
+            }
         }
+
         return message;
     }
 
@@ -235,13 +250,14 @@ public class GetMail {
             Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
-            Date lastDate = new Date();
-            if(lastDate.getMonth() >= 2) {
-                lastDate.setMonth(lastDate.getMonth() - 3);
+            Calendar checker = Calendar.getInstance();
+            if(checker.get(Calendar.MONTH) >= 2) {
+                checker.set(Calendar.MONTH,checker.get(Calendar.MONTH)-3);
             }else{
-                lastDate.setYear(lastDate.getYear()-1);
-                lastDate.setMonth(lastDate.getMonth()+9);
+                checker.set(Calendar.YEAR,checker.get(Calendar.YEAR)-1);
+                checker.set(Calendar.MONTH,checker.get(Calendar.MONTH)+9);
             }
+            Date lastDate = checker.getTime();
             SearchTerm after = new ReceivedDateTerm(ComparisonTerm.GE,lastDate);
             javax.mail.Message messages[] = inbox.search(after);
             for (int i = messages.length - 1; i >= 0; i--) {

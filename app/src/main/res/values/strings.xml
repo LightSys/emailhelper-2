@@ -142,17 +142,17 @@
     <string name="delete_word" translatable="true">Delete</string>
 
     <string name="contact_delete_message_prestring" translatable="true">"Are you sure you want to delete "</string>
-    <string name="contact_delete_message_poststring" translatable="true">" from Contacts?"</string>
+    <string name="contact_delete_message_poststring" translatable="true">" from Contacts? This will include all information and data assocaited with them."</string>
     <string name="contact_deleted_prestring" translatable="true"></string>
-    <string name="contact_deleted_poststring" translatable="true">" has been deleted from Contacts."</string>
+    <string name="contact_deleted_poststring" translatable="true">" has been deleted from Contacts. Their data has also been removed."</string>
     <string name="contact_not_deleted_prestring" translatable="true"></string>
-    <string name="contact_not_deleted_poststring" translatable="true">" has not been deleted from Contacts."</string>
+    <string name="contact_not_deleted_poststring" translatable="true">" has not been deleted from Contacts. Their data has not been removed."</string>
 
     <string name="conversation_delete_message_prestring" translatable="true">"Are you sure you want to delete the conversation with "</string>
-    <string name="conversation_delete_message_poststring" translatable="true">"?"</string>
-    <string name="conversation_deleted_prestring" translatable="true">"Conversation with "</string>
+    <string name="conversation_delete_message_poststring" translatable="true">"? This will include messages and attachements associated with it."</string>
+    <string name="conversation_deleted_prestring" translatable="true">"Conversation and data with "</string>
     <string name="conversation_deleted_poststring" translatable="true">" deleted."</string>
-    <string name="conversation_not_deleted_prestring" translatable="true">"Conversation with "</string>
+    <string name="conversation_not_deleted_prestring" translatable="true">"Conversation and data with "</string>
     <string name="conversation_not_deleted_poststring" translatable="true">" not deleted."</string>
 
     <string name="attachment_message_prestring" translatable="true">"Are you sure that you want to delete "</string>
@@ -180,11 +180,9 @@
     <string name="swipe_deletion_disabled">Swipe deletion is disabled.</string>
     <string name="title_activity_user_settings">User Settings</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="change_credentials">Change Credentials</string>
     <string name="menu_user_settings">User Settings</string>
     <string name="user_settings_credential_settings">Credential Settings</string>
-    <string name="default_phone_number" />
     <string name="key_phone_number">phone_number</string>
     <string name="title_phone_number">Phone Number</string>
     <string name="title_company">Company</string>
@@ -213,4 +211,7 @@
     <string name="key_smtp">stmp_key</string>
     <string name="invalid_smtp">There was an issue with your SMTP Server please re-enter to send messages.</string>
     <string name="intent_original_email">original_email</string>
+    <string name="intent_create_new_contact">start_conversation</string>
+    <string name="email_validation_prestring">"EmailHelper does not recognize "</string>
+    <string name="email_validation_poststring">". Are you sure you want to add this email?"</string>
 </resources>
