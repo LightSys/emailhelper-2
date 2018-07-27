@@ -13,6 +13,7 @@ import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -90,32 +91,28 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     private void setTime(MyViewHolder holder,Conversation convo) {
         Date set = db.getContactUpdatedDate(convo.getEmail());
-        Date today = CommonMethods.getCurrentTime();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
-        Date lastMonth = CommonMethods.getCurrentTime();
-        lastMonth.setDate(0);
-        lastMonth.setHours(0);
-        lastMonth.setMinutes(0);
-        lastMonth.setSeconds(0);
-        Date lastYear = CommonMethods.getCurrentTime();
-        lastYear.setMonth(0);
-        lastYear.setDate(0);
-        lastYear.setHours(0);
-        lastYear.setMinutes(0);
-        lastYear.setSeconds(0);
+        Calendar mCal = Calendar.getInstance();
+        mCal.set(Calendar.MILLISECOND,0);
+        mCal.set(Calendar.SECOND,0);
+        mCal.set(Calendar.MINUTE,0);
+        mCal.set(Calendar.HOUR,0);
+        mCal.set(Calendar.AM_PM,Calendar.AM);
+        Date today = mCal.getTime();
+        mCal.set(Calendar.DAY_OF_MONTH,1);
+        Date lastMonth = mCal.getTime();
+        mCal.set(Calendar.MONTH,0);
+        Date lastYear = mCal.getTime();
         if(today.before(set)){
             holder.time.setText(CommonMethods.getTime(set));
         }
         else if(today.after(set) && lastMonth.before(set)){
-            holder.time.setText(CommonMethods.getDateAndTime(set));
-        }
-        else if(lastMonth.after(set) && lastYear.before(set)){
             holder.time.setText(CommonMethods.getDate(set));
         }
+        else if(lastMonth.after(set) && lastYear.before(set)){
+            holder.time.setText(CommonMethods.getMonth(set));
+        }
         else if(lastYear.after(set)){
-            holder.time.setText(CommonMethods.getMonthAndYear(set));
+            holder.time.setText(CommonMethods.getYear(set));
         }
     }
 

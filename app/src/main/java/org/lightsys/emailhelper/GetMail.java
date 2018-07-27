@@ -68,12 +68,12 @@ public class GetMail {
                             Message timeHolder = new Message();
                             timeHolder.setEmail(contact.getEmail());
                             timeHolder.setName("");
-                            timeHolder.setSubject(CommonMethods.dateToString(message.getReceivedDate()));
+                            String date = CommonMethods.dateToString(message.getReceivedDate());
+                            timeHolder.setSubject(date);
                             timeHolder.setMessage("");
                             timeHolder.setSent(Message.TIME);
                             timeHolder.setHasAttachments(false);
                             timeHolder.setMessageId("");
-
 
                             //Push conversation
                             Message conversationWindow = new Message();

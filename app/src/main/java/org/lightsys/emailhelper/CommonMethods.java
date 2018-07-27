@@ -19,17 +19,17 @@ public class CommonMethods {
 
 
     private static DateFormat dateFormat = new SimpleDateFormat("d MMM yyyy");
-    private static DateFormat completeFormat = new SimpleDateFormat("K:mma d MMM yyyy");
+    private static DateFormat completeFormat = new SimpleDateFormat("HH:mma d MMM yyyy");
 
-    private static DateFormat visibleMonthAndYear = new SimpleDateFormat("MMM yyyy");
+    private static DateFormat visibleYear = new SimpleDateFormat("yyyy");
+    private static DateFormat visibleMonth = new SimpleDateFormat("MMM");
     private static DateFormat visibleDate = new SimpleDateFormat("MMM d");
-    private static DateFormat visibleDateAndTime = new SimpleDateFormat("MMM d K:mma");
-    private static DateFormat visibleTime = new SimpleDateFormat("K:mma");
+    private static DateFormat visibleTime = new SimpleDateFormat("HH:mma");
 
     public static String getTime(Date date){return visibleTime.format(date);}
-    public static String getDateAndTime(Date date){return visibleDateAndTime.format(date);}
     public static String getDate(Date date){return visibleDate.format(date);}
-    public static String getMonthAndYear(Date date){return visibleMonthAndYear.format(date);}
+    public static String getMonth(Date date){return visibleMonth.format(date);}
+    public static String getYear(Date date){return visibleYear.format(date);}
 
     public static Date getCurrentTime(){return Calendar.getInstance().getTime();}
     public static Date stringToDate(String date){

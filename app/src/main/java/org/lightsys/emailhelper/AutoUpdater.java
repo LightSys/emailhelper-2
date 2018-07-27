@@ -68,7 +68,6 @@ public class AutoUpdater extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         sp = getSharedPreferences(getString(R.string.preferences), 0);
-        checkForUpdates();
         //keeps service running after app is shut down
         return START_STICKY;
     }
