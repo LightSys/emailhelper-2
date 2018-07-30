@@ -17,12 +17,14 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Stack;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.UIDFolder;
@@ -34,6 +36,7 @@ import javax.mail.search.ComparisonTerm;
 import javax.mail.search.DateTerm;
 import javax.mail.search.FromTerm;
 import javax.mail.search.ReceivedDateTerm;
+import javax.mail.search.RecipientTerm;
 import javax.mail.search.SearchTerm;
 
 public class GetMail {
@@ -49,8 +52,8 @@ public class GetMail {
         sp = c.getSharedPreferences(r.getString(R.string.preferences),0);
 
     }
-    public emailNotification getMail() {
-        emailNotification receivedNew = new emailNotification();
+    public Stack<NotificationBase> getMail() {
+        Stack<NotificationBase> receivedNew = new Stack();
         ContactList contactList = db.getContactList();
         Properties props = System.getProperties();
         setProperties(props);
@@ -58,23 +61,32 @@ public class GetMail {
             Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
+            Folder sent = getSent(props);
+            if(sent != null){
+                sent.open(Folder.READ_ONLY);
+            }
+            UIDFolder ufSent = (UIDFolder) sent;
             for(int i = 0;i<contactList.size();i++){
                 Contact contact = contactList.get(i);
-                SearchTerm searchTerm = getSearchTerm(contact.getEmail());
-                javax.mail.Message messages[] = inbox.search(searchTerm);
-                for (javax.mail.Message message : messages) {
+                javax.mail.Message incoming[] = inbox.search(getSearchTermIncoming(contact.getEmail()));
+                //<editor-fold> This is getting messages from inbox
+                for (javax.mail.Message message : incoming) {
                     try {//This prevents one email from breaking the bunch.
                         if(db.willInsertMessage(contact.getEmail(),Long.toString(uf.getUID(message)))){
                             //Add new Time Message
                             Message timeHolder = new Message();
-                            timeHolder.setEmail(contact.getEmail());
-                            timeHolder.setName("");
-                            String date = CommonMethods.dateToString(message.getReceivedDate());
-                            timeHolder.setSubject(date);
-                            timeHolder.setMessage("");
-                            timeHolder.setSent(Message.TIME);
-                            timeHolder.setHasAttachments(false);
-                            timeHolder.setMessageId("");
+                            boolean hasRecentTime = !db.hasRecentTime(contact.getEmail(),message.getReceivedDate());
+                            if(hasRecentTime){
+                                timeHolder.setEmail(contact.getEmail());
+                                timeHolder.setName("TIME");
+                                String date = CommonMethods.dateToString(message.getReceivedDate());
+                                timeHolder.setSubject(date);
+                                timeHolder.setMessage("");
+                                timeHolder.setSent(Message.TIME);
+                                timeHolder.setHasAttachments(false);
+                                timeHolder.setMessageId("");
+                                timeHolder.setSentDate(message.getReceivedDate());
+                            }
 
                             //Push conversation
                             Message conversationWindow = new Message();
@@ -85,9 +97,12 @@ public class GetMail {
                             conversationWindow.setSent(Message.SENT_BY_OTHER);
                             conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
                             conversationWindow.setMessageId(Long.toString(uf.getUID(message)));
+                            conversationWindow.setSentDate(message.getReceivedDate());
 
                             //Insert the new messages
-                            db.insertMessage(timeHolder);
+                            if(hasRecentTime){
+                                db.insertMessage(timeHolder);
+                            }
                             db.insertMessage(conversationWindow);
                             //both are done at the same time just in case there was an error else where
 
@@ -95,7 +110,7 @@ public class GetMail {
                             String title = getNotificationTitle(conversationWindow);
                             String body = getNotifcationBody(conversationWindow, message);
                             if (db.getNotificationSettings(contact.getEmail())) {
-                                receivedNew.push(title, body);
+                                receivedNew.push(new NotificationBase(title, body));
                             }
 
                             //Update contact
@@ -113,11 +128,63 @@ public class GetMail {
                         e.printStackTrace();
                     }
                 }
+                //</editor-fold>
+                if(sent != null){
+                    javax.mail.Message outgoing[] = sent.search(getSearchTermOutgoing(contact.getEmail()));
+                    for (javax.mail.Message message : outgoing) {
+                        try {//This prevents one email from breaking the bunch.
+                            if(db.willInsertMessage(contact.getEmail(),Long.toString(ufSent.getUID(message)))){
+                                Message timeHolder = new Message();
+                                boolean hasRecentTime = !db.hasRecentTime(contact.getEmail(),message.getSentDate());
+                                if(hasRecentTime){
+                                    timeHolder.setEmail(contact.getEmail());
+                                    timeHolder.setName("TIME");
+                                    String date = CommonMethods.dateToString(message.getSentDate());
+                                    timeHolder.setSubject(date);
+                                    timeHolder.setMessage("");
+                                    timeHolder.setSent(Message.TIME);
+                                    timeHolder.setHasAttachments(false);
+                                    timeHolder.setMessageId("");
+                                    timeHolder.setSentDate(message.getSentDate());
+                                }
+                                //Add new Time Message
+
+
+                                //Push conversation
+                                Message conversationWindow = new Message();
+                                conversationWindow.setEmail(contact.getEmail());
+                                conversationWindow.setName(contact.getName());
+                                conversationWindow.setSubject(message.getSubject().trim());
+                                if(conversationWindow.getSubject().equalsIgnoreCase(r.getString(R.string.getSubjectLine))){
+                                    db.deleteIncompleteMessage(getMessageContent(message).trim());
+                                }
+                                conversationWindow.setMessage(getMessageContent(message).trim());
+                                conversationWindow.setSent(Message.SENT_BY_ME);
+                                conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
+                                conversationWindow.setMessageId(Long.toString(ufSent.getUID(message)));
+                                conversationWindow.setSentDate(message.getSentDate());
+
+                                //Insert the new messages
+                                if(hasRecentTime){
+                                    db.insertMessage(timeHolder);
+                                }
+                                db.insertMessage(conversationWindow);
+                                //both are done at the same time just in case there was an error else where
+
+
+                                //Update contact
+                                contact.setUpdatedDate(message.getReceivedDate());
+                                db.updateContact(contact.getEmail(), contact);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         } catch(AuthenticationFailedException e){
             e.printStackTrace();
             System.out.println("Messaging Exception.");
-//            receivedNew.setInvalid_Credentials();
         } catch (MessagingException e) {
             e.printStackTrace();
             System.out.println("Messaging Exception.");
@@ -127,6 +194,8 @@ public class GetMail {
         }
         return receivedNew;
     }
+
+
 
     private String getNotifcationBody(Message conversationWindow, javax.mail.Message email) throws MessagingException {
         String message = conversationWindow.getSubject()+"\n"+conversationWindow.getMessage();
@@ -157,11 +226,17 @@ public class GetMail {
         return message;
     }
 
-    private SearchTerm getSearchTerm(String email) throws AddressException {
+    private SearchTerm getSearchTermIncoming(String email) throws AddressException {
         SearchTerm sender = new FromTerm(new InternetAddress(email));
         Date updatedDate = db.getContactUpdatedDate(email);
         SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,updatedDate);
         return new AndTerm(sender, newerThan);
+    }
+    private SearchTerm getSearchTermOutgoing(String email) throws AddressException {
+        SearchTerm reciever = new RecipientTerm(javax.mail.Message.RecipientType.TO,new InternetAddress(email));
+        Date updatedDate = db.getContactUpdatedDate(email);
+        SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,updatedDate);
+        return new AndTerm(reciever, newerThan);
     }
     private String getMessageContent(javax.mail.Message message) throws MessagingException, IOException {
         return getTextFromMessage(message);
@@ -171,6 +246,22 @@ public class GetMail {
         IMAPStore store = (IMAPStore) session.getStore("imaps");
         store.connect(AuthenticationClass.incoming, AuthenticationClass.Email, AuthenticationClass.Password);
         return store.getFolder("Inbox");
+    }
+    private Folder getSent(Properties props) throws MessagingException {
+        Session session = Session.getDefaultInstance(props, null);
+        IMAPStore store = (IMAPStore) session.getStore("imaps");
+        store.connect(AuthenticationClass.incoming, AuthenticationClass.Email, AuthenticationClass.Password);
+        javax.mail.Folder[] folders = store.getDefaultFolder().list("*");
+        for (javax.mail.Folder folder : folders) {
+            if ((folder.getType() & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
+                System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
+                String name = folder.getFullName();
+                if(name.contains("sent") || name.contains("Sent") || name.contains("SENT")){
+                    return store.getFolder(folder.getFullName());
+                }
+            }
+        }
+        return null;
     }
     private void setProperties(Properties properties){
         properties.setProperty("mail.store.protocol", "imaps");

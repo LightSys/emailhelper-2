@@ -1,5 +1,7 @@
 package org.lightsys.emailhelper.Conversation;
 
+import java.util.Date;
+
 /**
  * The Message class is built for holding the messages.
  * Created by nicholasweg on 7/7/17.
@@ -11,6 +13,7 @@ public class Message {
 
     private int sent_by_me;
     private Boolean hasAttachments;
+    private Date sentDate;
 
     public static final int SENT_BY_OTHER = 1;
     public static final int SENT_BY_ME = -1;
@@ -18,7 +21,7 @@ public class Message {
 
     public Message() {}
 
-    public Message(String email, String name,String subject, String message, String messageId, int sent_by_me, Boolean hasAttachments) {
+    public Message(String email, String name,String subject, String message, String messageId, int sent_by_me, Boolean hasAttachments,Date sentDate) {
         this.email = email;
         this.name = name;
         this.subject = subject;
@@ -26,6 +29,7 @@ public class Message {
         this.messageId = messageId;
         this.sent_by_me = sent_by_me;
         this.hasAttachments = hasAttachments;
+        this.sentDate = sentDate;
 
     }
 
@@ -36,6 +40,7 @@ public class Message {
     public String getMessageId() {return messageId;}
     public int getSent() {return sent_by_me;}
     public boolean hasAttachments(){return hasAttachments;}
+    public Date getSentDate(){return sentDate;}
 
     public void setEmail(String email) {this.email = email;}
     public void setName(String name) {this.name = name;}
@@ -44,4 +49,5 @@ public class Message {
     public void setHasAttachments(Boolean hasAttachments) {this.hasAttachments = hasAttachments;}
     public void setMessageId(String messageId) {this.messageId = messageId;}
     public void setSent(int sent_by_me) {this.sent_by_me = sent_by_me;}
+    public void setSentDate(Date sentDate){this.sentDate = sentDate;}
 }

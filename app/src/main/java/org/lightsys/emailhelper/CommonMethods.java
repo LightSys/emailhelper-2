@@ -33,6 +33,9 @@ public class CommonMethods {
 
     public static Date getCurrentTime(){return Calendar.getInstance().getTime();}
     public static Date stringToDate(String date){
+        if(date == null){
+            return null;
+        }
         try {
             return completeFormat.parse(date);
         } catch (ParseException e) {

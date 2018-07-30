@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.data.DataBufferObserver;
 
+import org.lightsys.emailhelper.AutoUpdater;
 import org.lightsys.emailhelper.CommonMethods;
 import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.DatabaseHelper;
@@ -229,6 +230,9 @@ public class ContactActivity extends AppCompatActivity{
             case CommonMethods.CHECK_FOR_CONTACT_ADDITION:
                 if(resultCode == CommonMethods.NEW_CONTACT_ADDED){
                     addContact(Contact.getContactFromIntent(data));
+                    Intent updaterIntent = new Intent(getBaseContext(), AutoUpdater.class);
+                    stopService(updaterIntent);
+                    startService(updaterIntent);
                 }
                 break;
             case CommonMethods.DOES_CONTACT_CHANGE:

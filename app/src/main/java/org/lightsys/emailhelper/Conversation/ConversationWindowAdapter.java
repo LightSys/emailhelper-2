@@ -38,16 +38,21 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
     LinearLayout.LayoutParams original;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView message;
+        public TextView subjectOfMessage;
+        public TextView bodyOfMessage;
         public LinearLayout parent_layout;
+        public LinearLayout gravity;
+
         public RecyclerView recyclerView;
         RelativeLayout wrapper;
 
 
         public MyViewHolder(View view) {
             super(view);
-            message = view.findViewById(R.id.message);
-            parent_layout = view.findViewById(R.id.chat_bubble_parent);
+            subjectOfMessage = view.findViewById(R.id.subject);
+            bodyOfMessage = view.findViewById(R.id.body);
+            parent_layout = view.findViewById(R.id.bubble_layout);
+            gravity = view.findViewById(R.id.chat_bubble_parent);
             recyclerView = view.findViewById(R.id.attachment_view);
             wrapper = view.findViewById(R.id.wrapper);
             original = (LinearLayout.LayoutParams) wrapper.getLayoutParams();
@@ -70,8 +75,15 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final Message message = messageList.get(position);
 
-
-        holder.message.setOnClickListener(new View.OnClickListener() {
+        holder.subjectOfMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent messageActivity = new Intent(context,MessageActivity.class);
+                messageActivity.putExtra(context.getResources().getString(R.string.intent_message_id),message.getMessageId());
+                context.startActivity(messageActivity);
+            }
+        });
+        holder.bodyOfMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent messageActivity = new Intent(context,MessageActivity.class);
@@ -81,33 +93,38 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
         });
 
         Resources r = context.getResources();
-        String display;
         LinearLayout.LayoutParams size;
+        int dpAsPixels = (int) (r.getDisplayMetrics().density);
+        int spaceFromSide = 5;//This is the space between the message bubble and side
         switch(message.getSent()){
             case Message.SENT_BY_ME:
-                holder.message.setText(message.getMessage());
-                holder.parent_layout.setGravity(Gravity.END);
-                holder.message.setBackground(context.getResources().getDrawable(R.drawable.border));
-                holder.message.setClickable(false);
+                holder.subjectOfMessage.setText(message.getSubject().trim());
+                holder.subjectOfMessage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                holder.bodyOfMessage.setText(message.getMessage());
+                holder.bodyOfMessage.setClickable(true);
+                holder.gravity.setGravity(Gravity.END);
+                holder.parent_layout.setBackground(context.getResources().getDrawable(R.drawable.border));
+                holder.gravity.setPadding(spaceFromSide*dpAsPixels,0,spaceFromSide*dpAsPixels,3*dpAsPixels);
                 break;
             case Message.SENT_BY_OTHER:
-                display = message.getSubject() + "\n"+ message.getMessage();
-                holder.message.setText(display);
-                holder.message.setClickable(true);
-                holder.parent_layout.setGravity(Gravity.START);
-                holder.message.setBackground(context.getResources().getDrawable(R.drawable.border2));
-
+                holder.subjectOfMessage.setText(message.getSubject().trim());
+                holder.subjectOfMessage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                holder.bodyOfMessage.setText(message.getMessage());
+                holder.bodyOfMessage.setClickable(true);
+                holder.gravity.setGravity(Gravity.START);
+                holder.parent_layout.setBackground(context.getResources().getDrawable(R.drawable.border2));
+                holder.gravity.setPadding(spaceFromSide*dpAsPixels,0,spaceFromSide*dpAsPixels,3*dpAsPixels);
                 break;
             case Message.TIME:
-                display = message.getSubject();
-                holder.message.setClickable(false);
-                holder.message.setText(display);
-                holder.parent_layout.setGravity(Gravity.CENTER);
-                holder.message.setBackground(context.getResources().getDrawable(R.drawable.border3));
+                holder.subjectOfMessage.setLayoutParams(new LinearLayout.LayoutParams(0,0));
+                holder.bodyOfMessage.setClickable(false);
+                holder.bodyOfMessage.setText(message.getSubject());
+                holder.gravity.setGravity(Gravity.CENTER);
+                holder.parent_layout.setBackground(context.getResources().getDrawable(R.drawable.border3));
+                holder.gravity.setPadding(spaceFromSide*dpAsPixels,0,spaceFromSide*dpAsPixels,0);
                 break;
         }
         if(message.hasAttachments()){
-            holder.wrapper.setBackground(context.getResources().getDrawable(R.drawable.border2));
             holder.recyclerView.setHasFixedSize(false);
             ConversationAttachmentAdapter caa = new ConversationAttachmentAdapter(message.getMessageId(),new DatabaseHelper(context));
             holder.recyclerView.setAdapter(caa);
@@ -115,7 +132,6 @@ public class ConversationWindowAdapter extends RecyclerView.Adapter<Conversation
             holder.wrapper.setLayoutParams(original);
         }
         else{
-            holder.wrapper.setBackground(context.getResources().getDrawable(R.drawable.border3));
             size = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0);
             holder.wrapper.setLayoutParams(size);
         }

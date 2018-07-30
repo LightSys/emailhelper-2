@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         //start Updater
         Intent updateIntent = new Intent(getBaseContext(), AutoUpdater.class);
+        stopService(updateIntent);
         startService(updateIntent);
 
         //init materials

@@ -107,16 +107,25 @@ public class NewContactFragment extends android.app.Fragment {
         contact.setEmail(emailField.getText().toString().trim());
         contact.setFirstName(firstNameField.getText().toString().trim());
         contact.setLastName(lastNameField.getText().toString().trim());
-        Calendar setter = Calendar.getInstance();
-        setter.set(Calendar.SECOND,0);
-        setter.set(Calendar.MINUTE,0);
-        setter.set(Calendar.HOUR,0);
-        Date createdDate = setter.getTime();
+        Date createdDate = getCreatedDate();
         contact.setCreatedDate(createdDate);
-        contact.setUpdatedDate(CommonMethods.getCurrentTime());
+        contact.setUpdatedDate(createdDate);
         contact.setSendNotifications(true);
         contact.setInContacts(true);
         contact.setNumOfReferences(0);
         return contact;
+    }
+    private Date getCreatedDate(){
+        Calendar setter = Calendar.getInstance();
+        setter.set(Calendar.SECOND,0);
+        setter.set(Calendar.MINUTE,0);
+        setter.set(Calendar.HOUR,0);
+        if(setter.get(Calendar.DAY_OF_YEAR)>14){
+            setter.set(Calendar.DAY_OF_YEAR,setter.get(Calendar.DAY_OF_YEAR)-14);
+        }else{
+            setter.set(Calendar.DAY_OF_YEAR,setter.get(Calendar.DAY_OF_YEAR)+351);
+            setter.set(Calendar.YEAR,setter.get(Calendar.YEAR)-1);
+        }
+        return setter.getTime();
     }
 }

@@ -14,6 +14,7 @@ import org.lightsys.emailhelper.Conversation.Conversation;
 import org.lightsys.emailhelper.Conversation.Message;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
@@ -53,7 +54,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static String MESSAGE_COL_5 = "HAS_ATTACHMENT";
     public static String MESSAGE_COL_6 = "MESSAGE_ID";
     public static String MESSAGE_COL_7 = "SENT_BY_ME";
-    public static String MESSAGE_COL_8 = "DB_ID";
+    public static String MESSAGE_COL_8 = "SENT_DATE";
+    public static String MESSAGE_COL_9 = "DB_ID";
 
     // Attachment variables
     public static final String ATTACHMENT_DATABASE = "attachment_database";
@@ -63,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static String ATTACHMENT_COL_4 = "MESSAGE_ID";
     private Resources r;
 
-    private static final int versionNumber = 1;
+    private static final int versionNumber = 2;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, versionNumber);
@@ -78,26 +80,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch(oldVersion){
-            case 1:
-                upgradeFromVersion1();
+        //new code will go here for the upgrade
+        //Use the Alter Table table_name ADD new_column_name column_default_data
+        //find out more at https://www.techonthenet.com/sqlite/tables/alter_table.php
+        switch(newVersion){
+            case 2:
+                db.execSQL("ALTER TABLE "+MESSAGE_TABLE_NAME+" ADD "+MESSAGE_COL_8+" TEXT");
         }
     }
 
     private void createTables(SQLiteDatabase db){
         String conversationQuery = String.format("create table " + CONVERSATION_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s BOOL)", CONVO_COL_1, CONVO_COL_2, CONVO_COL_3);
         String contactQuery = String.format("create table " + CONTACT_TABLE_NAME + " ( %s TEXT PRIMARY KEY, %s TEXT, %s TEXT, %s TEXT, %s TEXT,%s BOOL)", CONTACT_COL_1, CONTACT_COL_2, CONTACT_COL_3, CONTACT_COL_4,CONTACT_COL_5,CONTACT_COL_6);
-        String windowQuery = String.format("create table " + MESSAGE_TABLE_NAME + " ( %s TEXT, %s TEXT, %s TEXT, %s TEXT,%s BOOLEAN, %s TEXT, %s BOOLEAN, %s INTEGER PRIMARY KEY AUTOINCREMENT)", MESSAGE_COL_1, MESSAGE_COL_2, MESSAGE_COL_3, MESSAGE_COL_4, MESSAGE_COL_5, MESSAGE_COL_6, MESSAGE_COL_7, MESSAGE_COL_8);
+        String windowQuery = String.format("create table " + MESSAGE_TABLE_NAME + " ( %s TEXT, %s TEXT, %s TEXT, %s TEXT,%s BOOLEAN, %s TEXT, %s BOOLEAN, %s TEXT, %s INTEGER PRIMARY KEY AUTOINCREMENT)", MESSAGE_COL_1, MESSAGE_COL_2, MESSAGE_COL_3, MESSAGE_COL_4, MESSAGE_COL_5, MESSAGE_COL_6, MESSAGE_COL_7,MESSAGE_COL_8, MESSAGE_COL_9);
         String attachmentQuery = String.format("create table " + ATTACHMENT_DATABASE + " ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s TEXT)", ATTACHMENT_COL_1, ATTACHMENT_COL_2, ATTACHMENT_COL_3, ATTACHMENT_COL_4);
         db.execSQL(conversationQuery);
         db.execSQL(contactQuery);
         db.execSQL(windowQuery);
         db.execSQL(attachmentQuery);
-    }
-    public void upgradeFromVersion1(){
-        //new code will go here for the upgrade
-        //Use the Alter Table table_name ADD new_column_name column_default_data
-        //find out more at https://www.techonthenet.com/sqlite/tables/alter_table.php
     }
 
     //<editor-fold>  Conversation Functions
@@ -479,10 +479,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(MESSAGE_COL_5, message.hasAttachments());
         contentValues.put(MESSAGE_COL_6, message.getMessageId());
         contentValues.put(MESSAGE_COL_7, message.getSent());
+        contentValues.put(MESSAGE_COL_8, CommonMethods.dateToString(message.getSentDate()));
         long result = db.insert(MESSAGE_TABLE_NAME, null, contentValues);
         return result != -1;
     }
-
+    public void deleteIncompleteMessage(String content){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(MESSAGE_TABLE_NAME,MESSAGE_COL_3+" = ? and "+MESSAGE_COL_4+" = ?",new String[]{r.getString(R.string.getSubjectLine),content});
+    }
     public List<Message> getMessages(String email) {
         Log.d("Database","Messages Accessed");
         List messageList = new ArrayList<>();
@@ -495,13 +499,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             boolean hasAttach = (1 == res.getInt(res.getColumnIndex(MESSAGE_COL_5)));
             String messageID = res.getString(res.getColumnIndex(MESSAGE_COL_6));
             int sentValue = res.getInt(res.getColumnIndex(MESSAGE_COL_7));
-            Message message = new Message(email,name,subject,text,messageID,sentValue,hasAttach);
+            Date sentDate = CommonMethods.stringToDate(res.getString(res.getColumnIndex(MESSAGE_COL_8)));
+            Message message = new Message(email,name,subject,text,messageID,sentValue,hasAttach,sentDate);
             messageList.add(message);
         }
         res.close();
         return messageList;
     }
-
     private void updateMessages(String originalEmail, Contact contact) {
         Log.d("Database","Messages Accessed");
         SQLiteDatabase db = this.getWritableDatabase();
@@ -518,6 +522,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(MESSAGE_COL_6,res.getString(res.getColumnIndex(MESSAGE_COL_6)));
             contentValues.put(MESSAGE_COL_7,1==res.getInt(res.getColumnIndex(MESSAGE_COL_7)));
             contentValues.put(MESSAGE_COL_8,res.getString(res.getColumnIndex(MESSAGE_COL_8)));
+            contentValues.put(MESSAGE_COL_9,res.getString(res.getColumnIndex(MESSAGE_COL_9)));
             db.update(MESSAGE_TABLE_NAME,contentValues,"EMAIL = ?",new String[]{originalEmail});
         }
         res.close();
@@ -534,7 +539,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String text = res.getString(res.getColumnIndex(MESSAGE_COL_4));
         boolean hasAttach = (1 == res.getInt(res.getColumnIndex(MESSAGE_COL_5)));
         int sentValue = res.getInt(res.getColumnIndex(MESSAGE_COL_7));
-        message = new Message(email,name,subject,text,messageID,sentValue,hasAttach);
+        Date sentDate = CommonMethods.stringToDate(res.getString(res.getColumnIndex(MESSAGE_COL_8)));
+        message = new Message(email,name,subject,text,messageID,sentValue,hasAttach,sentDate);
 
         res.close();
         return message;
@@ -551,6 +557,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(MESSAGE_TABLE_NAME,"EMAIL = ?",new String[]{email});
 
+    }
+    public boolean hasRecentTime(String email, Date test){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select "+MESSAGE_COL_8+" from " + MESSAGE_TABLE_NAME + " where EMAIL = ? and "+MESSAGE_COL_2+" = ?", new String[]{email,"TIME"}, null);
+        while(res.moveToNext()){
+            Date lastDate = CommonMethods.stringToDate(res.getString(res.getColumnIndex(MESSAGE_COL_8)));
+            Calendar testDate = Calendar.getInstance();
+            testDate.setTime(test);
+            if(testDate.get(Calendar.HOUR_OF_DAY)>=1){
+                testDate.set(Calendar.HOUR_OF_DAY,testDate.get(Calendar.HOUR_OF_DAY)-1);
+            }else{
+                testDate.set(Calendar.HOUR_OF_DAY,testDate.get(Calendar.HOUR_OF_DAY)+23);
+                if(testDate.get(Calendar.DAY_OF_YEAR)>=2){
+                    testDate.set(Calendar.DAY_OF_YEAR,testDate.get(Calendar.DAY_OF_YEAR)-1);
+                }else{
+                    testDate.set(Calendar.DAY_OF_YEAR,testDate.get(Calendar.DAY_OF_YEAR)-1);
+                    testDate.set(Calendar.YEAR,testDate.get(Calendar.YEAR)-1);
+                }
+            }
+            if(lastDate.after(testDate.getTime())){
+                return true;
+            }
+        }
+        return false;
     }
     //</editor-fold>
 

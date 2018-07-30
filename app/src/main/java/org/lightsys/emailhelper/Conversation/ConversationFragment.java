@@ -24,7 +24,7 @@ import org.lightsys.emailhelper.DividerItemDecoration;
 import org.lightsys.emailhelper.GetMail;
 import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.RecyclerTouchListener;
-import org.lightsys.emailhelper.emailNotification;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +134,6 @@ public class ConversationFragment extends android.app.Fragment{
             @Override
             public void onClick(View view, int position) {
                 Conversation conversation = conversationList.get(position);
-                Toast.makeText(getActivity().getApplicationContext(), conversation.getName() + getString(R.string.is_selected), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity().getBaseContext(), ConversationActivity.class);
                 intent.putExtra(getString(R.string.intent_email), conversation.getEmail());
                 conversation.resetNewMail();
@@ -178,23 +177,17 @@ public class ConversationFragment extends android.app.Fragment{
     }
     private class refresh extends AsyncTask<URL, Integer, Long>{
         Handler handler;
-        emailNotification creds;
         @Override
         protected Long doInBackground(URL... urls) {
             handler = new Handler(Looper.getMainLooper());
             GetMail mailer = new GetMail(getActivity().getApplicationContext());
-            creds = mailer.getMail();
+            mailer.getMail();
             return null;
         }
         @Override
         protected void onPostExecute(Long result){
             swipeContainer.setRefreshing(false);//Must be called or refresh circle will continue forever
-            if(creds.getInvalid_Credentials()){
-                Toast.makeText(getActivity().getApplicationContext(),getString(R.string.invalid_credentials),Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.refresh_finished), Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.refresh_finished), Toast.LENGTH_SHORT).show();
             prepareConversationData();
         }
     }

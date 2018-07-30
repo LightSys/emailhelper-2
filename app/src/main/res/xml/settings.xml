@@ -15,13 +15,6 @@
             android:summaryOff="@string/summary_basic_off"
             android:summaryOn="@string/summary_basic_on"
             android:title="@string/title_update_show_messages"/>
-        <CheckBoxPreference
-            android:defaultValue="@bool/default_link_messages"
-            android:key="@string/key_link_messages"
-            android:summaryOn="@string/summary_clickable_links_on"
-            android:summaryOff="@string/summary_clickable_links_off"
-            android:title="@string/title_link_messages"
-            />
         <ListPreference
             android:title="@string/title_update_time_period"
             android:key="@string/key_update_time_period"

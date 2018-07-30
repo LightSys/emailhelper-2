@@ -21,6 +21,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import java.net.URL;
 import java.util.List;
+import java.util.Stack;
+
 import xdroid.toaster.Toaster;
 import static java.lang.Math.pow;
 /**
@@ -37,7 +39,7 @@ public class AutoUpdater extends Service {
 
     //time constants in milliseconds
     private static final int ONE_SECOND     = 1000;
-    private emailNotification gotMail;
+    private Stack<NotificationBase> gotMail;
 
     private SharedPreferences sp;
 
@@ -85,13 +87,9 @@ public class AutoUpdater extends Service {
         protected Long doInBackground(URL... urls) {
             GetMail mailer = new GetMail(getApplicationContext());
             gotMail = mailer.getMail();
-            if(gotMail.getInvalid_Credentials()){
-                sendNotification(getString(R.string.invalid_credentials_notification_title),getString(R.string.invalid_credentials_notification_subject));
-            }else{
-                while (gotMail.status()){
-                    NotificationBase temp = gotMail.pop();
-                    sendNotification(temp.getTitle(),temp.getSubject());
-                }
+            while (gotMail.size()>0){
+                NotificationBase temp = gotMail.pop();
+                sendNotification(temp.getTitle(),temp.getSubject());
             }
             return null;
         }

@@ -21,6 +21,9 @@ import org.lightsys.emailhelper.R;
 import org.lightsys.emailhelper.SendMail;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,7 +115,7 @@ public class ConversationWindowFragment extends android.app.Fragment {
                 @Override
                 public void onClick(View v) {
                     //Create New Message
-                    Message message = new Message(passedEmail, "",getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), "", Message.SENT_BY_ME,false);
+                    Message message = new Message(passedEmail, db.getContactName(passedEmail),getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), "", Message.SENT_BY_ME,false,CommonMethods.getCurrentTime());
                     messageList.add(message);
                     cAdapter.notifyDataSetChanged();
 
@@ -144,6 +147,19 @@ public class ConversationWindowFragment extends android.app.Fragment {
      */
     public void prepareWindowRows() {
         messageList = db.getMessages(passedEmail);
+        Collections.sort(messageList,new Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                if(o1.getSentDate().after(o2.getSentDate())){
+                    return 1;
+                }else if(o1.getSentDate().before(o2.getSentDate())){
+                    return -1;
+                }
+                else{
+                    return 0;
+                }
+            }
+        });
         cAdapter = new ConversationWindowAdapter(messageList,getActivity().getApplicationContext());
         recyclerView.setAdapter(cAdapter);
     }
