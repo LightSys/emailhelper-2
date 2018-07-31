@@ -7,6 +7,7 @@ import android.os.Environment;
 
 import com.sun.mail.imap.IMAPStore;
 
+import org.jsoup.Jsoup;
 import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.Contact.ContactList;
 import org.lightsys.emailhelper.Conversation.Message;
@@ -19,8 +20,10 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Stack;
 
+import javax.mail.Address;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
+import javax.mail.FetchProfile;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -110,7 +113,7 @@ public class GetMail {
                             String title = getNotificationTitle(conversationWindow);
                             String body = getNotifcationBody(conversationWindow, message);
                             if (db.getNotificationSettings(contact.getEmail())) {
-                                receivedNew.push(new NotificationBase(title, body));
+                                receivedNew.push(new NotificationBase(title, body,contact.getEmail()));
                             }
 
                             //Update contact
@@ -263,7 +266,7 @@ public class GetMail {
         }
         return null;
     }
-    private void setProperties(Properties properties){
+    private static void setProperties(Properties properties){
         properties.setProperty("mail.store.protocol", "imaps");
         properties.put("mail.stmp.auth","true");
         properties.put("mail.smtp.starttls.enable","true");
@@ -273,9 +276,13 @@ public class GetMail {
         String result = "";
         if (message.isMimeType("text/plain")) {
             result = message.getContent().toString();
-        } else if (message.isMimeType("multipart/*")) {
+        }else if(message.isMimeType("text/html")){
+            result = message.getContent().toString();
+            result = Jsoup.parse(result).text();
+        }else if (message.isMimeType("multipart/*")) {
             Multipart mimeMultipart = (Multipart) message.getContent();
             result = getTextFromMimeMultipart(mimeMultipart);
+            result.trim();
         }
         return result;
     }

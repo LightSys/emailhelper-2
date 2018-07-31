@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
+        getSupportActionBar().setTitle(getString(R.string.app_title));
 
         reciever = new BroadcastReceiver() {
             @Override
@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         };
 
         fab = findViewById(R.id.mainFloatingButton);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,8 +86,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
-
-        //start Updater
+        //restart Updater
         Intent updateIntent = new Intent(getBaseContext(), AutoUpdater.class);
         stopService(updateIntent);
         startService(updateIntent);
@@ -100,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
 
-        boolean testingWithSignIn = false;
+        boolean testingWithSignIn = true;
         //TODO remove hard code
         if(testingWithSignIn){
             AuthenticationClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));

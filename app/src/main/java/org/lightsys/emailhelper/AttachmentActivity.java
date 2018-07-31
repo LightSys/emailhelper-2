@@ -134,10 +134,11 @@ public class AttachmentActivity extends AppCompatActivity {
             intent.putExtra("file_path",filePath);
             startActivity(intent);
         }else{
-            fileUri = Uri.parse("content://org.lightsys.emailhelper/sharingFiles/"+email+"/"+file.getName());
+            fileUri = Uri.fromFile(file);
             intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(fileUri,getContentResolver().getType(fileUri));
+            intent.setDataAndType(fileUri,mime);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PackageManager manager = getPackageManager();
             List<ResolveInfo> capableApps = manager.queryIntentActivities(intent,0);
             if(capableApps.size() > 0){

@@ -20,6 +20,7 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -87,9 +88,15 @@ public class AutoUpdater extends Service {
         protected Long doInBackground(URL... urls) {
             GetMail mailer = new GetMail(getApplicationContext());
             gotMail = mailer.getMail();
+            List<String> notifiedEmails = new ArrayList();//TODO to get something to get rid of duplicates
             while (gotMail.size()>0){
                 NotificationBase temp = gotMail.pop();
-                sendNotification(temp.getTitle(),temp.getSubject());
+                sendNotification(temp.getTitle(),temp.getSubject(),!notifiedEmails.contains(temp.getEmail()));
+                if(!notifiedEmails.contains(temp.getEmail())){
+                    notifiedEmails.add(temp.getEmail());
+                }
+
+
             }
             return null;
         }
@@ -100,17 +107,19 @@ public class AutoUpdater extends Service {
     /**********************************************************************************************
      *                                  Notification Builder                                      *
      **********************************************************************************************/
-    private void sendNotification(final String title, final String subject){
+    private void sendNotification(final String title, final String subject, boolean toastIfRunning){
         SharedPreferences sp = getSharedPreferences(getResources().getString(R.string.preferences),0);
         if(!sp.getBoolean(getResources().getString(R.string.key_update_show_notifications),getResources().getBoolean(R.bool.default_update_show_notifications))){
             return;
         }
         if(appIsRunning()){
-            Toaster.toastLong(title+"\n"+subject);
-            Intent result = new Intent();
-            result.setAction(getString(R.string.new_message));
-            result.putExtra(getString(R.string.broadcast_msg),getString(R.string.updateUI));
-            sendBroadcast(result);
+            if(toastIfRunning){
+                Toaster.toast(title);
+                Intent result = new Intent();
+                result.setAction(getString(R.string.new_message));
+                result.putExtra(getString(R.string.broadcast_msg),getString(R.string.updateUI));
+                sendBroadcast(result);
+            }
             return;
         }
 

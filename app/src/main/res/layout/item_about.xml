@@ -8,5 +8,7 @@
         android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoLink="web"/>
+        android:autoLink="web"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"/>
 </LinearLayout>

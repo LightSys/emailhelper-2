@@ -9,13 +9,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="org.lightsys.emailhelper.MainActivity">
-
-    <TextView
-        android:id="@+id/overview"
-        style="@style/fillHorizontal"
-        android:textColor="@color/colorPrimary"
-        android:textSize="25sp"
-        android:text="@string/messages"/>
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"

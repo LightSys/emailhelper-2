@@ -123,7 +123,7 @@
 
 
     <!-- Notification Strings -->
-    <string name="notification_title_prestring" translatable="true">"New message from "</string>
+    <string name="notification_title_prestring" translatable="true">"New message(s) from "</string>
     <string name="notification_title_poststring" translatable="true"></string>
 
     <!-- Emails Strings -->
@@ -214,4 +214,5 @@
     <string name="intent_create_new_contact">start_conversation</string>
     <string name="email_validation_prestring">"EmailHelper does not recognize "</string>
     <string name="email_validation_poststring">". Are you sure you want to add this email?"</string>
+    <string name="app_title">Email Helper - Messages</string>
 </resources>
