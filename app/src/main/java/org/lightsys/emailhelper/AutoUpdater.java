@@ -34,7 +34,7 @@ import static java.lang.Math.pow;
  * service class that automatically updates local database with server database
  * for the eventApp
  *
- * Pulled into and modified for emailHelper for notifications - SHADE
+ * Pulled into and modified for emailHelper for notifications - DSHADE
  */
 public class AutoUpdater extends Service {
 

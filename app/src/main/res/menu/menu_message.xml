@@ -7,12 +7,12 @@
         android:id="@+id/message_menu_QR_input"
         android:title="@string/menu_get_QR"
         android:icon="@drawable/ic_camera_white"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/message_menu_QR_output"
         android:title="@string/menu_show_QR"
         android:icon="@drawable/ic_center_focus_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/message_menu_contacts"
         android:title="@string/menu_contacts"

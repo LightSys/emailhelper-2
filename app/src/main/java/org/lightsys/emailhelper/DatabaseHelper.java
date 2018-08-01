@@ -27,7 +27,13 @@ import xdroid.toaster.Toaster;
  *  reinstall the app. The onCreate function only runs the first time the app is made. There may  *
  *  be a need to writed update functions so that won't have to happen if that situation comes up  *
  *  in the future. Otherwise you can use the onUpgrade function.                                  *
- **************************************************************************************************/
+ **************************************************************************************************
+ *
+ * Correction to the above comment. While changes to the app while developement should be used with
+ * a reinstall, you must watch for changes to the database on a new version. This changes should be
+ * onUpgrade as a new case statement.
+ * -DSHADE
+ */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "EmailHelper.db";
@@ -459,7 +465,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This function adds the message into the database
-     *
      */
     public boolean insertMessage(Message message) {
         SQLiteDatabase db = this.getWritableDatabase();

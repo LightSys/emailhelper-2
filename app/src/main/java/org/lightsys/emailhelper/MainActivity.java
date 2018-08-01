@@ -33,10 +33,7 @@ import xdroid.toaster.Toaster;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
 
-    // TODO: Remove or figure out how to make the DividerItemDecoration work
-    // TODO: Polling or push notifications
 
-    static private final int QR_RESULT = 1;
 
     DatabaseHelper db;
     ConversationFragment newConversationFragment = new ConversationFragment();
@@ -63,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle(getString(R.string.app_title));
+        getSupportActionBar().setTitle(getString(R.string.messages));
 
         reciever = new BroadcastReceiver() {
             @Override
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //Gathering Credentials
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), CommonMethods.SHARED_PREFERENCES_DEFAULT_MODE);
 
-        boolean testingWithSignIn = true;
+        boolean testingWithSignIn = false;
         //TODO remove hard code
         if(testingWithSignIn){
             AuthenticationClass.setEmail(sharedPref.getString(getString(R.string.key_email), getString(R.string.default_email)));
@@ -194,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 requestCameraPermission();
             } else {
                 Intent QR = new Intent(MainActivity.this, launchQRScanner.class);
-                startActivityForResult(QR, QR_RESULT);
+                startActivityForResult(QR, CommonMethods.QR_RESULT);
             }
         }
     }
@@ -214,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     if(permissions[i].equalsIgnoreCase("android.permission.CAMERA")){
                         if(grantResults[i] == PackageManager.PERMISSION_GRANTED){
                             Intent QR = new Intent(MainActivity.this, launchQRScanner.class);
-                            startActivityForResult(QR, QR_RESULT);
+                            startActivityForResult(QR, CommonMethods.QR_RESULT);
                         }else if(grantResults[i] == PackageManager.PERMISSION_DENIED){
                             if(!ActivityCompat.shouldShowRequestPermissionRationale(this,"android.permission.CAMERA")){//If statement added by DSHADE
                                 Toaster.toastLong(R.string.cannot_request_camera_permission);

@@ -8,6 +8,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+/**
+ * This class is to intialize the user settings fragment and keeping the summaries up to data.
+ */
 public class UserSettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener  {
 
 

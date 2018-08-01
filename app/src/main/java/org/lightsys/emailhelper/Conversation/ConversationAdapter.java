@@ -2,6 +2,7 @@ package org.lightsys.emailhelper.Conversation;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -98,9 +99,19 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         mCal.set(Calendar.HOUR,0);
         mCal.set(Calendar.AM_PM,Calendar.AM);
         Date today = mCal.getTime();
-        mCal.set(Calendar.DAY_OF_MONTH,1);
+        if(mCal.get(Calendar.DAY_OF_YEAR)>=32){
+            mCal.set(Calendar.YEAR,mCal.get(Calendar.YEAR)-1);
+            mCal.set(Calendar.DAY_OF_YEAR,mCal.get(Calendar.DAY_OF_YEAR)+334);
+        }else{
+            mCal.set(Calendar.DAY_OF_YEAR,mCal.get(Calendar.DAY_OF_YEAR)-31);
+        }
         Date lastMonth = mCal.getTime();
-        mCal.set(Calendar.MONTH,0);
+        if(mCal.get(Calendar.DAY_OF_YEAR)>=301){
+            mCal.set(Calendar.YEAR,mCal.get(Calendar.YEAR)-1);
+            mCal.set(Calendar.DAY_OF_YEAR,mCal.get(Calendar.DAY_OF_YEAR)+64);
+        }else{
+            mCal.set(Calendar.DAY_OF_YEAR,mCal.get(Calendar.DAY_OF_YEAR)-300);
+        }
         Date lastYear = mCal.getTime();
         if(today.before(set)){
             holder.time.setText(CommonMethods.getTime(set));

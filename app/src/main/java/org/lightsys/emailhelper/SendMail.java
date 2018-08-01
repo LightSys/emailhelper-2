@@ -68,8 +68,7 @@ public class SendMail extends AsyncTask<URL, Integer, Long> {
             message.setSubject(c.getResources().getString(R.string.getSubjectLine));
 
             message.setText(persistantMessage);
-            Transport transport = session.getTransport("smtp");
-            transport.send(message);
+            Transport.send(message);
         }
         catch(AuthenticationFailedException e){
             e.printStackTrace();

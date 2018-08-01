@@ -33,6 +33,10 @@ import java.io.OutputStream;
 import java.util.List;
 import xdroid.toaster.Toaster;
 
+/**
+ * This class is used to pull up the attachments for a given conversation. This screen is only
+ * availible when the contact has contacts.
+ */
 public class AttachmentActivity extends AppCompatActivity {
     RecyclerView attachments;
     private AttachmentAdapter adapter;

@@ -2,6 +2,8 @@ package org.lightsys.emailhelper;
 
 /**
  * Created by nicholasweg on 6/26/17.
+ * Edited by DSHADE Summer 2018
+ *  - added functions and constants
  */
 
 import android.view.View;
@@ -120,6 +122,8 @@ public class CommonMethods {
     public static final int DOES_CONTACT_CHANGE = 3030;
     public static final int CONTACT_CHANGED = 28430;
     public static final int CONTACT_NOT_CHANGED = 3036;
+
+    public static final int QR_RESULT = 1;
 
 
 

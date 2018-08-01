@@ -23,6 +23,13 @@ import java.util.List;
 import java.util.Scanner;
 
 
+/**
+ * The About Class created by DSHADE Summer 2018
+ * I think think this is one of my finer creations/additions. This class uses a recycler view to
+ * create the about page. It allows for everything used in the EventApp but with much more
+ * flexibility. To change the about page simple change the .txt file and use the approppriate HTML
+ * style encoding.
+ */
 public class About extends AppCompatActivity {
     RecyclerView recyclerView;
     AboutItemAdapter adapter;

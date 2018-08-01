@@ -5,7 +5,11 @@ package org.lightsys.emailhelper;
  *  I have no idea how this class works. I pulled it from where I got the formatting and creation *
  *  of the ConversationWindow list. It worked at the start, but I don't know why it stopped or    *
  *  where to try and start making changes for it.                                                 *
- **************************************************************************************************/
+ **************************************************************************************************
+ * This class is responsible for the creation on the separating lines between items in recycler views.
+ * To remove the lines simply remove the item decoration.
+ * -DSHADE
+ */
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;

@@ -15,6 +15,9 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import xdroid.toaster.Toaster;
 
+/**
+ * This class is to initialize the prefrence fragments and keep the summaries up to date.
+ */
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener,Preference.OnPreferenceChangeListener {
 
 

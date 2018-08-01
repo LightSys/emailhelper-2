@@ -9,6 +9,9 @@ import android.view.View;
 /**
  * Created by Ravi Tamada on 03/09/16.
  * www.androidhive.info
+ * also see https://www.javatips.net/api/Cook-It-Android-XML-Template-master/app/src/main/java/com/uiresource/cookit/recycler/RecyclerTouchListener.java#
+ *
+ * TODO VERY IMPORTANT more research needs done on the licensing for this file from javatips.
  */
 public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
@@ -51,6 +54,7 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
+
 
     public interface ClickListener {
         void onClick(View view, int position);

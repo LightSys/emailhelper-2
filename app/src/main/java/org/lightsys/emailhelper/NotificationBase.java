@@ -1,5 +1,8 @@
 package org.lightsys.emailhelper;
 
+/**
+ * This class was created to hold the data for the notification so the messages could all be collected.
+ */
 public class NotificationBase {
     private String Title;
     private String Subject;

@@ -42,6 +42,12 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.RecipientTerm;
 import javax.mail.search.SearchTerm;
 
+/**
+ * The GetMail class is used to uniformily get mail using the public functions inside of it.
+ * @author DSHADE
+ * When I originally began work on the app a function like this one was distributed across multiple
+ * different classes. I moved it here so that it was all in one place.
+ */
 public class GetMail {
     private DatabaseHelper db;
     SharedPreferences sp;
@@ -55,6 +61,11 @@ public class GetMail {
         sp = c.getSharedPreferences(r.getString(R.string.preferences),0);
 
     }
+
+    /**
+     * This function is in charge of getting messages from the email client.
+     * @return The notificationBases for the messages to be displayed if need be.
+     */
     public Stack<NotificationBase> getMail() {
         Stack<NotificationBase> receivedNew = new Stack();
         ContactList contactList = db.getContactList();
@@ -64,11 +75,8 @@ public class GetMail {
             Folder inbox = getInbox(props);
             UIDFolder uf = (UIDFolder) inbox;
             inbox.open(Folder.READ_WRITE);
-            Folder sent = getSent(props);
-            if(sent != null){
-                sent.open(Folder.READ_ONLY);
-            }
-            UIDFolder ufSent = (UIDFolder) sent;
+
+
             for(int i = 0;i<contactList.size();i++){
                 Contact contact = contactList.get(i);
                 javax.mail.Message incoming[] = inbox.search(getSearchTermIncoming(contact.getEmail()));
@@ -79,7 +87,7 @@ public class GetMail {
                             //Add new Time Message
                             Message timeHolder = new Message();
                             boolean hasRecentTime = !db.hasRecentTime(contact.getEmail(),message.getReceivedDate());
-                            if(hasRecentTime){
+                            if(hasRecentTime){//only addes a new TIME message if needed.
                                 timeHolder.setEmail(contact.getEmail());
                                 timeHolder.setName("TIME");
                                 String date = CommonMethods.dateToString(message.getReceivedDate());
@@ -91,12 +99,12 @@ public class GetMail {
                                 timeHolder.setSentDate(message.getReceivedDate());
                             }
 
-                            //Push conversation
+                            //Pull conversation from client
                             Message conversationWindow = new Message();
                             conversationWindow.setEmail(contact.getEmail());
                             conversationWindow.setName(contact.getName());
                             conversationWindow.setSubject(message.getSubject());
-                            conversationWindow.setMessage(getMessageContent(message));
+                            conversationWindow.setMessage(getTextFromMessage(message));
                             conversationWindow.setSent(Message.SENT_BY_OTHER);
                             conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
                             conversationWindow.setMessageId(Long.toString(uf.getUID(message)));
@@ -132,6 +140,12 @@ public class GetMail {
                     }
                 }
                 //</editor-fold>
+                //<editor-fold>This is getting messages from a sent folder...if there is two...bad
+                Folder sent = getSent(props);
+                if(sent != null){
+                    sent.open(Folder.READ_ONLY);
+                }
+                UIDFolder ufSent = (UIDFolder) sent;
                 if(sent != null){
                     javax.mail.Message outgoing[] = sent.search(getSearchTermOutgoing(contact.getEmail()));
                     for (javax.mail.Message message : outgoing) {
@@ -153,15 +167,15 @@ public class GetMail {
                                 //Add new Time Message
 
 
-                                //Push conversation
+                                //Pull conversation
                                 Message conversationWindow = new Message();
                                 conversationWindow.setEmail(contact.getEmail());
                                 conversationWindow.setName(contact.getName());
                                 conversationWindow.setSubject(message.getSubject().trim());
                                 if(conversationWindow.getSubject().equalsIgnoreCase(r.getString(R.string.getSubjectLine))){
-                                    db.deleteIncompleteMessage(getMessageContent(message).trim());
+                                    db.deleteIncompleteMessage(getTextFromMessage(message).trim());
                                 }
-                                conversationWindow.setMessage(getMessageContent(message).trim());
+                                conversationWindow.setMessage(getTextFromMessage(message).trim());
                                 conversationWindow.setSent(Message.SENT_BY_ME);
                                 conversationWindow.setHasAttachments(getAttachments(contact.getEmail(), message, uf));
                                 conversationWindow.setMessageId(Long.toString(ufSent.getUID(message)));
@@ -184,6 +198,7 @@ public class GetMail {
                         }
                     }
                 }
+                //</editor-fold>
             }
         } catch(AuthenticationFailedException e){
             e.printStackTrace();
@@ -241,9 +256,7 @@ public class GetMail {
         SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GE,updatedDate);
         return new AndTerm(reciever, newerThan);
     }
-    private String getMessageContent(javax.mail.Message message) throws MessagingException, IOException {
-        return getTextFromMessage(message);
-    }
+
     private Folder getInbox(Properties props) throws MessagingException {
         Session session = Session.getDefaultInstance(props, null);
         IMAPStore store = (IMAPStore) session.getStore("imaps");
@@ -266,12 +279,14 @@ public class GetMail {
         }
         return null;
     }
+
     private static void setProperties(Properties properties){
         properties.setProperty("mail.store.protocol", "imaps");
         properties.put("mail.stmp.auth","true");
         properties.put("mail.smtp.starttls.enable","true");
         properties.put("mail.imap.port","993");
     }
+
     private String getTextFromMessage(javax.mail.Message message) throws MessagingException, IOException {
         String result = "";
         if (message.isMimeType("text/plain")) {
@@ -340,6 +355,12 @@ public class GetMail {
         }
         return hasAttachments;
     }
+
+    /**
+     * This function was built to gather all the contacts from the inbox
+     * @return the ContactList containing all of the addresses in the inbox.
+     * USED in contact activity
+     */
     public ContactList getContactsFromInbox(){
         ContactList contactList = new ContactList();
         Properties props = System.getProperties();
