@@ -8,22 +8,33 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_email">This email addres is not compatible with Email Helper.</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_password">The Username or Password is incorrect.</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
 
     <!-- General Strings -->
-    <string name="settings" translatable="true">Settings</string>
+    <string name="settings" translatable="true">EmailHelper Settings</string>
+    <string name="messages" translatable="true">Conversations</string>
     <string name="contacts" translatable="true">Contacts</string>
     <string name="new_contact" translatable="true">New Contact</string>
-    <string name="action_new_contact" translatable="true">New Contact Button</string>
+
     <string name="refresh_finished" translatable="true">Refresh finished.</string>
     <string name="fragment_credentials_email" translatable="true">Email:</string>
     <string name="fragment_credentials_password" translatable="true">Password:</string>
+    <string name="inbox_button_string" translatable="true">Show All Addresses from Inbox</string>
+
+    <!-- Menu Strings -->
+    <string name="menu_add_new_contact" translatable="true">Add New Contact</string>
+    <string name="menu_get_QR" translatable="true">Scan QR Code</string>
+    <string name="menu_contacts" translatable="true">Contacts</string>
+    <string name="menu_show_QR" translatable="true">Show my QR Code</string>
+    <string name="menu_account_settings" translatable="true">Account Settings</string>
+    <string name="menu_settings" translatable="true">Settings</string>
+    <string name="menu_about" translatable="true">About</string>
+    <!-- Strings for credentials validation -->
+
     <string name="invalid_credentials" translatable="true">"Invalid credentials. Please reenter them.</string>
     <string name="invalid_credentials_notification_title" translatable="true">Invalid Credentials</string>
     <string name="invalid_credentials_notification_subject" translatable="true">Please reenter them.</string>
@@ -31,7 +42,7 @@
     <string name="valid_credentials" translatable="true">Credentials Validated.</string>
 
 
-    <!-- SharedPreference Strings-->
+    <!-- SharedPreference String-->
     <string name="preferences" translatable="false">org.lightsys.emailhelper_preferences</string>
 
     <!-- Keys -->
@@ -41,36 +52,167 @@
     <string name="key_update_show_messages" translatable="false">showMessages</string>
     <string name="key_email" translatable="false">email</string>
     <string name="key_password" translatable="false">password</string>
-    <string name="key_valid_credentials" translatable="false">Check_Credentials</string>
+    <string name="key_valid_credentials" translatable="false">checkCredentials</string>
+    <string name="key_show_database_contacts" translatable="false">showDatabaseContacts</string>
+    <string name="key_link_messages">linking_messages</string>
     <!-- Values -->
     <string name="value_time_period_minutes" translatable="false">1</string>
     <string name="value_time_period_hours" translatable="false">2</string>
     <!-- Defaults -->
     <string name="default_update_frequency" translatable="false">30</string>
-    <string name="default_email" translatable="false"></string>
-    <string name="default_password" translatable="false"></string>
+    <string name="default_email" translatable="false"> </string>
+    <string name="default_password" translatable="false"> </string>
     <!-- Titles -->
+    <string name="title_notifications" translatable="true">Notifications Settings</string>
     <string name="title_update_frequency" translatable="true">Update Frequency</string>
     <string name="title_update_time_period" translatable="true">Update Time Period</string>
     <string name="entry_time_period_minutes" translatable="true">Minutes</string>
     <string name="entry_time_period_hours" translatable="true">Hours</string>
     <string name="title_update_show_notifications" translatable="true">Show Notifications</string>
     <string name="title_update_show_messages" translatable="true">Show Messages</string>
+    <string name="title_user_settings" translatable="true">User Settings (For QR)</string>
+    <string name="title_edit_contact_activity" translatable="true">Edit Contact</string>
+    <string name="title_link_messages">Display Links in Messages</string>
     <!-- Summaries -->
-    <string name="summary_notifications_on" translatable="true">On</string>
-    <string name="summary_notifications_off" translatable="true">Off</string>
-    <string name="summary_messages_on" translatable="true">On</string>
-    <string name="summary_messages_off" translatable="true">Off</string>
+    <string name="summary_basic_on" translatable="true">On</string>
+    <string name="summary_basic_off" translatable="true">Off</string>
+    <string name="summary_clickable_links_on">Displaying Links</string>
+    <string name="summary_clickable_links_off">Not Displaying Links</string>
     <!-- QR Code Strings -->
-    <string name="title_activity_qr_output">My QR code</string>
-    <string name="title_activity_qr_input">Scan QR Code</string>
-    <string name="msg_default_status">Scan a QR code to import contact data.</string>
+    <string name="title_activity_qr_output" translatable="true">My QR code</string>
+    <string name="title_activity_qr_input" translatable="true">Scan QR Code</string>
+    <string name="msg_default_status" translatable="true">Scan a QR code to import contact data.</string>
+    <string name="barcode_without_name" translatable="true">QR has been created without complete contact.\nTo change this, enter one in User Settings.</string>
 
     <string name="key_first_name" translatable="false">firstName</string>
     <string name="key_last_name" translatable="false">lastName</string>
-    <string name="default_first_name" translatable="true">Enter first name for your contact card.</string>
-    <string name="default_last_name" translatable="true">Enter last name for your contact card.</string>
+    <string name="default_first_name" translatable="true">Enter first name</string>
+    <string name="default_last_name" translatable="true">Enter last name</string>
     <string name="title_first_name" translatable="true">First Name</string>
     <string name="title_last_name" translatable="true">Last Name</string>
 
+    <!-- Contact Settings Strings -->
+    <string name="title_activity_contact_settings" translatable="true">Contact Settings</string>
+    <string name="contact_settings_name_text_title" translatable="true">Name</string>
+    <string name="contact_settings_email_text_title" translatable="true">Email</string>
+    <string name="contact_settings_notifications_checkbox" translatable="true">Send notifications for this email</string>
+    <string name="contact_settings_edit_contact_button" translatable="true">Edit Contact</string>
+    <string name="contact_settings_show_attachments_button" translatable="true">Show Attachments</string>
+    <string name="contact_settings_start_button" translatable="true">Start New Conversation</string>
+    <string name="contact_settings_delete_button" translatable="true">Delete Conversation</string>
+    <string name="action_edit_contact" translatable="true">Edit Contact</string>
+    <string name="action_edit_contact_settings" translatable="true">Edit Contact Settings</string>
+
+    <!-- Intent Strings -->
+    <string name="intent_first_name" translatable="false">first_name</string>
+    <string name="intent_last_name" translatable="false">last_name</string>
+    <string name="intent_email" translatable="false">email</string>
+
+    <!-- New Contact Fragment Strings -->
+    <string name="contact_added_prestring" translatable="true"></string>
+    <string name="contact_added_poststring" translatable="true">" added to Contacts."</string>
+    <string name="contact_not_added_prestring" translatable="true"></string>
+    <string name="contact_not_added_poststring" translatable="true">" is already in the Database."</string>
+    <string name="conversation_added_prestring" translatable="true">"A conversation with "</string>
+    <string name="conversation_added_poststring" translatable="true">" was started."</string>
+    <string name="conversation_not_added_prestring" translatable="true">"A conversation with "</string>
+    <string name="conversation_not_added_poststring" translatable="true">" was already in the Database."</string>
+
+    <!-- Toast Strings -->
+    <string name="is_selected" translatable="true">" is selected!"</string>
+
+
+    <!-- Notification Strings -->
+    <string name="notification_title_prestring" translatable="true">"New message(s) from "</string>
+    <string name="notification_title_poststring" translatable="true"></string>
+
+    <!-- Emails Strings -->
+    <string name="getSubjectLine" translatable="true">Conversation Email</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Attachment Related Strings -->
+    <string name="attachments" translatable="true">Attachments</string>
+    <string name="image_title" translatable="true">Attachment</string>
+    <string name="title_activity_image">ImageActivity</string>
+    <string name="title_activity_attachment">AttachmentActivity</string>
+    <string name="attachment_message" translatable="true">"\nAttachment(s) were saved from this email.\n To view go to Contact Settings."</string>
+    <string name="cannot_find_app_to_run" translatable="true">No apps found capable to open selected attachment.</string>
+
+    <!-- Popup Strings -->
+    <string name="delete_word" translatable="true">Delete</string>
+
+    <string name="contact_delete_message_prestring" translatable="true">"Are you sure you want to delete "</string>
+    <string name="contact_delete_message_poststring" translatable="true">" from Contacts? This will include all information and data assocaited with them."</string>
+    <string name="contact_deleted_prestring" translatable="true"></string>
+    <string name="contact_deleted_poststring" translatable="true">" has been deleted from Contacts. Their data has also been removed."</string>
+    <string name="contact_not_deleted_prestring" translatable="true"></string>
+    <string name="contact_not_deleted_poststring" translatable="true">" has not been deleted from Contacts. Their data has not been removed."</string>
+
+    <string name="conversation_delete_message_prestring" translatable="true">"Are you sure you want to delete the conversation with "</string>
+    <string name="conversation_delete_message_poststring" translatable="true">"? This will include messages and attachements associated with it."</string>
+    <string name="conversation_deleted_prestring" translatable="true">"Conversation and data with "</string>
+    <string name="conversation_deleted_poststring" translatable="true">" deleted."</string>
+    <string name="conversation_not_deleted_prestring" translatable="true">"Conversation and data with "</string>
+    <string name="conversation_not_deleted_poststring" translatable="true">" not deleted."</string>
+
+    <string name="attachment_message_prestring" translatable="true">"Are you sure that you want to delete "</string>
+    <string name="attachment_message_poststring" translatable="true">"?"</string>
+    <string name="attachment_deleted_message" translatable="true">The attachment has been deleted.</string>
+    <string name="attachment_not_deleted_message" translatable="true">The attachment has not been deleted.</string>
+
+    <string name="confirm_word" translatable="true">Confirm</string>
+    <string name="QR_popup_message_prestring" translatable="true">"Would you like to add "</string>
+    <string name="QR_popup_message_poststring" translatable="true">" to contacts?"</string>
+    <string name="title_activity_inbox_contact" translatable="true">Inbox Addresses</string>
+    <string name="title_activity_about" translatable="true">About</string>
+    <string name="qr_activity_display_title" translatable="true">Contact info in displayed QR</string>
+    <string name="cannot_request_camera_permission" translatable="true">"EmailHelper cannot request Camera permission. Please change this in system settings."</string>
+    <string name="qr_email" translatable="true">"Email: "</string>
+    <string name="qr_name" translatable="true">"Name: "</string>
+    <string name="need_camera_permission">EmailHelper needs access to the camera to use the QR scanning feature.</string>
+    <string name="no_contacts">You have no contacts in the database. To get started, click the add new contact button or add contacts from your inbox using the checkbox.</string>
+    <string name="no_add_self_to_contacts">EmailHelper does not allow you to add the logged-in email to contacts.</string>
+    <string name="title_general_settings">General Settings</string>
+    <string name="key_swipe_deletion">swipe_deletion</string>
+    <string name="summary_enabled">Enabled</string>
+    <string name="summary_disabled">Disabled</string>
+    <string name="title_enable_swipe_deletions">Enable Swipe Deletion</string>
+    <string name="swipe_deletion_disabled">Swipe deletion is disabled.</string>
+    <string name="title_activity_user_settings">User Settings</string>
+
+    <string name="change_credentials">Change Credentials</string>
+    <string name="menu_user_settings">User Settings</string>
+    <string name="user_settings_credential_settings">Credential Settings</string>
+    <string name="key_phone_number">phone_number</string>
+    <string name="title_phone_number">Phone Number</string>
+    <string name="title_company">Company</string>
+    <string name="key_company">company</string>
+    <string name="key_address">address</string>
+    <string name="title_address">Address</string>
+    <string name="key_website">website</string>
+    <string name="title_website">Website</string>
+    <string name="key_note">note</string>
+    <string name="title_note">Note</string>
+    <string name="save_contact_button">Save Contact</string>
+    <string name="edit_contact_information">Edit Contact Information</string>
+    <string name="intent_message_id">message_id</string>
+    <string name="OAuthNonCompat">EmailHelper is not currently compatible with Gmail OAuth identification. This means that we cannot access gmail if your account it not set to use less secure apps. You can fix this in you google account settings.If you have this set, your Username or Password may be incorrect.</string>
+    <string name="invalid_update_frequency">Please enter a integer value between 1 and 60.</string>
+    <string name="broadcast_msg">broadcast_message</string>
+    <string name="updateUI">update_UI</string>
+    <string name="new_message">org.lightsys.emailHelper.NEW_MESSAGE</string>
+    <string name="prompt_smtp">SMTP Server</string>
+    <string name="promt_imap">IMAP Server</string>
+    <string name="enable_advanced_login">Enable Advanced Login</string>
+    <string name="error_check_stuff">Something went wrong. EmailHelper is not sure what. Please check the information you provided and try again.</string>
+    <string name="error_invalid_stmp">This STMP address is invalid.</string>
+    <string name="error_invalid_imap">Could not connect to the imap server. Please check the address and try again.</string>
+    <string name="key_imap">imap_key</string>
+    <string name="key_smtp">stmp_key</string>
+    <string name="invalid_smtp">There was an issue with your SMTP Server please re-enter to send messages.</string>
+    <string name="intent_original_email">original_email</string>
+    <string name="intent_create_new_contact">start_conversation</string>
+    <string name="email_validation_prestring">"EmailHelper does not recognize "</string>
+    <string name="email_validation_poststring">". Are you sure you want to add this email?"</string>
+    <string name="app_title">Email Helper - Messages</string>
 </resources>

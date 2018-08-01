@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Contact.EditContactActivity">
+
+
+    <TextView
+        android:id="@+id/editContactActivity_first_name"
+        style="@style/fillHorizontal"
+        android:text="@string/title_first_name"/>
+
+    <EditText
+        android:id="@+id/editContactActivity_first_name_edit"
+        style="@style/fillHorizontal"
+        android:ems="10"
+        android:inputType="textPersonName"/>
+
+    <TextView
+        android:id="@+id/editContactActivity_last_name"
+        style="@style/fillHorizontal"
+        android:text="@string/title_last_name"/>
+
+    <EditText
+        android:id="@+id/editContactActivity_last_name_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"/>
+
+    <TextView
+        android:id="@+id/editContactActivity_email"
+        style="@style/fillHorizontal"
+        android:text="@string/prompt_email"/>
+
+    <EditText
+        android:id="@+id/editContactActivity_email_edit"
+        style="@style/fillHorizontal"
+        android:ems="10"
+        android:inputType="textEmailAddress"/>
+
+    <Button
+        android:id="@+id/saveContactButton"
+        style="@style/fillHorizontal"
+        android:text="@string/save_contact_button"/>
+</LinearLayout>

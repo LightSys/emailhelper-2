@@ -1,9 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<fragment
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_contact"
-    android:name="org.lightsys.emailhelper.Contact.ContactFragment"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app2="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contact_activity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-</fragment>
+    android:layout_height="match_parent"
+    tools:context="org.lightsys.emailhelper.Contact.ContactActivity">
+
+    <CheckBox
+        android:id="@+id/inbox_check_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:text="@string/inbox_button_string"
+        android:textSize="18sp"/>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/contact_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inbox_check_box">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_contact_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="33dp"
+            android:layout_marginStart="0dp"
+            android:scrollbars="vertical"
+
+            app2:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+</RelativeLayout>

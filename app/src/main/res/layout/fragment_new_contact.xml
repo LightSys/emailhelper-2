@@ -10,13 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="First Name"
-            android:textSize="20sp"
-            android:layout_marginTop="25dp"
-            android:layout_marginLeft="30dp"/>
 
         <EditText
             android:id="@+id/firstNameField"
@@ -24,16 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:layout_marginRight="25dp"
-            android:layout_marginLeft="25dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Last Name"
-            android:textSize="20sp"
-            android:layout_below="@+id/firstNameField"
-            android:layout_marginTop="25dp"
-            android:layout_marginLeft="30dp"/>
+            android:layout_marginLeft="25dp"
+            android:hint="@string/title_first_name"/>
 
         <EditText
             android:id="@+id/lastNameField"
@@ -42,25 +27,19 @@
             android:layout_below="@+id/firstNameField"
             android:layout_marginTop="50dp"
             android:layout_marginRight="25dp"
-            android:layout_marginLeft="25dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:textSize="20sp"
-            android:layout_below="@+id/lastNameField"
-            android:layout_marginTop="25dp"
-            android:layout_marginLeft="30dp"/>
+            android:layout_marginLeft="25dp"
+            android:hint="@string/title_last_name"/>
 
         <EditText
             android:id="@+id/emailField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lastNameField"
+            android:inputType="textEmailAddress"
             android:layout_marginTop="50dp"
             android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"/>
+            android:layout_marginRight="25dp"
+            android:hint="@string/prompt_email"/>
 
         <Button
             android:id="@+id/addContactButton"

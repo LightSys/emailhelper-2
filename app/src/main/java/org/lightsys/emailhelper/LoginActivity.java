@@ -3,6 +3,7 @@ package org.lightsys.emailhelper;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ExpandableListActivity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -17,33 +18,39 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+
 import com.sun.mail.imap.IMAPStore;
-import java.net.URL;
+import com.sun.mail.util.MailConnectException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.UIDFolder;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import xdroid.toaster.Toaster;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * THIS DOESN'T DO ANYTHING RIGHT NOW. USE IT TO GET THE SIGN IN INFORMATION THE FIRST TIME THE USER SIGNS IN.
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
@@ -54,13 +61,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
@@ -70,28 +70,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private CheckBox enableAdvancedLogin;
+    private EditText mIMAPview;
+    private EditText mSTMPview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = findViewById(R.id.email);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
+        mPasswordView = findViewById(R.id.password);
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,16 +94,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mIMAPview = findViewById(R.id.incoming);
+        mSTMPview = findViewById(R.id.outgoing);
+        final LinearLayout.LayoutParams shrink = new LinearLayout.LayoutParams(0,0);
+        final LinearLayout.LayoutParams expand = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        mIMAPview.setLayoutParams(shrink);
+        mSTMPview.setLayoutParams(shrink);
+        enableAdvancedLogin = findViewById(R.id.enableAdvanced);
+        enableAdvancedLogin.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mIMAPview.setLayoutParams(expand);
+                    mSTMPview.setLayoutParams(expand);
+                } else {
+                    mIMAPview.setLayoutParams(shrink);
+                    mSTMPview.setLayoutParams(shrink);
+                }
+            }
+        });
+        enableAdvancedLogin.setChecked(false);
     }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
-
     private boolean mayRequestContacts() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
@@ -137,8 +148,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Callback received when a permissions request has been completed.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
@@ -156,99 +166,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (mAuthTask != null) {
             return;
         }
-
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String imap = mIMAPview.getText().toString();
+        String stmp = mSTMPview.getText().toString();
 
         // Save the 'global' variables of HelperClass
-        HelperClass._Email = email;
-        HelperClass._Password = password;
-        HelperClass.savedCredentials = true;
-
-        // Create object of SharedPreferences
-        SharedPreferences sharedPref = getSharedPreferences("myPreferences", 0);
-        // New get Editor
-        SharedPreferences.Editor editor = sharedPref.edit();
-        // Put your values
-        editor.putString(getResources().getString(R.string.key_email), email);
-        editor.putString(getResources().getString(R.string.key_password), password);
-        editor.putBoolean(getResources().getString(R.string.key_valid_credentials), true);
-        // Apply your edits
-        editor.apply();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
+        if(enableAdvancedLogin.isChecked()){
+            AuthenticationClass.Email = email;
+            AuthenticationClass.Password = password;
+            AuthenticationClass.incoming = imap;
+            AuthenticationClass.outgoing = stmp;
+        }else{
+            AuthenticationClass.setEmail(email);
+            AuthenticationClass.Password = password;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
-        checkCredentials check = new checkCredentials();
-        check.execute();
-    }
-    private class checkCredentials extends AsyncTask<URL, Integer, Boolean>{
 
-        @Override
-        protected Boolean doInBackground(URL... urls) {
-            try{
-                Properties props = System.getProperties();
-                props.setProperty("mail.store.protocol", "imaps");
-                Session session = Session.getDefaultInstance(props, null);
-                IMAPStore store = (IMAPStore) session.getStore("imaps");
-                store.connect("smtp.googlemail.com", HelperClass._Email, HelperClass._Password);
-                Folder inbox = store.getFolder("Inbox");
-                UIDFolder uf = (UIDFolder) inbox;
-                inbox.open(Folder.READ_WRITE);
-            }catch(AuthenticationFailedException e){
-                Toaster.toastLong(R.string.invalid_credentials);
-                return null;
 
-            }catch(MessagingException e){
-                return null;
-            }
-            Toaster.toastLong(R.string.valid_credentials);
-            return null;
-        }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        // Show a progress spinner, and kick off a background task to
+        // perform the user login attempt.
+        showProgress(true);
+        mAuthTask = new UserLoginTask();
+        mAuthTask.execute();
     }
 
     /**
@@ -330,7 +272,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
-
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -345,49 +286,144 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
+        private final int unknownError = -1;
+        private final int success = 0;
+        private final int emailInvalid = 1;
+        private final int credentialsInvalid = 2;
+        private final int advancedLoginIssue = 3;
+        private final int invalidSTMP = 4;
+        private final int invalidIMAP = 5;
 
         private final String mEmail;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+        UserLoginTask() {
+            mEmail = AuthenticationClass.Email;
+            mPassword = AuthenticationClass.Password;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            String credentials = "Email:" + mEmail + "\nPassword:" + mPassword;
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+        protected Integer doInBackground(Void... params) {
+            if(enableAdvancedLogin.isChecked()){
+                try{
+                    Properties props = System.getProperties();
+                    //props.setProperty("mail.store.protocol", "imaps");
+                    props.setProperty("mail.store.protocol", "imaps");
+                    props.put("mail.stmp.auth","true");
+                    props.put("mail.smtp.starttls.enable","true");
+                    props.put("mail.imap.port","993");
+                    Session session = Session.getDefaultInstance(props, null);
+                    IMAPStore store = (IMAPStore) session.getStore("imaps");
+                    store.connect(AuthenticationClass.incoming, mEmail, mPassword);
+                    Folder inbox = store.getFolder("Inbox");
+                    UIDFolder uf = (UIDFolder) inbox;
+                    inbox.open(Folder.READ_WRITE);
+                }catch(AuthenticationFailedException e){
+                    return credentialsInvalid;
+                }catch(MailConnectException e){
+                    return invalidIMAP;
+                }catch(MessagingException e){
+                    return unknownError;
+                }catch(Exception e){
+                    e.printStackTrace();
+                    return unknownError;
+                }
+                if(AuthenticationClass.outgoing.equalsIgnoreCase("") || !AuthenticationClass.outgoing.contains(".")){
+                    return invalidSTMP;
+                }
+                try {
+                    Properties props = new Properties();
+                    props.put("mail.smtp.auth", "true");
+                    props.put("mail.smtp.starttls.enable", "true");
+                    props.put("mail.smtp.host", AuthenticationClass.outgoing);
+                    props.put("mail.smtp.port", "587");
+                    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(AuthenticationClass.Email, AuthenticationClass.Password);
+                        }
+                    });
+                    MimeMessage message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(AuthenticationClass.Email));
+                    message.setRecipient(Message.RecipientType.TO, new InternetAddress("john.doe@example.com"));
+                    //^May cause a bounced email.
+                    Transport transport = session.getTransport("smtp");
+                    transport.send(message);
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                }
+                catch (MailConnectException e) {
+                    e.printStackTrace();
+                    return invalidSTMP;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else{
+                if(!CommonMethods.checkEmail(mEmail)){
+                    return emailInvalid;
+                }
+                try{
+                    Properties props = System.getProperties();
+                    //props.setProperty("mail.store.protocol", "imaps");
+                    props.setProperty("mail.store.protocol", "imaps");
+                    props.put("mail.stmp.auth","true");
+                    props.put("mail.smtp.starttls.enable","true");
+                    props.put("mail.imap.port","993");
+                    Session session = Session.getDefaultInstance(props, null);
+                    IMAPStore store = (IMAPStore) session.getStore("imaps");
+                    store.connect(AuthenticationClass.incoming, mEmail, mPassword);
+                    Folder inbox = store.getFolder("Inbox");
+                    UIDFolder uf = (UIDFolder) inbox;
+                    inbox.open(Folder.READ_WRITE);
+                }catch(AuthenticationFailedException e){
+                    return credentialsInvalid;
+
+                }catch(MessagingException e){
+                    return unknownError;
                 }
             }
+            Toaster.toastLong(R.string.valid_credentials);
+            return success;
 
-            // TODO: register the new account here.
-            return true;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final Integer result) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+            AuthenticationClass.savedCredentials = result == success;
+            switch(result) {
+                case invalidIMAP:
+                    mIMAPview.setError(getString(R.string.error_invalid_imap));
+                    mIMAPview.requestFocus();
+                    break;
+                case invalidSTMP:
+                    mSTMPview.setError(getString(R.string.error_invalid_stmp));
+                    mSTMPview.requestFocus();
+                    break;
+                case advancedLoginIssue:
+                    mEmailView.setError(getString(R.string.error_check_stuff));
+                    mEmailView.requestFocus();
+                    break;
+                case emailInvalid:
+                    mEmailView.setError(getString(R.string.error_invalid_email));
+                    mEmailView.requestFocus();
+                    break;
+                case credentialsInvalid:
+                    if (mEmail.contains("@gmail.com")) {
+                        mEmailView.setError(getString(R.string.OAuthNonCompat));
+                        mEmailView.requestFocus();
+                    }
+                case unknownError:
+                    if(!mEmail.contains("@gmail.com")){//This is basically and else for the above.
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                    }
+                    break;
+                case success:
+                    updateSharedPreferences();
+                    finish();
+                    break;
             }
         }
 
@@ -396,6 +432,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+    private void updateSharedPreferences(){
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);// Create object of SharedPreferences
+        SharedPreferences.Editor editor = sharedPref.edit();// New get Editor
+        editor.putString(getResources().getString(R.string.key_email), AuthenticationClass.Email);// Put your values
+        editor.putString(getResources().getString(R.string.key_password), AuthenticationClass.Password);
+        editor.putString(getString(R.string.key_imap),AuthenticationClass.incoming);
+        editor.putString(getString(R.string.key_smtp),AuthenticationClass.outgoing);
+        editor.putBoolean(getResources().getString(R.string.key_valid_credentials), AuthenticationClass.savedCredentials);
+        editor.apply();// Apply your edits
     }
 }
 

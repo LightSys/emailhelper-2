@@ -3,6 +3,7 @@ package org.lightsys.emailhelper.qr;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,14 +12,11 @@ import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
-
 import com.google.android.gms.samples.vision.barcodereader.BarcodeCapture;
 import com.google.android.gms.samples.vision.barcodereader.BarcodeGraphic;
 import com.google.android.gms.vision.barcode.Barcode;
-
-import net.glxn.qrgen.core.scheme.VCard;
-
 import org.lightsys.emailhelper.CommonMethods;
+import org.lightsys.emailhelper.ConfirmDialog;
 import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.R;
@@ -30,12 +28,16 @@ import xyz.belvi.mobilevisionbarcodescanner.BarcodeRetriever;
 /**
  * Created by otter57 on 5/9/17.
  * https://android-arsenal.com/details/1/4516
+ * Pulled from eventApp for use in Email Helper
  */
 
 public class launchQRScanner extends AppCompatActivity implements BarcodeRetriever{
 
     private static final String QR_DATA_EXTRA = "qr_data";
     private Dialog dialog;
+    private DatabaseHelper db;
+    Contact newContact;
+    Context activityContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,22 +59,33 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Contact newContact = new Contact();
+                newContact = new Contact();
                 newContact.setEmail(barcode.contactInfo.emails[0].address);
                 String name = (String)(barcode.contactInfo.name.formattedName);
                 newContact.setFirstName(name.substring(0,name.indexOf(" ")));
                 newContact.setLastName(name.substring(name.indexOf(" ")+1));
-                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                db.insertContactData(newContact);
-                db.insertConversationData(newContact, CommonMethods.getCurrentTime(),CommonMethods.getCurrentDate());
+                db = new DatabaseHelper(getApplicationContext());
+                dialog.dismiss();
                 Intent resultIntent = new Intent();
                 setResult(Activity.RESULT_OK, resultIntent);
-                dialog.dismiss();
-                finish();
+                String confirmMessage = getString(R.string.QR_popup_message_prestring)+newContact.getFirstName()+" "+newContact.getLastName()+getString(R.string.QR_popup_message_poststring);
+                new ConfirmDialog(confirmMessage,getString(R.string.confirm_word),activityContext,addContactRunnable,cancelRunnable);
             }
+            Runnable addContactRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    db.insertContact(newContact);
+                    db.insertConversationData(newContact.getEmail(),newContact.getName());
+                    finish();
+                }
+            };
+            Runnable cancelRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            };
         });
-
-
     }
 
     // for multiple callback
@@ -80,7 +93,7 @@ public class launchQRScanner extends AppCompatActivity implements BarcodeRetriev
     public void onRetrievedMultiple(final Barcode closetToClick, final List<BarcodeGraphic> barcodeGraphics) {
         runOnUiThread(new Runnable() {
             @Override
-            public void run() {
+            public void run() {//This seciton I'm not sure is necessary.
                 String message = "Code selected : " + closetToClick.displayValue + "\n\nother " +
                         "codes in frame include : \n";
                 for (int index = 0; index < barcodeGraphics.size(); index++) {

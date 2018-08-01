@@ -1,12 +1,12 @@
 package org.lightsys.emailhelper.Conversation;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,176 +14,153 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import org.lightsys.emailhelper.CommonMethods;
+import org.lightsys.emailhelper.Contact.Contact;
 import org.lightsys.emailhelper.DatabaseHelper;
 import org.lightsys.emailhelper.DividerItemDecoration;
-import org.lightsys.emailhelper.HelperClass;
 import org.lightsys.emailhelper.R;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import xdroid.toaster.Toaster;
+import org.lightsys.emailhelper.SendMail;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+/**
+ *
+ */
 public class ConversationWindowFragment extends android.app.Fragment {
 
     DatabaseHelper db;
-    private List<ConversationWindow> conversationWindowList = new ArrayList<>();
+    private List<Message> messageList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ConversationWindowAdapter cAdapter;
     View rootView;
-    String passedEmail = "";                                                                        //This is the email of the person we are getting messages from
+    String passedEmail; //This is the email of the person we are getting messages from
+
 
     public ImageButton sendMessageButton;
-
     public EditText messageSend;
-    String persistantMessage;
 
-    public ConversationWindowFragment() {
-        // Required empty public constructor
-    }
+    //Empty Constructor
+    public ConversationWindowFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if (rootView == null) {
-            passedEmail = getArguments().getString("email");
+            passedEmail = getArguments().getString(getString(R.string.intent_email));
             rootView = inflater.inflate(R.layout.fragment_conversation_window, container, false);
             makeRecyclerView(rootView);
-            sendMessageButton = (ImageButton) rootView.findViewById(R.id.sendMessageButton);
-            messageSend = (EditText) rootView.findViewById(R.id.messageEditText);
-            prepareWindowRows();
-            sendMessage();
+            sendMessageButton = rootView.findViewById(R.id.sendMessageButton);
+            setUpSendMessageButton();
+            setUpTextBox();
         }
+        //connect the database
+        db = new DatabaseHelper(getActivity().getApplicationContext());
         return rootView;
     }
 
-    /**********************************************************************************************
-     *        Has all the steps needed to make the RecyclerView that holds the chat bubbles.      *
-     **********************************************************************************************/
+    /**
+     * This function sets up the textbox.
+     */
+    private void setUpTextBox(){
+        messageSend = rootView.findViewById(R.id.messageEditText);
+        messageSend.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+            //This function is critical to not allowing the user to send empty email as spam.
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(messageSend.getText().toString().trim().equalsIgnoreCase("")){
+                    sendMessageButton.setClickable(false);
+                }else{
+                    sendMessageButton.setClickable(true);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    /**
+     * Sets up the RecyclerView that holds the messages
+     */
     public void makeRecyclerView(View view) {
-        db = new DatabaseHelper(getActivity().getApplicationContext());
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.window_recycler_view);
-
-        cAdapter = new ConversationWindowAdapter(conversationWindowList);
-
+        recyclerView = view.findViewById(R.id.window_recycler_view);
         LinearLayoutManager cLinearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         cLinearLayoutManager.setStackFromEnd(true);
-        RecyclerView.LayoutManager cLayoutManager = cLinearLayoutManager;
-        recyclerView.setLayoutManager(cLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(cLinearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(cAdapter);
         // This makes the list scroll to the bottom when the keyboard is displayed
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,int oldRight, int oldBottom)
             {
-                recyclerView.smoothScrollToPosition(conversationWindowList.size());
+                recyclerView.smoothScrollToPosition(messageList.size());
             }
         });
     }
 
-    public void sendMessage() {
+    /**
+     * Sets up the sendButton.
+     */
+    public void setUpSendMessageButton() {
         sendMessageButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Create New Message
+                    Message message = new Message(passedEmail, db.getContactName(passedEmail),getActivity().getApplicationContext().getResources().getString(R.string.getSubjectLine), messageSend.getText().toString(), "", Message.SENT_BY_ME,false,CommonMethods.getCurrentTime());
+                    messageList.add(message);
+                    cAdapter.notifyDataSetChanged();
 
-                        ConversationWindow conversationWindow = new ConversationWindow(HelperClass._Email, null, messageSend.getText().toString(), null, true);
-                        conversationWindowList.add(conversationWindow);
-                        cAdapter.notifyDataSetChanged();
+                    //add message to database
+                    db.insertMessage(message);
 
-                        persistantMessage = messageSend.getText().toString();                       //This is so we can clear the EditText field as soon as the button is
-                                                                                                    //pressed and not have to wait until after the Async Task is finished.
-                        boolean isInserted = db.insertWindowData(passedEmail, null, persistantMessage, true, null);
+                    //Send the Message
+                    SendMail sendInstance = new SendMail(passedEmail, messageSend.getText().toString(),getActivity().getApplicationContext());
+                    sendInstance.execute();
 
-                        SendNewEmail sendInstance = new SendNewEmail();
-                        sendInstance.execute();
+                    //Update contact time
+                    //TODO analyze what happens when update time is updated and prevents an email from coming in.
+                    Contact sent = db.getContact(passedEmail);
+                    sent.setUpdatedDate(CommonMethods.getCurrentTime());
+                    db.updateContact(passedEmail,sent);
 
-                        messageSend.getText().clear();
-
-                        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                        db.updateConversation(passedEmail, CommonMethods.getCurrentTime());
-
-                    }
+                    //Remove the message
+                    messageSend.getText().clear();
                 }
+            }
         );
+        //This is important to make sure you cannot send empty spam messages.
+        sendMessageButton.setClickable(false);
     }
 
+
+    /**
+     * This function gets the data from the database and displays the new information.
+     */
     public void prepareWindowRows() {
-        Cursor res = db.getWindowData(passedEmail);
-        while (res.moveToNext()) {
-            boolean sentValue = (res.getInt(5) == 1);
-            ConversationWindow conversationWindow = new ConversationWindow(res.getString(0), res.getString(1), res.getString(2), res.getString(4), sentValue);
-            conversationWindowList.add(conversationWindow);
-            System.out.println(res.getString(2));
-        }
-        cAdapter.notifyDataSetChanged();
-    }
-
-    /**********************************************************************************************
-     *              The Async class used to send the email on a different thread.                 *
-     **********************************************************************************************/
-
-    private class SendNewEmail extends AsyncTask<URL, Integer, Long> {
-        protected void onProgressUpdate() {
-        }
-        @Override
-        protected Long doInBackground(URL... params) {
-            sendMailTLS();
-            return null;
-        }
-        protected void onPostExecute(Long result) {
-        }
-    }
-
-    /**********************************************************************************************
-     *  I'm pretty sure that we will need to have a different host and port depending on the type *
-     *  of email the person is using. This one works with Gmail. Something to maybe do would be   *
-     *  put the different hosts in the HelperClass file and just pull whatever ones are needed    *
-     *  for the email provider being used.
-     *  -Nick
-     **********************************************************************************************/
-
-    public void sendMailTLS() {
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() { protected PasswordAuthentication getPasswordAuthentication() {return new PasswordAuthentication(HelperClass._Email, HelperClass._Password);}});
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(HelperClass._Email));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(passedEmail));
-            message.setSubject("Conversation Email");
-            message.setText(persistantMessage);
-            Transport.send(message);
-        }
-        catch(AuthenticationFailedException e){
-            e.printStackTrace();
-            System.out.println("Messaging Exception.");
-            Toaster.toastLong(R.string.invalid_credentials_message);
-        }catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        messageList = db.getMessages(passedEmail);
+        Collections.sort(messageList,new Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                if(o1.getSentDate().after(o2.getSentDate())){
+                    return 1;
+                }else if(o1.getSentDate().before(o2.getSentDate())){
+                    return -1;
+                }
+                else{
+                    return 0;
+                }
+            }
+        });
+        cAdapter = new ConversationWindowAdapter(messageList,getActivity().getApplicationContext());
+        recyclerView.setAdapter(cAdapter);
     }
 }
